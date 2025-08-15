@@ -17,27 +17,27 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_DATABASE_COMMAND_H
-#define NUCLEX_DATABASE_COMMAND_H
+#ifndef NUCLEX_THINORM_DATABASE_H
+#define NUCLEX_THINORM_DATABASE_H
 
-#include "Nuclex/Database/Config.h"
+#include "Nuclex/ThinOrm/Config.h"
 
 #include <stop_token> // for std::stop_token
 
-namespace Nuclex { namespace Database {
+namespace Nuclex { namespace ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Command in the form of an SQL statement that can be issued to a database</summary>
-  class NUCLEX_DATABASE_TYPE Command {
+  class NUCLEX_THINORM_TYPE Database {
 
     /// <summary>Frees all resources owned by the command</summary>
-    public: NUCLEX_DATABASE_API virtual ~Command() = default;
+    public: NUCLEX_THINORM_API virtual ~Database() = default;
 
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::Database
+}} // namespace Nuclex::ThinOrm
 
-#endif // NUCLEX_DATABASE_COMMAND_H
+#endif // NUCLEX_THINORM_DATABASE_H

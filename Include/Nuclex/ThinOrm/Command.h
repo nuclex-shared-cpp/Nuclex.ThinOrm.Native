@@ -1,7 +1,7 @@
 #pragma region Apache License 2.0
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2025 Markus Ewald / Nuclex Development Labs
+Copyright (C) 2002-2024 Markus Ewald / Nuclex Development Labs
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,25 +17,27 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-// If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_THINORM_SOURCE 1
+#ifndef NUCLEX_THINORM_COMMAND_H
+#define NUCLEX_THINORM_COMMAND_H
 
-#include <gtest/gtest.h>
+#include "Nuclex/ThinOrm/Config.h"
 
-namespace {
-
-  // ------------------------------------------------------------------------------------------- //
-  // ------------------------------------------------------------------------------------------- //
-
-} // anonymous namespace
+#include <stop_token> // for std::stop_token
 
 namespace Nuclex { namespace ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(SqlCommandTest, HasDefaultConstructor) {
-  }
+  /// <summary>Command in the form of an SQL statement that can be issued to a database</summary>
+  class NUCLEX_THINORM_TYPE Command {
+
+    /// <summary>Frees all resources owned by the command</summary>
+    public: NUCLEX_THINORM_API virtual ~Command() = default;
+
+  };
 
   // ------------------------------------------------------------------------------------------- //
 
 }} // namespace Nuclex::ThinOrm
+
+#endif // NUCLEX_THINORM_COMMAND_H

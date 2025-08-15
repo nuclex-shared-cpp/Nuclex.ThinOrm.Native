@@ -18,9 +18,9 @@ limitations under the License.
 #pragma endregion // Apache License 2.0
 
 // If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_DATABASE_SOURCE 1
+#define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/Database/Config.h"
+#include "Nuclex/ThinOrm/Config.h"
 
 // --------------------------------------------------------------------------------------------- //
 

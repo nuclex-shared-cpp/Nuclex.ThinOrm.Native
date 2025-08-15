@@ -18,13 +18,13 @@ limitations under the License.
 #pragma endregion // Apache License 2.0
 
 // If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_DATABASE_SOURCE 1
+#define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/Database/IsolationLevel.h"
+#include "Nuclex/ThinOrm/IsolationLevel.h"
 
-namespace Nuclex { namespace Database {
+namespace Nuclex { namespace ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::Database
+}} // namespace Nuclex::ThinOrm

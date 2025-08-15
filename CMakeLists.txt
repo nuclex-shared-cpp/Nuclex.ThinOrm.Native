@@ -4,9 +4,9 @@ cmake_minimum_required (VERSION 3.15)
 # -------------------------------------------------------------------------------------------------
 
 project(
-  NuclexDatabaseNative
+  NuclexThinOrmNative
   VERSION 1.0.0
-  DESCRIPTION "Database abstraction layer for Windows and Linux"
+  DESCRIPTION "Thin database abstraction layer for Windows and Linux"
 )
 
 option(
@@ -48,7 +48,7 @@ if(NOT (TARGET NuclexSupportNative))
   )
 endif()
 
-message(STATUS "Enabled options for Nuclex.Database.Native:")
+message(STATUS "Enabled options for Nuclex.ThinOrm.Native:")
 message(STATUS "  ⚫ Build core library")
 
 if(BUILD_UNIT_TESTS)
@@ -109,7 +109,7 @@ file(
 file(
   GLOB_RECURSE headerFiles
   CONFIGURE_DEPENDS
-  "Include/Nuclex/Database/*.h"
+  "Include/Nuclex/ThinOrm/*.h"
 )
 file(
   GLOB_RECURSE unittestFiles
@@ -141,46 +141,46 @@ endfunction()
 # -------------------------------------------------------------------------------------------------
 
 # Shared library that can be linked to other projects
-add_library(NuclexDatabaseNative SHARED)
+add_library(NuclexThinOrmNative SHARED)
 
 # Enable compiler warnings only if this library is compiled on its own.
 # If it's used as a sub-project, the including project's developers aren't
 # interested in seeing warnings from a project they're not maintaining.
-if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexDatabaseNative")
-  enable_target_compiler_warnings(NuclexDatabaseNative)
+if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexThinOrmNative")
+  enable_target_compiler_warnings(NuclexThinOrmNative)
 else()
-  disable_target_compiler_warnings(NuclexDatabaseNative)
+  disable_target_compiler_warnings(NuclexThinOrmNative)
 endif()
 
 # Add directory with public headers to include path
 target_include_directories(
-  NuclexDatabaseNative
+  NuclexThinOrmNative
   PUBLIC "Include"
 )
 
 # Add public headers and sources to compilation list
 # (headers, too, in case CMake is used to generate an IDE project)
 target_sources(
-  NuclexDatabaseNative
+  NuclexThinOrmNative
   PUBLIC ${headerFiles}
   PRIVATE ${sourceFiles}
 )
 
 # Link against PThreads and Nuclex.Support.Native
 target_link_libraries(
-  NuclexDatabaseNative
+  NuclexThinOrmNative
   PRIVATE Threads::Threads
   PUBLIC NuclexSupportNative
 )
 
 # Add include directories and static libraries of all enabled image formats
-add_third_party_libraries(NuclexDatabaseNative)
+add_third_party_libraries(NuclexThinOrmNative)
 
-# On Windows, we want the shared library to be named Nuclex.Database.Native.dll
+# On Windows, we want the shared library to be named Nuclex.ThinOrm.Native.dll
 if(WIN32)
   set_target_properties(
-    NuclexDatabaseNative
-    PROPERTIES OUTPUT_NAME "Nuclex.Database.Native"
+    NuclexThinOrmNative
+    PROPERTIES OUTPUT_NAME "Nuclex.ThinOrm.Native"
   )
 endif()
 
@@ -189,35 +189,35 @@ endif()
 if(BUILD_UNIT_TESTS)
 
   # Executable that runs the unit tests (main() supplied by GoogleTest)
-  add_executable(NuclexDatabaseNativeTests)
+  add_executable(NuclexThinOrmNativeTests)
 
   # Enable compiler warnings only if this library is compiles on its own.
   # If it's used as a sub-project, the including project's developers aren't
   # interested in seeing warnings from a project they're not maintaining.
-  if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexDatabaseNative")
-    enable_target_compiler_warnings(NuclexDatabaseNativeTests)
+  if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexThinOrmNative")
+    enable_target_compiler_warnings(NuclexThinOrmNativeTests)
   else()
-    disable_target_compiler_warnings(NuclexDatabaseNativeTests)
+    disable_target_compiler_warnings(NuclexThinOrmNativeTests)
   endif()
 
   # Let the code know it's not being compiled into a shared library
   # (this disables visibility/exports, thus allowing the compiler detect
   # additional unused code and warn about it)
   target_compile_definitions(
-    NuclexDatabaseNativeTests
-    PRIVATE NUCLEX_DATABASE_EXECUTABLE
+    NuclexThinOrmNativeTests
+    PRIVATE NUCLEX_THINORM_EXECUTABLE
   )
 
   # Add directory with public headers to include path
   target_include_directories(
-    NuclexDatabaseNativeTests
+    NuclexThinOrmNativeTests
     PUBLIC "Include"
   )
 
   # Add public headers and sources (normal + unit tests) to compilation list
   # (headers, too, in case CMake is used to generate an IDE project)
   target_sources(
-    NuclexDatabaseNativeTests
+    NuclexThinOrmNativeTests
     PRIVATE ${headerFiles}
     PRIVATE ${sourceFiles}
     PRIVATE ${unittestFiles}
@@ -226,20 +226,20 @@ if(BUILD_UNIT_TESTS)
   # Link GoogleTest and the main() function supplied by GoogleTest
   # Also link against PThreads
   target_link_libraries(
-    NuclexDatabaseNativeTests
+    NuclexThinOrmNativeTests
     PRIVATE GoogleTest::Static
     PRIVATE GoogleTest::Main
     PRIVATE Threads::Threads
     PUBLIC NuclexSupportNative
   )
 
-  add_third_party_libraries(NuclexDatabaseNativeTests)
+  add_third_party_libraries(NuclexThinOrmNativeTests)
 
-  # On Windows, we want the executable to be named Nuclex.Database.Native.Tests.exe
+  # On Windows, we want the executable to be named Nuclex.ThinOrm.Native.Tests.exe
   if(WIN32)
     set_target_properties(
-      NuclexDatabaseNativeTests
-      PROPERTIES OUTPUT_NAME "Nuclex.Database.Native.Tests"
+      NuclexThinOrmNativeTests
+      PROPERTIES OUTPUT_NAME "Nuclex.ThinOrm.Native.Tests"
     )
   endif()
 
@@ -250,35 +250,35 @@ endif() # if BUILD_UNIT_TESTS enabled
 if(BUILD_BENCHMARK)
 
   # Executable that runs the benchmark (main() supplied by Celero)
-  add_executable(NuclexDatabaseNativeBenchmark)
+  add_executable(NuclexThinOrmNativeBenchmark)
 
   # Enable compiler warnings only if this library is compiled on its own.
   # If it's used as a sub-project, the including project's developers aren't
   # interested in seeing warnings from a project they're not maintaining.
-  if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexDatabaseNative")
-    enable_target_compiler_warnings(NuclexDatabaseNativeBenchmark)
+  if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexThinOrmNative")
+    enable_target_compiler_warnings(NuclexThinOrmNativeBenchmark)
   else()
-    disable_target_compiler_warnings(NuclexDatabaseNativeBenchmark)
+    disable_target_compiler_warnings(NuclexThinOrmNativeBenchmark)
   endif()
 
   # Let the code know it's not being compiled into a shared library
   # (this disables visibility/exports, thus allowing the compiler detect
   # additional unused code and warn about it)
   target_compile_definitions(
-    NuclexDatabaseNativeBenchmark
-    PRIVATE NUCLEX_DATABASE_EXECUTABLE
+    NuclexThinOrmNativeBenchmark
+    PRIVATE NUCLEX_THINORM_EXECUTABLE
   )
 
   # Add directory with public headers to include path
   target_include_directories(
-    NuclexDatabaseNativeBenchmark
+    NuclexThinOrmNativeBenchmark
     PUBLIC "Include"
   )
 
   # Add public headers and sources (normal + benchmark) to compilation list
   # (headers, too, in case CMake is used to generate an IDE project)
   target_sources(
-    NuclexDatabaseNativeBenchmark
+    NuclexThinOrmNativeBenchmark
     PRIVATE ${headerFiles}
     PRIVATE ${sourceFiles}
     PRIVATE ${benchmarkFiles}
@@ -287,19 +287,19 @@ if(BUILD_BENCHMARK)
   # Link Celero
   # Also link against PThreads
   target_link_libraries(
-    NuclexDatabaseNativeBenchmark
+    NuclexThinOrmNativeBenchmark
     PRIVATE Celero
     PRIVATE Threads::Threads
     PUBLIC NuclexSupportNative
   )
 
-  add_third_party_libraries(NuclexDatabaseNativeBenchmark)
+  add_third_party_libraries(NuclexThinOrmNativeBenchmark)
 
-  # On Windows, we want the executable to be named Nuclex.Database.Native.Benchmark.exe
+  # On Windows, we want the executable to be named Nuclex.ThinOrm.Native.Benchmark.exe
   if(WIN32)
     set_target_properties(
-      NuclexDatabaseNativeBenchmark
-      PROPERTIES OUTPUT_NAME "Nuclex.Database.Native.Benchmark"
+      NuclexThinOrmNativeBenchmark
+      PROPERTIES OUTPUT_NAME "Nuclex.ThinOrm.Native.Benchmark"
     )
   endif()
 
@@ -312,14 +312,14 @@ endif() # if BUILD_BENCHMARK enabled
 # "compiler tag" and dynamically formed -- it ensures that when linking
 # a pre-compiled shared library, the correct library is used).
 install(
-  TARGETS NuclexDatabaseNative
+  TARGETS NuclexThinOrmNative
   ARCHIVE DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
   LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
   RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
 
 # Install .pdb files on Windows platforms for the main library.
-install_debug_symbols(NuclexDatabaseNative)
+install_debug_symbols(NuclexThinOrmNative)
 
 # Do the same for Nuclex.Support.Native. Since we depend on this library
 # and have set the rpath accordingly, it needs to be in the same directory
@@ -333,23 +333,23 @@ install(
 # Install unit tests in same location as shared library.
 if(BUILD_UNIT_TESTS)
   install(
-    TARGETS NuclexDatabaseNativeTests
+    TARGETS NuclexThinOrmNativeTests
     RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
   )
 
   # Install .pdb files on Windows platforms for the unit tests, too.
-  install_debug_symbols(NuclexDatabaseNativeTests)
+  install_debug_symbols(NuclexThinOrmNativeTests)
 endif()
 
 # Install benchmarks in same location as shared library.
 if(BUILD_BENCHMARK)
   install(
-    TARGETS NuclexDatabaseNativeBenchmark
+    TARGETS NuclexThinOrmNativeBenchmark
     RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
   )
 
   # Install .pdb files on Windows platforms for the benchmark, too.
-  install_debug_symbols(NuclexDatabaseNativeBenchmark)
+  install_debug_symbols(NuclexThinOrmNativeBenchmark)
 endif()
 
 # -------------------------------------------------------------------------------------------------
@@ -361,8 +361,8 @@ if(BUILD_DOCS)
   endif()
 
   add_custom_target(
-    NuclexDatabaseNativeDocs ALL
-    COMMAND ${DOXYGEN_EXECUTABLE} "Nuclex.Database.Native.doxygen.cfg"
+    NuclexThinOrmNativeDocs ALL
+    COMMAND ${DOXYGEN_EXECUTABLE} "Nuclex.ThinOrm.Native.doxygen.cfg"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
   )
 
@@ -371,31 +371,31 @@ endif()
 # -------------------------------------------------------------------------------------------------
 
 file(
-  WRITE "${PROJECT_SOURCE_DIR}/NuclexDatabaseNativeConfig.cmake"
+  WRITE "${PROJECT_SOURCE_DIR}/NuclexThinOrmNativeConfig.cmake"
   "#!/usr/bin/cmake
 
-# Configuration to include Nuclex.Database.Native in a CMake-based project. If you want to
-# reference Nuclex.Database.Native as an externally compiled static library, do this:
+# Configuration to include Nuclex.ThinOrm.Native in a CMake-based project. If you want to
+# reference Nuclex.ThinOrm.Native as an externally compiled static library, do this:
 #
-#    set(NuclexDatabaseNative_DIR \"../Nuclex.Database.Native\")
-#    find_package(NuclexDatabaseNative REQUIRED CONFIG)
+#    set(NuclexThinOrmNative_DIR \"../Nuclex.ThinOrm.Native\")
+#    find_package(NuclexThinOrmNative REQUIRED CONFIG)
 #
 #    target_link_libraries(
 #        MyAwesomeProject
-#        PRIVATE NuclexDatabaseNative::Dynamic
+#        PRIVATE NuclexThinOrmNative::Dynamic
 #    )
 #
-# Alternatively, if you want to build Nuclex.Database.Native together with your project,
+# Alternatively, if you want to build Nuclex.ThinOrm.Native together with your project,
 # use the normal CMakeLists.txt with CMake's add_subdirectory() command:
 #
 #    add_subdirectory(
-#        \"\${PROJECT_SOURCE_DIR}/../Nuclex.Database.Native\"
+#        \"\${PROJECT_SOURCE_DIR}/../Nuclex.ThinOrm.Native\"
 #        \"\${CMAKE_BINARY_DIR}/nuclex.pixels.native\"
 #    )
 #
 #    target_link_libraries(
 #        MyAwesomeProject
-#        PRIVATE NuclexDatabaseNative
+#        PRIVATE NuclexThinOrmNative
 #    )
 #
 
@@ -424,7 +424,7 @@ endif()
 
 # -------------------------------------------------------------------------------------------------
 
-add_library(NuclexDatabaseNative::Dynamic SHARED IMPORTED)
+add_library(NuclexThinOrmNative::Dynamic SHARED IMPORTED)
 
 # This may cause warnings on recent GCC versions (10.0.0+?) with LTO because GCC detects
 # that the headers used during build (residing in build/) are not the same used when
@@ -433,24 +433,24 @@ add_library(NuclexDatabaseNative::Dynamic SHARED IMPORTED)
 # CMake doesn't run the install step during build, so the only way to get the headers
 # in place before building would be by copying them rather than installing them.
 set_target_properties(
-	NuclexDatabaseNative::Dynamic PROPERTIES
+	NuclexThinOrmNative::Dynamic PROPERTIES
 	INTERFACE_INCLUDE_DIRECTORIES \"\${CMAKE_CURRENT_LIST_DIR}/Include\"
 	IMPORTED_LINK_INTERFACE_LANGUAGES \"C\"
 )
 
 if(WIN32)
 	set_target_properties(
-		NuclexDatabaseNative::Dynamic PROPERTIES
-		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/Nuclex.Database.Native.lib\"
+		NuclexThinOrmNative::Dynamic PROPERTIES
+		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/Nuclex.ThinOrm.Native.lib\"
 	)
 else()
 	set_target_properties(
-		NuclexDatabaseNative::Dynamic PROPERTIES
-		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/libNuclexDatabaseNative.so\"
+		NuclexThinOrmNative::Dynamic PROPERTIES
+		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/libNuclexThinOrmNative.so\"
 	)
 endif()
 
-message(STATUS \"Imported Nuclex.Database.Native targets with binaries in '\${CMAKE_CURRENT_LIST_DIR}'\")"
+message(STATUS \"Imported Nuclex.ThinOrm.Native targets with binaries in '\${CMAKE_CURRENT_LIST_DIR}'\")"
 )
 
 # -------------------------------------------------------------------------------------------------

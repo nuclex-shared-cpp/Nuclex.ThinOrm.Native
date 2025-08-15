@@ -1,4 +1,4 @@
-Nuclex.Database.Native Dependencies
+Nuclex.ThinOrm.Native Dependencies
 ===================================
 
 
@@ -9,7 +9,7 @@ This library is intended to be placed into a source tree using submodules to rep
 the following directory layout:
 
     root/
-        Nuclex.Database.Native/     <-- you are here
+        Nuclex.ThinOrm.Native/      <-- you are here
             CMakeLists.txt
 
         Nuclex.Support.Native/      <-- Git: nuclex-shared-cpp/Nuclex.Support.Native
@@ -40,8 +40,8 @@ To Use this Library as a Binary
 Either use the included `CMakeLists.txt` (it still requires the `build-system` directory)
 or, more directly:
 
-  * Add `Nuclex.Database.Native/Include` to your include directory
+  * Add `Nuclex.ThinOrm.Native/Include` to your include directory
   * Add `Nuclex.Support.Native/Include` to your include directory
-  * Link `libNuclexDatabaseNative.so` (or `Nuclex.Database.Native.lib` on Windows)
+  * Link `libNuclexThinOrmNative.so` (or `Nuclex.ThinOrm.Native.lib` on Windows)
   * Copy the `.so` files (or `.dll` fils on Windows) to your output directory
-    (of both `Nuclex.Database.Native` and `Nuclex.Support.Native` which it depends on)
+    (of both `Nuclex.ThinOrm.Native` and `Nuclex.Support.Native` which it depends on)

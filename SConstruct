@@ -35,14 +35,14 @@ if use_clang:
 
 # Compile the main library
 library_environment = common_environment.Clone()
-library_binaries = library_environment.build_library('Nuclex.Database.Native')
+library_binaries = library_environment.build_library('Nuclex.ThinOrm.Native')
 
 # Compile the unit test executable
 unit_test_environment = common_environment.Clone()
-unit_test_environment.add_preprocessor_constant('NUCLEX_DATABASE_EXECUTABLE')
-#unit_test_environment.add_preprocessor_constant('NUCLEX_DATABASE_ENABLE_BENCHMARKS')
+unit_test_environment.add_preprocessor_constant('NUCLEX_THINORM_EXECUTABLE')
+#unit_test_environment.add_preprocessor_constant('NUCLEX_THINORM_ENABLE_BENCHMARKS')
 unit_test_binaries = unit_test_environment.build_unit_tests(
-    'Nuclex.Database.Native.Tests'
+    'Nuclex.ThinOrm.Native.Tests'
 )
 
 # ----------------------------------------------------------------------------------------------- #

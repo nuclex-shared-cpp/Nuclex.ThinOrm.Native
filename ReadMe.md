@@ -4,10 +4,10 @@
   - **Platforms:** Cross-platform, developed on Linux, will eventually
     receive testing on Windows.
 
-Nuclex.Database.Native
+Nuclex.ThinOrm.Native
 ======================
 
-This library implements a "thin" ORM that grants you full controls over how
+This library implements a "thin" ORM that grants you full control over how
 queries will be constructed, avoiding convenience abstractions such as
 active record, lazy-loading proxy collections or automatic cascading. It is
 inspired by LinqToDb for .NET, though, as of now, it still requires you to

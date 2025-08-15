@@ -17,12 +17,12 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_DATABASE_ISOLATIONLEVEL_H
-#define NUCLEX_DATABASE_ISOLATIONLEVEL_H
+#ifndef NUCLEX_THINORM_ISOLATIONLEVEL_H
+#define NUCLEX_THINORM_ISOLATIONLEVEL_H
 
-#include "Nuclex/Database/Config.h"
+#include "Nuclex/ThinOrm/Config.h"
 
-namespace Nuclex { namespace Database {
+namespace Nuclex { namespace ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -50,7 +50,7 @@ namespace Nuclex { namespace Database {
   ///     For SQL Server, check https://learn.microsoft.com/en-us/sql/t-sql/statements/set-transaction-isolation-level-transact-sql.
   ///   </para>
   /// </remarks>
-  enum class NUCLEX_DATABASE_TYPE IsolationLevel {
+  enum class NUCLEX_THINORM_TYPE IsolationLevel {
 
     /// <summary>The default isolation level of the database is used</summary>
     /// <remarks>
@@ -126,6 +126,6 @@ namespace Nuclex { namespace Database {
 
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::Database
+}} // namespace Nuclex::ThinOrm
 
-#endif // NUCLEX_DATABASE_ISOLATIONLEVEL_H
+#endif // NUCLEX_THINORM_ISOLATIONLEVEL_H
