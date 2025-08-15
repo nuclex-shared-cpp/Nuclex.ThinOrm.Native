@@ -66,7 +66,7 @@
         "isDefault": true
       },
       "type": "shell",
-      "command": "bin/linux-gcc13.2-amd64-debug/NuclexDatabaseNativeTests",
+      "command": "bin/linux-gcc13.2-amd64-debug/NuclexThinOrmNativeTests",
       "args": [ ],
       "options": {
         "cwd": "${workspaceFolder}"
@@ -81,7 +81,7 @@
         "isDefault": true
       },
       "type": "shell",
-      "command": "bin/linux-gcc13.2-amd64-debug/NuclexDatabaseNativeBenchmark",
+      "command": "bin/linux-gcc13.2-amd64-debug/NuclexThinOrmNativeBenchmark",
       "args": [ ],
       "options": {
         "cwd": "${workspaceFolder}"

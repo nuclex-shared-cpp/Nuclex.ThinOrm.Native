@@ -17,29 +17,14 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_COMMAND_H
-#define NUCLEX_THINORM_COMMAND_H
+// If the library is compiled as a DLL, this ensures symbols are exported
+#define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/ThinOrm/Config.h"
+#include "Nuclex/ThinOrm/Configuration/ConnectionUrl.h"
 
-#include <stop_token> // for std::stop_token
-
-namespace Nuclex { namespace ThinOrm {
+namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
-
-  /// <summary>Command in the form of an SQL statement that can be issued to a database</summary>
-  class NUCLEX_THINORM_TYPE Command {
-
-    public: NUCLEX_THINORM_API Command(const std::u8string &sqlQuery);
-    /// <summary>Frees all resources owned by the command</summary>
-    public: NUCLEX_THINORM_API virtual ~Command() = default;
-
-
-  };
-
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::ThinOrm
-
-#endif // NUCLEX_THINORM_COMMAND_H
+} // namespace Nuclex::ThinOrm

@@ -17,22 +17,34 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_DATABASE_H
-#define NUCLEX_THINORM_DATABASE_H
+#ifndef NUCLEX_THINORM_DATABASECONNECTION_H
+#define NUCLEX_THINORM_DATABASECONNECTION_H
 
 #include "Nuclex/ThinOrm/Config.h"
 
 #include <stop_token> // for std::stop_token
 
 namespace Nuclex { namespace ThinOrm {
+  class Command;
+}} // namespace Nuclex::ThinOrm
+
+namespace Nuclex { namespace ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Command in the form of an SQL statement that can be issued to a database</summary>
-  class NUCLEX_THINORM_TYPE Database {
+  /// <summary>Connection to a database on which commands can be executed</summary>
+  class NUCLEX_THINORM_TYPE DatabaseConnection {
 
     /// <summary>Frees all resources owned by the command</summary>
-    public: NUCLEX_THINORM_API virtual ~Database() = default;
+    public: NUCLEX_THINORM_API virtual ~DatabaseConnection() = default;
+
+    public: virtual const std::u8string &GetDatabaseProductName() = 0;
+
+    public: virtual const std::u8string &GetDialectName() = 0;
+
+    public: virtual const std::u8string &GetConnectorName() = 0;
+
+    public: virtual void Prepare(const Command &command) = 0;
 
   };
 
@@ -40,4 +52,4 @@ namespace Nuclex { namespace ThinOrm {
 
 }} // namespace Nuclex::ThinOrm
 
-#endif // NUCLEX_THINORM_DATABASE_H
+#endif // NUCLEX_THINORM_DATABASECONNECTION_H
