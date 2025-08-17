@@ -35,21 +35,21 @@ namespace {
   /// <summary>Constructs a string_view from a string segment specified via indices</summary>
   /// <param name="text">Text in which a string_view for a substring will be created</param>
   /// <param name="start">Start index within the full string</param>
-  /// <param name="end">End index within the full string or 'npos' for everything</param>
+  /// <param name="count">End index within the full string or 'npos' for everything</param>
   /// <returns>
   ///   A string_view covering the region of the string like std::u8string::substr() would
   /// </returns>
   std::u8string_view getSubstringView(
     const std::u8string &text,
-    std::u8string::size_type start, std::u8string::size_type end = std::u8string::npos
+    std::u8string::size_type start, std::u8string::size_type count = std::u8string::npos
   ) {
-    if(end == std::u8string::npos) {
+    if(count == std::u8string::npos) {
       std::u8string::size_type length = text.length();
       assert((length >= start) && u8"Start index lies within the string");
 
       return std::u8string_view(text.data() + start, length - start);
     } else {
-      return std::u8string_view(text.data() + start, end - start + 1);
+      return std::u8string_view(text.data() + start, count - start);
     }
   }
 
@@ -260,8 +260,8 @@ namespace Nuclex::ThinOrm::Configuration {
       }
 
       // Look for the next semicolon-delimited key/value pair
-      start = end;
-      end = properties.find(u8';', start + 1);
+      start = end + 1;
+      end = properties.find(u8';', start);
     }
 
     // Require at least the driver name (without it no connection can be made) and either
