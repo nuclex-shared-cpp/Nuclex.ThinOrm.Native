@@ -21,11 +21,13 @@ limitations under the License.
 #define NUCLEX_THINORM_CONFIGURATION_CONNECTIONURL_H
 
 #include "Nuclex/ThinOrm/Config.h"
+#include "Nuclex/ThinOrm/Configuration/WritableConnectionProperties.h"
 
-#include <string> // for std::u8string
-#include <optional> // for std::optional<>
+#include <map> // for std::map
 
-namespace Nuclex { namespace ThinOrm { namespace Configuration {
+// NOTE: Test parser with IPv6!
+
+namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -42,12 +44,12 @@ namespace Nuclex { namespace ThinOrm { namespace Configuration {
   ///     files or be updated by the user.
   ///   </para>
   /// </remarks>
-  class NUCLEX_THINORM_TYPE ConnectionUrl {
+  class NUCLEX_THINORM_TYPE ConnectionUrl : public WritableConnectionProperties {
 
-    /// <summary>Initializes a new connection string</summary>
-    public: NUCLEX_THINORM_TYPE ConnectionUrl(const std::u8string &uri);
-    /// <summary>Frees all resources owned by the command</summary>
-    public: NUCLEX_THINORM_API virtual ~ConnectionUrl() = default;
+    /// <summary>Initializes a new connection URL with default parameters</summary>
+    public: NUCLEX_THINORM_API ConnectionUrl();
+    /// <summary>Frees all resources owned by the connection URL</summary>
+    public: NUCLEX_THINORM_API virtual ~ConnectionUrl() override = default;
 
     /// <summary>Parses a connection string from the specified set of properties</summary>
     /// <param name="properties">Connection string that will be parsed</param>
@@ -56,14 +58,167 @@ namespace Nuclex { namespace ThinOrm { namespace Configuration {
     /// </returns>
     public: NUCLEX_THINORM_API static ConnectionUrl Parse(const std::u8string &url);
 
-    /// <summary>Converts the connection string back into a plain string</summary>
-    /// <returns>A string containing the connection properties</returns>
-    public: std::u8string ToString() const;
+    /// <summary>Converts the connection URL back into a plain (url) string</summary>
+    /// <returns>A string containing the connection properties in URL form</returns>
+    public: NUCLEX_THINORM_API std::u8string ToString() const;
+
+    //
+    // ConnectionProperties interface
+    //
+
+    /// <summary>Retrieves the driver to use to access the database</summary>
+    /// <returns>The driver by which the database should be accessed</returns>
+    public: NUCLEX_THINORM_API std::u8string GetDriver() const override {
+      return this->driver;
+    }
+
+    /// <summary>Sets the driver to use to access the database</summary>
+    /// <param name="driver">The driver that should be used to access the database</param>
+    public: NUCLEX_THINORM_API void SetDriver(const std::u8string &driver) override {
+      this->driver = driver;
+    }
+
+    /// <summary>Retrieves the hostname of the database server</summary>
+    /// <returns>The database server's hostname or the filename for the database</returns>
+    /// <remarks>
+    ///   This should simply contain the IP address or host name of the database server,
+    ///   or, for embedded databases such as SQLite, the directory of the database file
+    ///   (in which case, the database name contains the filename for consistency reasons,
+    ///   as in single-file databases, the file is identical to the database and the final
+    ///   URL slug element is always the database name for consistency)
+    /// </remarks>
+    public: NUCLEX_THINORM_API std::u8string GetHostnameOrPath() const override {
+      return this->hostnameOrPath;
+    }
+
+    /// <summary>Sets the hostname of the database server to connect to</summary>
+    /// <param name="hostnameOrPath">
+    ///   IP, hostname or single-file database path to use
+    /// </param>
+    public: NUCLEX_THINORM_API void SetHostnameOrPath(
+      const std::u8string &hostnameOrPath
+    ) override {
+      this->hostnameOrPath = hostnameOrPath;
+    }
+
+    /// <summary>Retrieves the TCP port to connect to the database server on</summary>
+    /// <returns>The TCP port number to which connection attempts should be directed</returns>
+    /// <remarks>
+    ///   If the port is not specified, the database driver decides. For standalone database
+    ///   servers, this would mean the standard port used by the database product. Single-file
+    ///   embedded databases will not use a port at all.
+    /// </remarks>
+    public: NUCLEX_THINORM_API std::optional<std::uint16_t> GetPort() const override {
+      return this->port;
+    }
+
+    /// <summary>Sets the TCP port on which the database server should be addressed</summary>
+    /// <param name="port">TCP port number that should be used when connecting</param>
+    public: NUCLEX_THINORM_API void SetPort(
+      const std::optional<std::uint16_t> &port = std::optional<std::uint16_t>()
+    ) override {
+      this->port = port;
+    }
+
+    /// <summary>Retrieves the name of the user to identify as when connecting</summary>
+    /// <returns>The user name by which to connect to the database server</returns>
+    public: NUCLEX_THINORM_API std::optional<std::u8string> GetUser() const override {
+      return this->user;
+    }
+
+    /// <summary>Sets the name of the user to identify as when connecting</summary>
+    /// <param name="user">User to identify as when connecting to the database server</param>
+    public: NUCLEX_THINORM_API void SetUser(
+      const std::optional<std::u8string> &user = std::optional<std::u8string>()
+    ) override {
+      this->user = user;
+    }
+
+    /// <summary>Retrieves the password to use when connecting to the database</summary>
+    /// <returns>The password to use when connecting to the database</returns>
+    public: NUCLEX_THINORM_API std::optional<std::u8string> GetPassword() const override {
+      return this->password;
+    }
+
+    /// <summary>Sets the password to use when connecting to the database</summary>
+    /// <param name="password">Password to use when connecting to the database</param>
+    public: NUCLEX_THINORM_API void SetPassword(
+      const std::optional<std::u8string> &password = std::optional<std::u8string>()
+    ) override {
+      this->password = password;
+    }
+
+    /// <summary>
+    ///   Retrieves the name of the database that should be opened upon connecting
+    /// </summary>
+    /// <returns>The name of the database to open after connecting</returns>
+    public: NUCLEX_THINORM_API std::optional<std::u8string> GetDatabaseName() const override {
+      return this->databaseName;
+    }
+
+    /// <summary>Sets the name of the database to open upon connecting</summary>
+    /// <param name="databaseName">Database to open when connecting</param>
+    public: NUCLEX_THINORM_API void SetDatabaseName(
+      const std::optional<std::u8string> &databaseName = std::optional<std::u8string>()
+    ) override {
+      this->databaseName = databaseName;
+    }
+
+    /// <summary>Retrieves the value of an arbitrary option</summary>
+    /// <param name="name">Name of the option whose value will be retrieved</param>
+    /// <returns>The value of the option or nothing if the option wasn't set</returns>
+    public: NUCLEX_THINORM_API std::optional<std::u8string> GetOption(
+      const std::u8string &name
+    ) const override;
+
+    /// <summary>Sets the value of an arbitrary option or unsets the option</summary>
+    /// <parma name="name">Name of the option whose value will be changed</param>
+    /// <param name=:value">
+    ///   Value that will be assigned to the option, or nothing to unset the option
+    /// </param>
+    public: NUCLEX_THINORM_API void SetOption(
+      const std::u8string &name,
+      const std::optional<std::u8string> &value = std::optional<std::u8string>()
+    ) override;
+
+    // The instance name (an unusual feature only present in SQL Server) is appended to
+    // to the host name or ip with a slash in ADO.NET. This means it poorly interacts with
+    // URL-formatted connection settings because it looks like a plain URL path. However,
+    // if we accept that the first slug in an URL path with two slugs must be the instance
+    // name, we can arrive at consistency:
+    //
+    // - For SQLite and other embedded databases, that will mean the hostname or filename
+    // property will contain the directory of the database file
+    //
+    // - For SQL Server with optional instance names, that means the first URL slug becomes
+    // the instance name, the second URL slug becomes the database (catalog) name.
+    //
+    // - For MariaDB, PostgreSQL and others, there are no instances, only the hostname and 
+    // the database name, which also would be correctly split by this approach.
+    //
+    // - Firebird with local paths passed to the server should be able to "just work," too.
+    //
+    //public: NUCLEX_THINORM_API virtual std::optional<std::u8string> GetInstanceName() const;
+
+    /// <summary>Name of the driver by which connections will be made</summary>
+    private: std::u8string driver;
+    /// <summary>IP or hostname of the database server of single-file database path</summary>
+    private: std::u8string hostnameOrPath;
+    /// <summary>Port number to which connections sould be directed</summary>
+    private: std::optional<std::uint16_t> port;
+    /// <summary>Name of the user to identify as to the database server</summary>
+    private: std::optional<std::u8string> user;
+    /// <summary>Password for the user account on the database server</summary>
+    private: std::optional<std::u8string> password;
+    /// <summary>Name of the database that should initially be opened</summary>
+    private: std::optional<std::u8string> databaseName;
+    /// <summary>Additional, driver-specific options for the database connection</summary>
+    private: std::map<std::u8string, std::u8string> options;
 
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-}}} // namespace Nuclex::ThinOrm::Configuration
+} // namespace Nuclex::ThinOrm::Configuration
 
 #endif // NUCLEX_THINORM_CONFIGURATION_CONNECTIONURL_H

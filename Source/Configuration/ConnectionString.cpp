@@ -22,9 +22,62 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Configuration/ConnectionString.h"
 
-namespace Nuclex::ThinOrm {
+#include <stdexcept>
+
+namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
+
+  ConnectionString::ConnectionString() :
+    driver(u8"sqlite", 6),
+    hostnameOrPath(u8".", 1),
+    port(),
+    user(),
+    password(),
+    databaseName(std::u8string(u8"default.sqlite3.db", 18)),
+    options() {}
+
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm
+  ConnectionString ConnectionString::Parse(const std::u8string &properties) {
+    throw std::runtime_error(reinterpret_cast<const char *>(u8"Not implemented yet"));
+    return ConnectionString();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::u8string ConnectionString::ToString() const {
+    throw std::runtime_error(reinterpret_cast<const char *>(u8"Not implemented yet"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<std::u8string> ConnectionString::GetOption(
+    const std::u8string &name
+  ) const {
+    std::map<std::u8string, std::u8string>::const_iterator iterator = (
+      this->options.find(name)
+    );
+    if(iterator == this->options.end()) {
+      return std::optional<std::u8string>();
+    } else {
+      return iterator->second;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void ConnectionString::SetOption(
+    const std::u8string &name,
+    const std::optional<std::u8string> &value /* = std::optional<std::u8string>() */
+  ) {
+    if(value.has_value()) {
+      this->options[name] = value.value();
+    } else {
+      this->options.erase(name);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // namespace Nuclex::ThinOrm::Configuration
