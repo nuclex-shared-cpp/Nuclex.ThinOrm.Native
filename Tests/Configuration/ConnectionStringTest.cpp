@@ -85,7 +85,10 @@ namespace Nuclex::ThinOrm::Configuration {
 
     EXPECT_EQ(s.GetDriver(), std::u8string(u8"mariadb"));
     EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"localhost"));
-    EXPECT_EQ(s.GetOption(u8"Timeout"), std::u8string(u8"30"));
+
+    std::optional<std::u8string> timeoutValue = s.GetOption(u8"Timeout");
+    ASSERT_TRUE(timeoutValue.has_value());
+    EXPECT_EQ(timeoutValue.value(), std::u8string(u8"30"));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -95,6 +98,79 @@ namespace Nuclex::ThinOrm::Configuration {
 
     EXPECT_EQ(s.GetDriver(), std::u8string(u8"sqlite"));
     EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"/tmp/example.db"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionStringTest, DuplicateKeysAreDisallowed) {
+    EXPECT_THROW(
+      ConnectionString::Parse(u8"Driver=sqlite; Host=.; driver=postgres"),
+      std::invalid_argument
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionStringTest, DuplicateOptionKeysAreDisallowed) {
+    EXPECT_THROW(
+      ConnectionString::Parse(u8"Driver=sqlite; Host=.; timeout=30; tImEoUt=40"),
+      std::invalid_argument
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionStringTest, EmptySegmentsAreIgnored) {
+    ConnectionString s = ConnectionString::Parse(u8"Driver=mariadb;;; Host=localhost;");
+
+    EXPECT_EQ(s.GetDriver(), std::u8string(u8"mariadb"));
+    EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"localhost"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionStringTest, NonExistentOptionsCanBeQueried) {
+    ConnectionString s = ConnectionString::Parse(u8"Driver=mysql; Host=localhost; dummy=yes");
+
+    EXPECT_EQ(s.GetDriver(), std::u8string(u8"mysql"));
+    EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"localhost"));
+
+    std::optional<std::u8string> nonExistentValue = s.GetOption(u8"DoesNotExist");
+    EXPECT_FALSE(nonExistentValue.has_value());
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionStringTest, UsernameAndPasswordCanBeSpecified) {
+    ConnectionString s = ConnectionString::Parse(
+      u8"Driver=mysql; Host=localhost; User=yes; Password=no"
+    );
+
+    EXPECT_EQ(s.GetDriver(), std::u8string(u8"mysql"));
+    EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"localhost"));
+
+    std::optional<std::u8string> userValue = s.GetUser();
+    ASSERT_TRUE(userValue.has_value());
+    EXPECT_EQ(userValue.value(), std::u8string(u8"yes"));
+
+    std::optional<std::u8string> passwordValue = s.GetPassword();
+    ASSERT_TRUE(passwordValue.has_value());
+    EXPECT_EQ(passwordValue.value(), std::u8string(u8"no"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionStringTest, PortCanBeSpecified) {
+    ConnectionString s = ConnectionString::Parse(
+      u8"Driver=mysql; Host=localhost; Port=1433"
+    );
+
+    EXPECT_EQ(s.GetDriver(), std::u8string(u8"mysql"));
+    EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"localhost"));
+
+    std::optional<std::uint16_t> portValue = s.GetPort();
+    ASSERT_TRUE(portValue.has_value());
+    EXPECT_EQ(portValue.value(), std::uint16_t(1433));
   }
 
   // ------------------------------------------------------------------------------------------- //

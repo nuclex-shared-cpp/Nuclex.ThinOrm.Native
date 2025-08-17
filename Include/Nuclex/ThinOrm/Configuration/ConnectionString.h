@@ -209,6 +209,7 @@ namespace Nuclex::ThinOrm::Configuration {
       const std::optional<std::u8string> &value = std::optional<std::u8string>()
     ) override;
 
+    /// <summary>Maps key names to key values for the arbitrary options</summary>
     private: typedef std::map<
       std::u8string, std::u8string,
       Nuclex::Support::Text::CaseInsensitiveUtf8Less

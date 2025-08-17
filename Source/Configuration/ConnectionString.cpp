@@ -196,8 +196,6 @@ namespace Nuclex::ThinOrm::Configuration {
   // ------------------------------------------------------------------------------------------- //
 
   ConnectionString ConnectionString::Parse(const std::u8string &properties) {
-    constexpr bool CaseSensitive = false;
-
     ConnectionString result;
 
     // To keep track of non std::optional<> properties so we can tell if they're missing
@@ -250,7 +248,15 @@ namespace Nuclex::ThinOrm::Configuration {
           result.SetDatabaseName(std::u8string(value));
           haveDatabaseName = true;
         } else {
-          result.options[std::u8string(keyName)] = std::u8string(value);
+          std::u8string keyNameString(keyName);
+          OptionsMapType::const_iterator iterator = result.options.find(keyNameString);
+          if(iterator != result.options.end()) [[unlikely]] {
+            std::u8string message(keyName);
+            message.append(u8" must not be specified multiple times");
+            requireUniqueness(true, message.data());
+          }
+
+          result.options[keyNameString] = std::u8string(value);
         }
       }
 
