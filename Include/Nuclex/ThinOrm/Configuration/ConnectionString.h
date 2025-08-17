@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Configuration/WritableConnectionProperties.h"
+#include "Nuclex/Support/Text/StringMatcher.h" // StringMatcher::AreEqual()
 
 #include <map> // for std::map
 
@@ -49,7 +50,7 @@ namespace Nuclex::ThinOrm::Configuration {
   class NUCLEX_THINORM_TYPE ConnectionString : public WritableConnectionProperties {
 
     /// <summary>Name of the property through which the driver can be specified</summary>
-    public: NUCLEX_THINORM_API static const std::u8string &DriverPropertyName;
+    public: NUCLEX_THINORM_API static const std::u8string DriverPropertyName;
     /// <summary>Name of the property through which the database host can be specified</summary>
     /// <remarks>
     ///   For weirdo databases that let you run different database engines on the same computer
@@ -57,15 +58,21 @@ namespace Nuclex::ThinOrm::Configuration {
     ///   the instance name should be appended here with a slash,
     ///   i.e. <code>127.0.0.1/InstanceName</code>.
     /// </remarks>
-    public: NUCLEX_THINORM_API static const std::u8string &HostPropertyName;
+    public: NUCLEX_THINORM_API static const std::u8string HostPropertyName;
+    /// <summary>Path in which the database is stored for file-based databases</summary>
+    /// <remarks>
+    ///   This is interchangeable with the <see cref="HostPropertyName" /> and can be more
+    ///   expressive when you're dealing with file-based database engines.
+    /// </remarks>
+    public: NUCLEX_THINORM_API static const std::u8string PathPropertyName;
     /// <summary>Name of the property through which the user name can be specified</summary>
-    public: NUCLEX_THINORM_API static const std::u8string &UserPropertName;
+    public: NUCLEX_THINORM_API static const std::u8string UserPropertName;
     /// <summary>Name of the property through which the password can be specified</summary>
-    public: NUCLEX_THINORM_API static const std::u8string &PasswordPropertName;
+    public: NUCLEX_THINORM_API static const std::u8string PasswordPropertName;
     /// <summary>Name of the property through which the port can be specified</summary>
-    public: NUCLEX_THINORM_API static const std::u8string &PortPropertName;
+    public: NUCLEX_THINORM_API static const std::u8string PortPropertyName;
     /// <summary>Name of the property through which the database can be specified</summary>
-    public: NUCLEX_THINORM_API static const std::u8string &DatabasePropertName;
+    public: NUCLEX_THINORM_API static const std::u8string DatabasePropertName;
 
     /// <summary>Initializes a new connection string with default settings</summary>
     public: NUCLEX_THINORM_API ConnectionString();
@@ -202,6 +209,11 @@ namespace Nuclex::ThinOrm::Configuration {
       const std::optional<std::u8string> &value = std::optional<std::u8string>()
     ) override;
 
+    private: typedef std::map<
+      std::u8string, std::u8string,
+      Nuclex::Support::Text::CaseInsensitiveUtf8Less
+    > OptionsMapType;
+
     /// <summary>Name of the driver by which connections will be made</summary>
     private: std::u8string driver;
     /// <summary>IP or hostname of the database server of single-file database path</summary>
@@ -215,7 +227,7 @@ namespace Nuclex::ThinOrm::Configuration {
     /// <summary>Name of the database that should initially be opened</summary>
     private: std::optional<std::u8string> databaseName;
     /// <summary>Additional, driver-specific options for the database connection</summary>
-    private: std::map<std::u8string, std::u8string> options;
+    private: OptionsMapType options;
 
   };
 
