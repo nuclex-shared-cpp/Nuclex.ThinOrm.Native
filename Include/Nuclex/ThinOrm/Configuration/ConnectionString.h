@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Configuration/WritableConnectionProperties.h"
-#include "Nuclex/Support/Text/StringMatcher.h" // StringMatcher::AreEqual()
+#include "Nuclex/Support/Text/StringMatcher.h" // for CaseInsensitiveUtf8Less
 
 #include <map> // for std::map
 

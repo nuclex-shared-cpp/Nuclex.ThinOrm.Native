@@ -25,7 +25,7 @@ limitations under the License.
 #include "Nuclex/Support/Text/LexicalCast.h" // lexical_cast<>
 #include "Nuclex/Support/Text/UnicodeHelper.h" // for UnicodeHelper::Read/WriteCodePoint()
 
-#include <stdexcept>
+#include <stdexcept> // for std::invalid_argument
 #include <cassert> // for assert()
 
 namespace {
@@ -258,7 +258,7 @@ namespace Nuclex::ThinOrm::Configuration {
 
           result.options[keyNameString] = std::u8string(value);
         }
-      }
+      } // if property string has contents
 
       // If we already hit the end with this segment, stop
       if(end == std::u8string::npos) {
@@ -268,7 +268,7 @@ namespace Nuclex::ThinOrm::Configuration {
       // Look for the next semicolon-delimited key/value pair
       start = end + 1;
       end = properties.find(u8';', start);
-    }
+    } // for ever
 
     // Require at least the driver name (without it no connection can be made) and either
     // a lone hostname (valid if the connection is to the database engine itself) or

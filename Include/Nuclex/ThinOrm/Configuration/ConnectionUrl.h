@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Configuration/WritableConnectionProperties.h"
+#include "Nuclex/Support/Text/StringMatcher.h" // for CaseInsensitiveUtf8Less
 
 #include <map> // for std::map
 
@@ -200,6 +201,12 @@ namespace Nuclex::ThinOrm::Configuration {
     //
     //public: NUCLEX_THINORM_API virtual std::optional<std::u8string> GetInstanceName() const;
 
+    /// <summary>Maps key names to key values for the arbitrary options</summary>
+    private: typedef std::map<
+      std::u8string, std::u8string,
+      Nuclex::Support::Text::CaseInsensitiveUtf8Less
+    > OptionsMapType;
+
     /// <summary>Name of the driver by which connections will be made</summary>
     private: std::u8string driver;
     /// <summary>IP or hostname of the database server of single-file database path</summary>
@@ -213,7 +220,7 @@ namespace Nuclex::ThinOrm::Configuration {
     /// <summary>Name of the database that should initially be opened</summary>
     private: std::optional<std::u8string> databaseName;
     /// <summary>Additional, driver-specific options for the database connection</summary>
-    private: std::map<std::u8string, std::u8string> options;
+    private: OptionsMapType options;
 
   };
 

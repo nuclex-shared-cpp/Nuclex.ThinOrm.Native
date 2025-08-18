@@ -130,7 +130,7 @@ namespace Nuclex::ThinOrm::Configuration {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(ConnectionStringTest, NonExistentOptionsCanBeQueried) {
-    ConnectionString s = ConnectionString::Parse(u8"Driver=mysql; Host=localhost; dummy=yes");
+    ConnectionString s = ConnectionString::Parse(u8"Driver=mysql; Host=localhost; Dummy=yes");
 
     EXPECT_EQ(s.GetDriver(), std::u8string(u8"mysql"));
     EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"localhost"));

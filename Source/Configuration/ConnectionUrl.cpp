@@ -24,9 +24,71 @@ limitations under the License.
 #include "Nuclex/Support/Text/StringHelper.h" // for StringHelper::GetTrimmed()
 #include "Nuclex/Support/Text/LexicalCast.h" // lexical_cast<>
 
-#include <stdexcept>
+#include <stdexcept> // for std::invalid_argument
+#include <cassert> // for assert()
 
 namespace {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Constructs a string_view from a string segment specified via indices</summary>
+  /// <param name="text">Text in which a string_view for a substring will be created</param>
+  /// <param name="start">Start index within the full string</param>
+  /// <param name="count">End index within the full string or 'npos' for everything</param>
+  /// <returns>
+  ///   A string_view covering the region of the string like std::u8string::substr() would
+  /// </returns>
+  std::u8string_view getSubstringView(
+    const std::u8string &text,
+    std::u8string::size_type start, std::u8string::size_type count = std::u8string::npos
+  ) {
+    if(count == std::u8string::npos) {
+      std::u8string::size_type length = text.length();
+      assert((length >= start) && u8"Start index lies within the string");
+
+      return std::u8string_view(text.data() + start, length - start);
+    } else {
+      return std::u8string_view(text.data() + start, count - start);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Extracts the key name of a key/value assignment (with optional value)</summary>
+  /// <param name="property">String segment that contains the name of the key</param>
+  /// <param name="assignmentIndex">Index of the equals sign in the assignment</param>
+  /// <returns>A string segment containing only the trimmed key name</returns>
+  std::u8string_view getKeyName(
+    const std::u8string_view &property,
+    std::u8string_view::size_type assignmentIndex = std::u8string_view::npos
+  ) {
+    if(assignmentIndex == std::u8string_view::npos) {
+      return Nuclex::Support::Text::StringHelper::GetTrimmed(property);
+    } else {
+      return Nuclex::Support::Text::StringHelper::GetTrimmed(
+        property.substr(0, assignmentIndex)
+      );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Extracts the value of a key/value assignment</summary>
+  /// <param name="property">String segment that contains the assigned value</param>
+  /// <param name="assignmentIndex">Index of the equals sign in the assignment</param>
+  /// <returns>A string segment containing only the trimmed value being assigned</returns>
+  std::u8string_view getAssignedValue(
+    const std::u8string_view &property,
+    std::u8string_view::size_type assignmentIndex = std::u8string_view::npos
+  ) {
+    if(assignmentIndex == std::u8string_view::npos) {
+      return std::u8string_view();
+    } else {
+      return Nuclex::Support::Text::StringHelper::GetTrimmed(
+        property.substr(assignmentIndex + 1)
+      );
+    }
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -48,6 +110,17 @@ namespace {
     );
   }
 
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Throws an exception if a key is a duplicate</summary>
+  /// <param name="isDuplicate">True if the key is a duplicate</param>
+  /// <param name="exceptionMessage">Exception that will be thrown</param>
+  void requireUniqueness(bool isDuplicate, const char8_t *exceptionMessage) {
+    if(isDuplicate) [[unlikely]] {
+      throw std::invalid_argument(reinterpret_cast<const char *>(exceptionMessage));
+    }
+  }
+  
   // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
@@ -154,8 +227,9 @@ namespace Nuclex::ThinOrm::Configuration {
     //   mssql://db.local:1433/testinstance/mydatabase    mariadb://ambiguousname:3306
     //           ^^^^^^^^      ^^^^^^^^^^^^                         ^^^^^^^^^^^^^
     //
-    std::string::size_type databaseStartIndex;
     {
+      std::string::size_type databaseStartIndex;
+
       std::u8string::size_type lastSlashIndex = properties.find_last_of(u8'/', optionsStartIndex);
       if((lastSlashIndex != std::u8string::npos) && (lastSlashIndex >= hostStartIndex)) {
         hostnameOrPath.append(properties.substr(hostStartIndex, lastSlashIndex - hostStartIndex));
@@ -170,16 +244,54 @@ namespace Nuclex::ThinOrm::Configuration {
         }
         databaseStartIndex = hostStartIndex;
       }
-    }
 
-    if(optionsStartIndex == std::u8string::npos) {
-      hostnameOrPath.append(properties.substr(databaseStartIndex));
-    } else { // ^^ no options specified ^^ // vv path ends at options vv
-      hostnameOrPath.append(
-        properties.substr(databaseStartIndex, optionsStartIndex - databaseStartIndex)
-      );
-    }
-    result.SetDatabaseName(hostnameOrPath);
+      if(optionsStartIndex == std::u8string::npos) {
+        hostnameOrPath.append(properties.substr(databaseStartIndex));
+      } else { // ^^ no options specified ^^ // vv path ends at options vv
+        hostnameOrPath.append(
+          properties.substr(databaseStartIndex, optionsStartIndex - databaseStartIndex)
+        );
+      }
+      if(!hostnameOrPath.empty()) {
+        result.SetDatabaseName(hostnameOrPath);
+      } else {
+        result.SetDatabaseName(std::optional<std::u8string>());
+      }
+    } // beauty scope
+
+    if(optionsStartIndex != std::u8string::npos) {
+
+      // Scan through the string to locate semicolon-delimited key/value pairs
+      std::u8string::size_type start = optionsStartIndex + 1;
+      std::u8string::size_type end = properties.find(u8'&');
+      for(;;) {
+        std::u8string_view property = getSubstringView(properties, start, end);
+
+        std::u8string_view::size_type assignmentIndex = property.find(u8'=');
+        std::u8string_view keyName = getKeyName(property, assignmentIndex);
+        std::u8string_view value = getAssignedValue(property, assignmentIndex);
+
+        std::u8string keyNameString(keyName);
+        OptionsMapType::const_iterator iterator = result.options.find(keyNameString);
+        if(iterator != result.options.end()) [[unlikely]] {
+          std::u8string message(keyName);
+          message.append(u8" must not be specified multiple times");
+          requireUniqueness(true, message.data());
+        }
+
+        result.options[keyNameString] = std::u8string(value);
+
+        // If we already hit the end with this segment, stop
+        if(end == std::u8string::npos) {
+          break;
+        }
+
+        // Look for the next semicolon-delimited key/value pair
+        start = end + 1;
+        end = properties.find(u8'&', start);
+      } // for ever
+
+    } // if URL parameters present
 
     return result;
   }

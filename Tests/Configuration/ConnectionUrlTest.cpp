@@ -107,4 +107,64 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(ConnectionUrlTest, NonExistentOptionsCanBeQueried) {
+    ConnectionUrl u = ConnectionUrl::Parse(u8"sqlite://example.db?dummy=yes");
+
+    EXPECT_EQ(u.GetDriver(), std::u8string(u8"sqlite"));
+
+    std::optional<std::u8string> databaseValue = u.GetDatabaseName();
+    ASSERT_TRUE(databaseValue.has_value());
+    EXPECT_EQ(databaseValue.value(), std::u8string(u8"example.db"));
+
+    std::optional<std::u8string> nonExistentValue = u.GetOption(u8"DoesNotExist");
+    EXPECT_FALSE(nonExistentValue.has_value());
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionUrlTest, DuplicateOptionKeysAreDisallowed) {
+    EXPECT_THROW(
+      ConnectionUrl::Parse(u8"sqlite://example.db?timeout=30&tImEoUt=40"),
+      std::invalid_argument
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionUrlTest, OptionsCanBeValueless) {
+    ConnectionUrl u = ConnectionUrl::Parse(u8"sqlite://example.db?extra1&extra2");
+
+    EXPECT_EQ(u.GetDriver(), std::u8string(u8"sqlite"));
+
+    std::optional<std::u8string> databaseValue = u.GetDatabaseName();
+    ASSERT_TRUE(databaseValue.has_value());
+    EXPECT_EQ(databaseValue.value(), std::u8string(u8"example.db"));
+
+    std::optional<std::u8string> extra1Value = u.GetOption(u8"Extra1");
+    ASSERT_TRUE(extra1Value.has_value());
+    EXPECT_TRUE(extra1Value.value().empty());
+
+    std::optional<std::u8string> extra2Value = u.GetOption(u8"Extra2");
+    ASSERT_TRUE(extra2Value.has_value());
+    EXPECT_TRUE(extra2Value.value().empty());
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionUrlTest, UrlParametersBecomeOptions) {
+    ConnectionUrl u = ConnectionUrl::Parse(u8"sqlite://example.db?timeout=30");
+
+    EXPECT_EQ(u.GetDriver(), std::u8string(u8"sqlite"));
+
+    std::optional<std::u8string> databaseValue = u.GetDatabaseName();
+    ASSERT_TRUE(databaseValue.has_value());
+    EXPECT_EQ(databaseValue.value(), std::u8string(u8"example.db"));
+
+    std::optional<std::u8string> timeoutValue = u.GetOption(u8"Timeout");
+    ASSERT_TRUE(timeoutValue.has_value());
+    EXPECT_EQ(timeoutValue.value(), std::u8string(u8"30"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // namespace Nuclex::ThinOrm::Configuration
