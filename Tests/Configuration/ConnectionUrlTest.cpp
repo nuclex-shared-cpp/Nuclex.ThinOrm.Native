@@ -52,33 +52,44 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ConnectionUrlTest, DatbaseCanBePathBased) {
+  TEST(ConnectionUrlTest, DatabaseCanBePathBased) {
     ConnectionUrl u = ConnectionUrl::Parse(u8"sqlite:///tmp/test.db");
 
     EXPECT_EQ(u.GetDriver(), std::u8string(u8"sqlite"));
     EXPECT_EQ(u.GetHostnameOrPath(), std::u8string(u8"/tmp"));
-    EXPECT_EQ(u.GetDatabaseName(), std::u8string(u8"test.db"));
+
+    std::optional<std::u8string> databaseValue = u.GetDatabaseName();
+    ASSERT_TRUE(databaseValue.has_value());
+    EXPECT_EQ(databaseValue.value(), std::u8string(u8"test.db"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(ConnectionUrlTest, UserCanBeSpecified) {
-    ConnectionUrl u = ConnectionUrl::Parse(u8"mariadb://me@localhost");
+    ConnectionUrl u = ConnectionUrl::Parse(u8"mariadb://me@localhost/mydatabase");
 
     EXPECT_EQ(u.GetDriver(), std::u8string(u8"mariadb"));
     EXPECT_EQ(u.GetUser(), std::u8string(u8"me"));
     EXPECT_EQ(u.GetHostnameOrPath(), std::u8string(u8"localhost"));
+
+    std::optional<std::u8string> databaseValue = u.GetDatabaseName();
+    ASSERT_TRUE(databaseValue.has_value());
+    EXPECT_EQ(databaseValue.value(), std::u8string(u8"mydatabase"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(ConnectionUrlTest, UserAndPasswordCanBeSpecified) {
-    ConnectionUrl u = ConnectionUrl::Parse(u8"mariadb://user:pass@localhost");
+    ConnectionUrl u = ConnectionUrl::Parse(u8"mariadb://user:pass@localhost/mydatabase");
 
     EXPECT_EQ(u.GetDriver(), std::u8string(u8"mariadb"));
     EXPECT_EQ(u.GetUser(), std::u8string(u8"user"));
     EXPECT_EQ(u.GetPassword(), std::u8string(u8"pass"));
     EXPECT_EQ(u.GetHostnameOrPath(), std::u8string(u8"localhost"));
+
+    std::optional<std::u8string> databaseValue = u.GetDatabaseName();
+    ASSERT_TRUE(databaseValue.has_value());
+    EXPECT_EQ(databaseValue.value(), std::u8string(u8"mydatabase"));
   }
 
   // ------------------------------------------------------------------------------------------- //

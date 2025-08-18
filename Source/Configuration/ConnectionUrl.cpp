@@ -70,16 +70,17 @@ namespace Nuclex::ThinOrm::Configuration {
   ConnectionUrl ConnectionUrl::Parse(const std::u8string &properties) {
     ConnectionUrl result;
 
-    // To keep track of non std::optional<> properties so we can tell if they're missing
-    bool haveHostnameOrPath = false;
-    bool haveDatabaseName = false;
-
     // Parse the driver name from the URL
     std::u8string::size_type driverEndIndex = properties.find(u8"://");
     if(driverEndIndex == std::u8string::npos) {
       throw std::invalid_argument(reinterpret_cast<const char *>(u8"URL missing protocol part"));
     }
 
+    // Look for the protocol part in the url:
+    //
+    //   mariadb://localhost/mydatabase
+    //   ^^^^^^^
+    //
     std::u8string::size_type hostStartIndex;
     {
       result.SetDriver(properties.substr(0, driverEndIndex));
@@ -103,13 +104,13 @@ namespace Nuclex::ThinOrm::Configuration {
       }
     } // beauty scope
 
-    // This is a bit icky. We want to treat everything up to the element behind a potential
-    // last slash as the host or path name (so an instance name for SQL server becomes part
-    // of the host name and an actual path for SQLite is stored as the path as well).
+    // Extract the port. This is a bit icky because we want to treat everything up to
+    // the element behind a potential last slash as the host or path name (so an instance
+    // name for SQL server becomes part of the host name and an actual path for SQLite is
+    // stored in the path property as well).
     //
-    // But a port number may be sitting in the middle of it (annoying SQL Server instances),
-    // looking like this: 'mssql://server:1234/instancename/database' - here we need to pick
-    // out the port number so the host name becomes 'server/instancename'.
+    //   mssql://db.local:1433/testinstance/mydatabase    sqlite://mydata.db
+    //           '''''''' ^^^^                                <nothing>
     //
     // That's why we'll move the 'hostStartPath' and cache the cut-off host name part in
     // the following variable:
@@ -138,22 +139,47 @@ namespace Nuclex::ThinOrm::Configuration {
               }
 
               result.SetPort(Nuclex::Support::Text::lexical_cast<std::int16_t>(port));
-              hostnameOrPath = properties.substr(hostStartIndex, portIndex - hostStartIndex);
-              hostStartIndex = portEndIndex;
+              hostnameOrPath = properties.substr(hostStartIndex, portIndex - hostStartIndex - 1);
+              hostStartIndex = portIndex + port.length();
             } // if first port character is numeric
           } // if port separator lies before first path slash
         } // if characters following port separator
       } // if port separator present
     } // beauty scope
 
-    std::u8string::size_type lastSlashIndex = properties.find_last_of(u8'/', optionsStartIndex);
-    if((lastSlashIndex == std::u8string::npos) || (lastSlashIndex < hostStartIndex)) {
-      hostnameOrPath.append(properties.substr(hostStartIndex));
-      result.SetHostnameOrPath(hostnameOrPath);
-    } else {
-      hostnameOrPath.append(properties.substr(hostStartIndex, lastSlashIndex - hostStartIndex));
-      result.SetHostnameOrPath(hostnameOrPath);
+    // Look for the database name. If the URL contains no directory separators, then assume
+    // that the URL contains *only* the database name (relative path for file based database),
+    // unless a port was specified (dear NTFS peeps, no we don't consider alternate streams).
+    //
+    //   mssql://db.local:1433/testinstance/mydatabase    mariadb://ambiguousname:3306
+    //           ^^^^^^^^      ^^^^^^^^^^^^                         ^^^^^^^^^^^^^
+    //
+    std::string::size_type databaseStartIndex;
+    {
+      std::u8string::size_type lastSlashIndex = properties.find_last_of(u8'/', optionsStartIndex);
+      if((lastSlashIndex != std::u8string::npos) && (lastSlashIndex >= hostStartIndex)) {
+        hostnameOrPath.append(properties.substr(hostStartIndex, lastSlashIndex - hostStartIndex));
+        result.SetHostnameOrPath(hostnameOrPath);
+
+        hostnameOrPath.clear();
+        databaseStartIndex = lastSlashIndex + 1;
+      } else { // ^^ slash present ^^ // vv no slash vv
+        if(result.port.has_value()) {
+          result.SetHostnameOrPath(hostnameOrPath);
+          hostnameOrPath.clear();
+        }
+        databaseStartIndex = hostStartIndex;
+      }
     }
+
+    if(optionsStartIndex == std::u8string::npos) {
+      hostnameOrPath.append(properties.substr(databaseStartIndex));
+    } else { // ^^ no options specified ^^ // vv path ends at options vv
+      hostnameOrPath.append(
+        properties.substr(databaseStartIndex, optionsStartIndex - databaseStartIndex)
+      );
+    }
+    result.SetDatabaseName(hostnameOrPath);
 
     return result;
   }
