@@ -167,4 +167,25 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(ConnectionUrlTest, CanBeConvertedIntoPlainString) {
+    ConnectionUrl u = ConnectionUrl::Parse(
+      u8"mariadb://me@db.local?timeout=30&pooling"
+    );
+
+    std::u8string plainString = u.ToString();
+
+    EXPECT_NE(plainString.find(u8"mariadb://"), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(u8"me@"), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(u8"@db.local"), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(u8"timeout=30"), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(u8"pooling"), std::u8string::npos);
+    EXPECT_EQ(plainString.find(u8"pooling="), std::u8string::npos);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // namespace Nuclex::ThinOrm::Configuration

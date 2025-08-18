@@ -241,6 +241,8 @@ namespace Nuclex::ThinOrm::Configuration {
         if(result.port.has_value()) {
           result.SetHostnameOrPath(hostnameOrPath);
           hostnameOrPath.clear();
+        } else {
+          result.SetHostnameOrPath(std::u8string());
         }
         databaseStartIndex = hostStartIndex;
       }
@@ -259,9 +261,8 @@ namespace Nuclex::ThinOrm::Configuration {
       }
     } // beauty scope
 
+    // If there are URL parameters, scan through the string to isolate each one
     if(optionsStartIndex != std::u8string::npos) {
-
-      // Scan through the string to locate semicolon-delimited key/value pairs
       std::u8string::size_type start = optionsStartIndex + 1;
       std::u8string::size_type end = properties.find(u8'&');
       for(;;) {
@@ -290,7 +291,6 @@ namespace Nuclex::ThinOrm::Configuration {
         start = end + 1;
         end = properties.find(u8'&', start);
       } // for ever
-
     } // if URL parameters present
 
     return result;
@@ -299,7 +299,105 @@ namespace Nuclex::ThinOrm::Configuration {
   // ------------------------------------------------------------------------------------------- //
 
   std::u8string ConnectionUrl::ToString() const {
-    throw std::runtime_error(reinterpret_cast<const char *>(u8"Not implemented yet"));
+    std::optional<std::u8string> portString;
+
+    // Calculate the length of the final string. This is a bit of micro-optimization
+    // but growing a string five times in a row would suck.
+    std::u8string::size_type length = (
+      this->driver.length() + 3 + this->hostnameOrPath.length()
+    );
+    if(this->user.has_value() || this->password.has_value()) {
+      ++length;
+      if(this->user.has_value()) {
+        length += this->user.value().length();
+      }
+      if(this->password.has_value()) {
+        length += 1 + this->password.value().length();
+      }
+    }
+    if(this->databaseName.has_value()) {
+      if(!this->hostnameOrPath.empty()) {
+        ++length;
+      }
+      length += this->databaseName.value().length();
+    }
+    if(this->port.has_value()) {
+      portString = Nuclex::Support::Text::lexical_cast<std::u8string>(this->port.value());
+      length += 2 + portString.value().length();
+    }
+    for(
+      OptionsMapType::const_iterator iterator = this->options.begin();
+      iterator != this->options.end();
+      ++iterator
+    ) {
+      length += 1 + iterator->first.length();
+      if(!iterator->second.empty()) {
+        length += 1 + iterator->second.length();
+      }
+    }
+
+    // Now that we know the ultimate lenght of the string, begin forming it
+    std::u8string result;
+    result.reserve(length);
+
+    result.append(this->driver);
+    result.append(u8"://");
+
+    if(this->user.has_value() || this->password.has_value()) {
+      if(this->user.has_value()) {
+        result.append(this->user.value());
+      }
+      if(this->password.has_value()) {
+        result.push_back(u8':');
+        result.append(this->password.value());
+      }
+      result.push_back(u8'@');
+    }
+
+    if(portString.has_value()) {
+      std::u8string::size_type slashIndex = this->hostnameOrPath.find(u8'/');
+      if(slashIndex == std::u8string::npos) {
+        result.append(this->hostnameOrPath);
+        result.push_back(u8':');
+        result.append(portString.value());
+      } else {
+        result.append(this->hostnameOrPath.substr(0, slashIndex));
+        result.push_back(u8':');
+        result.append(portString.value());
+        result.append(this->hostnameOrPath.substr(slashIndex + 1));
+      }
+    } else {
+      result.append(this->hostnameOrPath);
+    }
+
+    if(this->databaseName.has_value()) {
+      if(!this->hostnameOrPath.empty()) {
+        result.push_back(u8'/');
+      }
+
+      result.append(this->databaseName.value());
+    }
+
+    bool first = true;
+    for(
+      OptionsMapType::const_iterator iterator = this->options.begin();
+      iterator != this->options.end();
+      ++iterator
+    ) {
+      if(first) {
+        result.push_back(u8'?');
+        first = false;
+      } else {
+        result.push_back(u8'&');
+      }
+      result.append(iterator->first);
+      if(!iterator->second.empty()) {
+        result.push_back(u8'=');
+        result.append(iterator->second);
+      }
+    }
+
+    return result;
   }
 
   // ------------------------------------------------------------------------------------------- //
