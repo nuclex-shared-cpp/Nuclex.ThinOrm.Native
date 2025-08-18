@@ -175,4 +175,51 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(ConnectionStringTest, OptionsCanBeValueless) {
+    ConnectionString s = ConnectionString::Parse(
+      u8"Driver=mysql; Host=localhost; Extra1; Extra2"
+    );
+
+    EXPECT_EQ(s.GetDriver(), std::u8string(u8"mysql"));
+    EXPECT_EQ(s.GetHostnameOrPath(), std::u8string(u8"localhost"));
+
+    std::optional<std::u8string> extra1Value = s.GetOption(u8"Extra1");
+    ASSERT_TRUE(extra1Value.has_value());
+    EXPECT_TRUE(extra1Value.value().empty());
+
+    std::optional<std::u8string> extra2Value = s.GetOption(u8"Extra2");
+    ASSERT_TRUE(extra2Value.has_value());
+    EXPECT_TRUE(extra2Value.value().empty());
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionStringTest, CanBeConvertedIntoPlainString) {
+    ConnectionString s = ConnectionString::Parse(
+      u8"Driver=mariadb; Host=db.local; User=me; Timeout=30; Pooling"
+    );
+
+    std::u8string plainString = s.ToString();
+
+    EXPECT_NE(plainString.find(ConnectionString::DriverPropertyName), std::u8string::npos);
+    EXPECT_NE(plainString.find(u8"=mariadb"), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(ConnectionString::HostPropertyName), std::u8string::npos);
+    EXPECT_NE(plainString.find(u8"=db.local"), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(ConnectionString::UserPropertName), std::u8string::npos);
+    EXPECT_NE(plainString.find(u8"=me"), std::u8string::npos);
+
+    EXPECT_EQ(plainString.find(ConnectionString::PortPropertyName), std::u8string::npos);
+    EXPECT_EQ(plainString.find(ConnectionString::PasswordPropertName), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(u8"Timeout"), std::u8string::npos);
+    EXPECT_NE(plainString.find(u8"=30"), std::u8string::npos);
+
+    EXPECT_NE(plainString.find(u8"Pooling"), std::u8string::npos);
+    EXPECT_EQ(plainString.find(u8"Pooling="), std::u8string::npos);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // namespace Nuclex::ThinOrm::Configuration

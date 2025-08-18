@@ -43,4 +43,57 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(ConnectionUrlTest, ParsingEmptyStringFails) {
+    EXPECT_THROW(
+      ConnectionUrl::Parse(std::u8string()),
+      std::invalid_argument
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionUrlTest, DatbaseCanBePathBased) {
+    ConnectionUrl u = ConnectionUrl::Parse(u8"sqlite:///tmp/test.db");
+
+    EXPECT_EQ(u.GetDriver(), std::u8string(u8"sqlite"));
+    EXPECT_EQ(u.GetHostnameOrPath(), std::u8string(u8"/tmp"));
+    EXPECT_EQ(u.GetDatabaseName(), std::u8string(u8"test.db"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionUrlTest, UserCanBeSpecified) {
+    ConnectionUrl u = ConnectionUrl::Parse(u8"mariadb://me@localhost");
+
+    EXPECT_EQ(u.GetDriver(), std::u8string(u8"mariadb"));
+    EXPECT_EQ(u.GetUser(), std::u8string(u8"me"));
+    EXPECT_EQ(u.GetHostnameOrPath(), std::u8string(u8"localhost"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionUrlTest, UserAndPasswordCanBeSpecified) {
+    ConnectionUrl u = ConnectionUrl::Parse(u8"mariadb://user:pass@localhost");
+
+    EXPECT_EQ(u.GetDriver(), std::u8string(u8"mariadb"));
+    EXPECT_EQ(u.GetUser(), std::u8string(u8"user"));
+    EXPECT_EQ(u.GetPassword(), std::u8string(u8"pass"));
+    EXPECT_EQ(u.GetHostnameOrPath(), std::u8string(u8"localhost"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ConnectionUrlTest, PortCanBeLastElement) {
+    ConnectionUrl u = ConnectionUrl::Parse(u8"mariadb://localhost:1433");
+
+    EXPECT_EQ(u.GetDriver(), std::u8string(u8"mariadb"));
+    EXPECT_EQ(u.GetHostnameOrPath(), std::u8string(u8"localhost"));
+
+    std::optional<std::uint16_t> portValue = u.GetPort();
+    ASSERT_TRUE(portValue.has_value());
+    EXPECT_EQ(portValue.value(), std::uint16_t(1433));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // namespace Nuclex::ThinOrm::Configuration

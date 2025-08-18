@@ -285,7 +285,91 @@ namespace Nuclex::ThinOrm::Configuration {
   // ------------------------------------------------------------------------------------------- //
 
   std::u8string ConnectionString::ToString() const {
-    throw std::runtime_error(reinterpret_cast<const char *>(u8"Not implemented yet"));
+    std::optional<std::u8string> portString;
+
+    // Calculate the length of the final string. This is a bit of micro-optimization
+    // but growing a string five times in a row would suck.
+    std::u8string::size_type length = (
+      DriverPropertyName.length() + 1 + this->driver.length() +
+      2 + HostPropertyName.length() + 1 + this->hostnameOrPath.length()
+    );
+    if(this->port.has_value()) {
+      portString = Nuclex::Support::Text::lexical_cast<std::u8string>(this->port.value());
+      length += 2 + PortPropertyName.length() + 1 + portString.value().length();
+    }
+    if(this->user.has_value()) {
+      length += 2 + UserPropertName.length() + 1 + this->user.value().length();
+    }
+    if(this->password.has_value()) {
+      length += 2 + PasswordPropertName.length() + 1 + this->password.value().length();
+    }
+    if(this->databaseName.has_value()) {
+      length += 2 + DatabasePropertName.length() + 1 + this->databaseName.value().length();
+    }
+    for(
+      OptionsMapType::const_iterator iterator = this->options.begin();
+      iterator != this->options.end();
+      ++iterator
+    ) {
+      length += 2 + iterator->first.length();
+      if(!iterator->second.empty()) {
+        length += 1 + iterator->second.length();
+      }
+    }
+
+    // Now that we know the ultimate lenght of the string, begin forming it
+    std::u8string result;
+    result.reserve(length);
+
+    // Driver
+    result.append(DriverPropertyName);
+    result.push_back(u8'=');
+    result.append(this->driver);
+
+    // Hostname or path
+    result.append(u8"; ");
+    result.append(HostPropertyName);
+    result.push_back(u8'=');
+    result.append(this->hostnameOrPath);
+
+    if(portString.has_value()) {
+      result.append(u8"; ");
+      result.append(PortPropertyName);
+      result.push_back(u8'=');
+      result.append(portString.value());
+    }
+    if(this->user.has_value()) {
+      result.append(u8"; ");
+      result.append(UserPropertName);
+      result.push_back(u8'=');
+      result.append(this->user.value());
+    }
+    if(this->password.has_value()) {
+      result.append(u8"; ");
+      result.append(PasswordPropertName);
+      result.push_back(u8'=');
+      result.append(this->password.value());
+    }
+    if(this->databaseName.has_value()) {
+      result.append(u8"; ");
+      result.append(DatabasePropertName);
+      result.push_back(u8'=');
+      result.append(this->databaseName.value());
+    }
+    for(
+      OptionsMapType::const_iterator iterator = this->options.begin();
+      iterator != this->options.end();
+      ++iterator
+    ) {
+      result.append(u8"; ");
+      result.append(iterator->first);
+      if(!iterator->second.empty()) {
+        result.push_back(u8'=');
+        result.append(iterator->second);
+      }
+    }
+
+    return result;
   }
 
   // ------------------------------------------------------------------------------------------- //
