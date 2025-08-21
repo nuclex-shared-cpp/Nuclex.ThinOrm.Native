@@ -22,9 +22,13 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
 
-namespace Nuclex::ThinOrm {
+namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
+
+  // This file is only here to guarantee that its associated header has no hidden
+  // dependencies and can be included on its own
+
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm
+} // namespace Nuclex::ThinOrm::Configuration

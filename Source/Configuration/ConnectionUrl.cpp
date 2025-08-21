@@ -143,16 +143,22 @@ namespace Nuclex::ThinOrm::Configuration {
   ConnectionUrl ConnectionUrl::Parse(const std::u8string &properties) {
     ConnectionUrl result;
 
-    // Parse the driver name from the URL
+    // Look for the protocol part in the url:
+    //
+    //   mariadb://localhost/mydatabase          postgres://user:password@localhost/mydatabase
+    //   ^^^^^^^                                 ^^^^^^^^
+    //
+    // This will become the driver name
+    //
     std::u8string::size_type driverEndIndex = properties.find(u8"://");
     if(driverEndIndex == std::u8string::npos) {
       throw std::invalid_argument(reinterpret_cast<const char *>(u8"URL missing protocol part"));
     }
 
-    // Look for the protocol part in the url:
+    // Now see if there is a user name and/or password embedded in the url:
     //
-    //   mariadb://localhost/mydatabase
-    //   ^^^^^^^
+    //   mariadb://localhost/mydatabase          postgres://user:password@localhost/mydatabase
+    //         <nothing>                                    ^^^^ ^^^^^^^^
     //
     std::u8string::size_type hostStartIndex;
     {
@@ -177,16 +183,15 @@ namespace Nuclex::ThinOrm::Configuration {
       }
     } // beauty scope
 
-    // Extract the port. This is a bit icky because we want to treat everything up to
-    // the element behind a potential last slash as the host or path name (so an instance
-    // name for SQL server becomes part of the host name and an actual path for SQLite is
-    // stored in the path property as well).
+    // Extract the port. We skip over the hostname and stash it in a temporary string here
+    // because, depending on whether a port is specified or not, either the hostname is
+    // part of the path (file-based database engine) or an actual host name.
     //
     //   mssql://db.local:1433/testinstance/mydatabase    sqlite://mydata.db
     //           '''''''' ^^^^                                <nothing>
     //
-    // That's why we'll move the 'hostStartPath' and cache the cut-off host name part in
-    // the following variable:
+    // If there is a port, we stash it and adjust 'hostStartIndex', otherwise, we do
+    // absolutely nothing here and let the next section parse the whole URL host + path.
     //
     std::u8string hostnameOrPath;
     std::u8string::size_type optionsStartIndex = properties.find(u8'?', hostStartIndex);
@@ -225,7 +230,7 @@ namespace Nuclex::ThinOrm::Configuration {
     // unless a port was specified (dear NTFS peeps, no we don't consider alternate streams).
     //
     //   mssql://db.local:1433/testinstance/mydatabase    mariadb://ambiguousname:3306
-    //           ^^^^^^^^      ^^^^^^^^^^^^                         ^^^^^^^^^^^^^
+    //           """"""""      ^^^^^^^^^^^^                         """""""""""""
     //
     {
       std::string::size_type databaseStartIndex;
@@ -254,17 +259,24 @@ namespace Nuclex::ThinOrm::Configuration {
           properties.substr(databaseStartIndex, optionsStartIndex - databaseStartIndex)
         );
       }
-      if(!hostnameOrPath.empty()) {
-        result.SetDatabaseName(hostnameOrPath);
-      } else {
+      if(hostnameOrPath.empty()) {
         result.SetDatabaseName(std::optional<std::u8string>());
+      } else {
+        result.SetDatabaseName(hostnameOrPath);
       }
     } // beauty scope
 
     // If there are URL parameters, scan through the string to isolate each one
+    //
+    //   mariadb://localhost/db?timeout=30&ssl=no     sqlite://./my.sqlite3.db?journalMode=off
+    //                         ^^^^^^^^^^^^^^^^^^                             ^^^^^^^^^^^^^^^^
+    //
+    // In 'optionsStartIndex' we'll have the index of the question mark that initiates
+    // the URL parameter list, if it is present.
+    //
     if(optionsStartIndex != std::u8string::npos) {
       std::u8string::size_type start = optionsStartIndex + 1;
-      std::u8string::size_type end = properties.find(u8'&');
+      std::u8string::size_type end = properties.find(u8'&', start);
       for(;;) {
         std::u8string_view property = getSubstringView(properties, start, end);
 
