@@ -21,8 +21,14 @@ limitations under the License.
 #define NUCLEX_THINORM_DRIVERS_DRIVERBASEDCONNECTIONFACTORY_H
 
 #include "Nuclex/ThinOrm/Config.h"
+#include "Nuclex/ThinOrm/Drivers/ConnectionFactory.h"
 
-namespace Nuclex::ThinOrm::Configuration {
+#if defined(NUCLEX_THINORM_SUPPORT_ASYNCPP)
+  #include <stop_token>
+  #include <asyncpp/task.h> // for asyncpp::task
+#endif
+
+namespace Nuclex::ThinOrm::Drivers {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -31,11 +37,34 @@ namespace Nuclex::ThinOrm::Configuration {
   ///   a <see cref="ConnectionProperties" /> instance, picking the matching
   ///   <see cref="Driver" /> from its own repository of registered drivers.
   /// </summary>
-  class NUCLEX_THINORM_TYPE DriverBasedConnectionFactory {
+  class NUCLEX_THINORM_TYPE DriverBasedConnectionFactory : public ConnectionFactory {
 
     /// <summary>Frees all resources owned by the connection factory</summary>
     public: NUCLEX_THINORM_API virtual ~DriverBasedConnectionFactory() = default;
 
+    /// <summary>Establishes a new connection to the specified database</summary>
+    /// <param name="connectionProperties">
+    ///   Specifies the driver, data source and other parameters to reach the database
+    /// </param>
+    /// <returns>A new database connection wrapper, if successful</returns>
+    /// <remarks>
+    ///   Here, the 'driver' part of the connection properties specifies either
+    ///   the abbreviated name ('sqlite', 'mariadb') of a database driver,
+    ///   or the full name ('SQLite', 'MariaDB C/C++ Connector') of a driver that was
+    ///   previously registered to the driver-based connection factory.
+    /// </remarks>
+    public: NUCLEX_THINORM_API std::shared_ptr<Connection> Connect(
+      const Configuration::ConnectionProperties &connectionProperties
+    ) const override;
+
+#if 0 && defined(NUCLEX_THINORM_SUPPORT_ASYNCPP)
+
+    public: NUCLEX_THINORM_API asyncpp::task<std::shared_ptr<Connection>> ConnectAsync(
+      const Configuration::ConnectionProperties &connectionProperties,
+      const std::stop_token &stopToken
+    ) const;
+
+#endif
 
   };
 

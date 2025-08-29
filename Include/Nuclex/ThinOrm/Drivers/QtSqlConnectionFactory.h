@@ -21,19 +21,44 @@ limitations under the License.
 #define NUCLEX_THINORM_DRIVERS_QTSQLCONNECTIONFACTORY_H
 
 #include "Nuclex/ThinOrm/Config.h"
+#include "Nuclex/ThinOrm/Drivers/ConnectionFactory.h"
 
-namespace Nuclex::ThinOrm::Configuration {
+#if defined(NUCLEX_THINORM_SUPPORT_ASYNCPP)
+  #include <stop_token>
+  #include <asyncpp/task.h> // for asyncpp::task
+#endif
+
+namespace Nuclex::ThinOrm::Drivers {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>
   ///   Establishes database connections through the Qt SQL module from Qt5 or Qt6
   /// </summary>
-  class NUCLEX_THINORM_TYPE QtSqlConnectionFactory {
+  class NUCLEX_THINORM_TYPE QtSqlConnectionFactory : public ConnectionFactory {
+
+    /// <summary>Name of the option through which Qt connection name can be set</summary>
+    public: NUCLEX_THINORM_API static const std::u8string ConnectionNameOptionName;
 
     /// <summary>Frees all resources owned by the connection factory</summary>
     public: NUCLEX_THINORM_API virtual ~QtSqlConnectionFactory() = default;
 
+    /// <summary>Establishes a new connection to the specified database</summary>
+    /// <param name="connectionProperties">
+    ///   Specifies the driver, data source and other parameters to reach the database
+    /// </param>
+    /// <returns>A new database connection wrapper, if successful</returns>
+    /// <remarks>
+    ///   This factory passes the 'driver' setting directly to the 'QSqlDatabase' as
+    ///   the type of the database, i.e. 'QSQLITE', so pick a valid Qt driver name. The other
+    ///   properties are directly applied to the 'QSqlDatabase', whilst the 'connection name'
+    ///   (which must be unique if Qt is to actually establish multiple connections) will be
+    ///   auto-generated but can be prefixed with an identifier you can control by using
+    ///   an options named <see cref="ConnectionNameOptionName" /> in the connection settings.
+    /// </remarks>
+    public: NUCLEX_THINORM_API std::shared_ptr<Connection> Connect(
+      const Configuration::ConnectionProperties &connectionProperties
+    ) const override;
 
   };
 
