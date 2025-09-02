@@ -35,7 +35,7 @@ namespace Nuclex::ThinOrm::Drivers {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Opens new database connections according to its configuration</summary>
+  /// <summary>Opens new database connections according to connection properties</summary>
   class NUCLEX_THINORM_TYPE ConnectionFactory {
 
     /// <summary>Frees all resources owned by the connection factory</summary>
