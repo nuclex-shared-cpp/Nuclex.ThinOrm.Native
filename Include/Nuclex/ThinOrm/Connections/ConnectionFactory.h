@@ -17,31 +17,29 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_DRIVERS_QTSQLCONNECTIONFACTORY_H
-#define NUCLEX_THINORM_DRIVERS_QTSQLCONNECTIONFACTORY_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_CONNECTIONFACTORY_H
+#define NUCLEX_THINORM_CONNECTIONS_CONNECTIONFACTORY_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Drivers/ConnectionFactory.h"
 
-#if defined(NUCLEX_THINORM_SUPPORT_ASYNCPP)
-  #include <stop_token>
-  #include <asyncpp/task.h> // for asyncpp::task
-#endif
+#include <memory> // for std::shared_ptr
 
-namespace Nuclex::ThinOrm::Drivers {
+namespace Nuclex::ThinOrm::Configuration {
+  class ConnectionProperties;
+}
+namespace Nuclex::ThinOrm {
+  class Connection;
+}
+
+namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>
-  ///   Establishes database connections through the Qt SQL module from Qt5 or Qt6
-  /// </summary>
-  class NUCLEX_THINORM_TYPE QtSqlConnectionFactory : public ConnectionFactory {
-
-    /// <summary>Name of the option through which Qt connection name can be set</summary>
-    public: NUCLEX_THINORM_API static const std::u8string ConnectionNameOptionName;
+  /// <summary>Opens new database connections according to connection properties</summary>
+  class NUCLEX_THINORM_TYPE ConnectionFactory {
 
     /// <summary>Frees all resources owned by the connection factory</summary>
-    public: NUCLEX_THINORM_API virtual ~QtSqlConnectionFactory() = default;
+    public: NUCLEX_THINORM_API virtual ~ConnectionFactory() = default;
 
     /// <summary>Establishes a new connection to the specified database</summary>
     /// <param name="connectionProperties">
@@ -56,14 +54,14 @@ namespace Nuclex::ThinOrm::Drivers {
     ///   auto-generated but can be prefixed with an identifier you can control by using
     ///   an options named <see cref="ConnectionNameOptionName" /> in the connection settings.
     /// </remarks>
-    public: NUCLEX_THINORM_API std::shared_ptr<Connection> Connect(
+    public: virtual std::shared_ptr<Connection> Connect(
       const Configuration::ConnectionProperties &connectionProperties
-    ) const override;
+    ) const = 0;
 
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Drivers
+} // namespace Nuclex::ThinOrm::Connections
 
-#endif // NUCLEX_THINORM_DRIVERS_QTSQLCONNECTIONFACTORY_H
+#endif // NUCLEX_THINORM_CONNECTIONS_CONNECTIONFACTORY_H

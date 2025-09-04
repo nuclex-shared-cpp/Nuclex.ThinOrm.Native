@@ -17,18 +17,18 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_DRIVERS_STANDARDCONNECTIONPOOL_H
-#define NUCLEX_THINORM_DRIVERS_STANDARDCONNECTIONPOOL_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_STANDARDCONNECTIONPOOL_H
+#define NUCLEX_THINORM_CONNECTIONS_STANDARDCONNECTIONPOOL_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Drivers/ConnectionPool.h"
 #include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
+#include "Nuclex/ThinOrm/Connections/ConnectionPool.h"
 
-namespace Nuclex::ThinOrm::Drivers {
+namespace Nuclex::ThinOrm::Connections {
   class ConnectionFactory;
 }
 
-namespace Nuclex::ThinOrm::Drivers {
+namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -64,14 +64,14 @@ namespace Nuclex::ThinOrm::Drivers {
     ///   which the connection pool will close returned connections if the pool already
     ///   contains this many active connections waiting to be borrowed.
     /// </remarks>
-    public: NUCLEX_THINORM_API StandardConnectionPool(
+    public: NUCLEX_THINORM_API inline StandardConnectionPool(
       const std::shared_ptr<ConnectionFactory> &connectionFactory,
       const Configuration::ConnectionProperties &connectionProperties,
       const std::size_t maximumRetainedConnectionCount = 3
     );
 
     /// <summary>Frees all resources owned by the connection pool</summary>
-    public: NUCLEX_THINORM_API virtual ~StandardConnectionPool() = default;
+    public: NUCLEX_THINORM_API inline ~StandardConnectionPool() = default;
 
     /// <summary>
     ///   Establishes the specified number of connections and puts them into the pool
@@ -85,10 +85,10 @@ namespace Nuclex::ThinOrm::Drivers {
     ///   your application when it accesses the database for the first time after launching,
     ///   you can opt to create one or more prepared connections early.
     /// </remarks>
-    public: NUCLEX_THINORM_API void Ready(std::size_t connectionCount);
+    public: NUCLEX_THINORM_API inline void Ready(std::size_t connectionCount);
 
     /// <summary>Evicts and, thus, closes all pooled connections</summary>
-    public: NUCLEX_THINORM_API void EvictAll();
+    public: NUCLEX_THINORM_API inline void EvictAll();
 
     /// <summary>Borrows a connection from the connection pool</summary>
     /// <returns>A connection to the database the connection pool has been set up for</returns>
@@ -97,7 +97,7 @@ namespace Nuclex::ThinOrm::Drivers {
     ///   returned for the exclusive use by the caller. Otherwise, a new connection will
     ///   be established.
     /// </remarks>
-    public: NUCLEX_THINORM_API std::shared_ptr<Connection> BorrowConnection() override;
+    public: NUCLEX_THINORM_API inline std::shared_ptr<Connection> BorrowConnection() override;
 
     /// <summary>Returns a borrowed connection to the connection pool</summary>
     /// <param name="connection">Connection to put back into the connection pool</param>
@@ -106,7 +106,7 @@ namespace Nuclex::ThinOrm::Drivers {
     ///   otherwise you'll prime the next borrower for a nasty surprise that is hard to
     ///   trace back to the incorrect code that returned a connection in a bad state.
     /// </remarks>
-    public: NUCLEX_THINORM_API void ReturnConnection(
+    public: NUCLEX_THINORM_API inline void ReturnConnection(
       const std::shared_ptr<Connection> &connection
     ) override;
 
@@ -119,6 +119,6 @@ namespace Nuclex::ThinOrm::Drivers {
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Drivers
+} // namespace Nuclex::ThinOrm::Connections
 
-#endif // NUCLEX_THINORM_DRIVERS_STANDARDCONNECTIONPOOL_H
+#endif // NUCLEX_THINORM_CONNECTIONS_STANDARDCONNECTIONPOOL_H

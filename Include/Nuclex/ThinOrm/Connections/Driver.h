@@ -17,8 +17,8 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_DRIVERS_DRIVER_H
-#define NUCLEX_THINORM_DRIVERS_DRIVER_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_DRIVER_H
+#define NUCLEX_THINORM_CONNECTIONS_DRIVER_H
 
 #include "Nuclex/ThinOrm/Config.h"
 
@@ -33,7 +33,7 @@ namespace Nuclex::ThinOrm {
   class Connection;
 }
 
-namespace Nuclex::ThinOrm::Configuration {
+namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -68,7 +68,7 @@ namespace Nuclex::ThinOrm::Configuration {
     /// </param>
     /// <returns>A new database connection</returns>
     public: virtual std::shared_ptr<Connection> Connect(
-      const ConnectionProperties &connectionProperties
+      const Configuration::ConnectionProperties &connectionProperties
     ) = 0;
 
     //public: virtual std::optional<std::shared_ptr<Connection>> TryConnect(
@@ -79,6 +79,6 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Drivers
+} // namespace Nuclex::ThinOrm::Connections
 
-#endif // NUCLEX_THINORM_DRIVERS_DRIVER_H
+#endif // NUCLEX_THINORM_CONNECTIONS_DRIVER_H

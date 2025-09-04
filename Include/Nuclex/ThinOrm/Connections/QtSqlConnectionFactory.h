@@ -17,30 +17,31 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_DRIVERS_DRIVERBASEDCONNECTIONFACTORY_H
-#define NUCLEX_THINORM_DRIVERS_DRIVERBASEDCONNECTIONFACTORY_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTIONFACTORY_H
+#define NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTIONFACTORY_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Drivers/ConnectionFactory.h"
+#include "Nuclex/ThinOrm/Connections/ConnectionFactory.h"
 
 #if defined(NUCLEX_THINORM_SUPPORT_ASYNCPP)
   #include <stop_token>
   #include <asyncpp/task.h> // for asyncpp::task
 #endif
 
-namespace Nuclex::ThinOrm::Drivers {
+namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>
-  ///   Establishes database connections according to the settings specified in
-  ///   a <see cref="ConnectionProperties" /> instance, picking the matching
-  ///   <see cref="Driver" /> from its own repository of registered drivers.
+  ///   Establishes database connections through the Qt SQL module from Qt5 or Qt6
   /// </summary>
-  class NUCLEX_THINORM_TYPE DriverBasedConnectionFactory : public ConnectionFactory {
+  class NUCLEX_THINORM_TYPE QtSqlConnectionFactory : public ConnectionFactory {
+
+    /// <summary>Name of the option through which Qt connection name can be set</summary>
+    public: NUCLEX_THINORM_API static const std::u8string ConnectionNameOptionName;
 
     /// <summary>Frees all resources owned by the connection factory</summary>
-    public: NUCLEX_THINORM_API virtual ~DriverBasedConnectionFactory() = default;
+    public: NUCLEX_THINORM_API virtual ~QtSqlConnectionFactory() = default;
 
     /// <summary>Establishes a new connection to the specified database</summary>
     /// <param name="connectionProperties">
@@ -48,28 +49,21 @@ namespace Nuclex::ThinOrm::Drivers {
     /// </param>
     /// <returns>A new database connection wrapper, if successful</returns>
     /// <remarks>
-    ///   Here, the 'driver' part of the connection properties specifies either
-    ///   the abbreviated name ('sqlite', 'mariadb') of a database driver,
-    ///   or the full name ('SQLite', 'MariaDB C/C++ Connector') of a driver that was
-    ///   previously registered to the driver-based connection factory.
+    ///   This factory passes the 'driver' setting directly to the 'QSqlDatabase' as
+    ///   the type of the database, i.e. 'QSQLITE', so pick a valid Qt driver name. The other
+    ///   properties are directly applied to the 'QSqlDatabase', whilst the 'connection name'
+    ///   (which must be unique if Qt is to actually establish multiple connections) will be
+    ///   auto-generated but can be prefixed with an identifier you can control by using
+    ///   an options named <see cref="ConnectionNameOptionName" /> in the connection settings.
     /// </remarks>
     public: NUCLEX_THINORM_API std::shared_ptr<Connection> Connect(
       const Configuration::ConnectionProperties &connectionProperties
     ) const override;
 
-#if 0 && defined(NUCLEX_THINORM_SUPPORT_ASYNCPP)
-
-    public: NUCLEX_THINORM_API asyncpp::task<std::shared_ptr<Connection>> ConnectAsync(
-      const Configuration::ConnectionProperties &connectionProperties,
-      const std::stop_token &stopToken
-    ) const;
-
-#endif
-
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Drivers
+} // namespace Nuclex::ThinOrm::Connections
 
-#endif // NUCLEX_THINORM_DRIVERS_DRIVERBASEDCONNECTIONFACTORY_H
+#endif // NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTIONFACTORY_H

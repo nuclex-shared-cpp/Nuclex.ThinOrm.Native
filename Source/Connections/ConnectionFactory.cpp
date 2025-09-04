@@ -20,9 +20,9 @@ limitations under the License.
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/ThinOrm/Drivers/ConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/ConnectionFactory.h"
 
-namespace Nuclex::ThinOrm::Drivers {
+namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -31,4 +31,4 @@ namespace Nuclex::ThinOrm::Drivers {
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Drivers
+} // namespace Nuclex::ThinOrm::Connections

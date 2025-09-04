@@ -17,8 +17,8 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_DRIVERS_CONNECTIONPOOL_H
-#define NUCLEX_THINORM_DRIVERS_CONNECTIONPOOL_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_CONNECTIONPOOL_H
+#define NUCLEX_THINORM_CONNECTIONS_CONNECTIONPOOL_H
 
 #include "Nuclex/ThinOrm/Config.h"
 
@@ -28,7 +28,7 @@ namespace Nuclex::ThinOrm {
   class Connection;
 }
 
-namespace Nuclex::ThinOrm::Drivers {
+namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -41,9 +41,16 @@ namespace Nuclex::ThinOrm::Drivers {
   /// <remarks>
   ///   <para>
   ///     Data contexts can either use an explicit user-provided connections or
-  ///     &quot;borrow&quot; a connection from a connection pool. This is just an interface,
-  ///     but you'd typically just use its default implementation, which establishes new
-  ///     connections using saved connection properties.
+  ///     &quot;borrow&quot; a connection from a connection pool. This is just the interface
+  ///     through which that happens. Typically, you'd set up a connection factory in
+  ///     your application, then the <see cref="StandardConnectionPool" /> and pass that
+  ///     through your data context.
+  ///   </para>
+  ///   <para>
+  ///     Using a connection pool interface as the basic building block instead of just
+  ///     a connection factory makes it siple and obvious to use pooling rather than hide
+  ///     it behind a level of indirection tha returns an internal connection when some
+  ///     exposed connection object gets destroyed or similar.
   ///   </para>
   /// </remarks>
   template<typename TDataContext = void>
@@ -74,6 +81,6 @@ namespace Nuclex::ThinOrm::Drivers {
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Drivers
+} // namespace Nuclex::ThinOrm::Connections
 
-#endif // NUCLEX_THINORM_DRIVERS_CONNECTIONPOOL_H
+#endif // NUCLEX_THINORM_CONNECTIONS_CONNECTIONPOOL_H
