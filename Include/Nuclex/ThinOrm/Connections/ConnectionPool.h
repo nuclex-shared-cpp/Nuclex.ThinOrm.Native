@@ -33,11 +33,6 @@ namespace Nuclex::ThinOrm::Connections {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Establishes database connections and allows them to be reused</summary>
-  /// <typeparam name="TDataContext">
-  ///   Specialization to distinguish the types in C++ dependency injectors.
-  ///   Ignroe this if you do not use a dependency injector or if you only
-  ///   access a single database in your application.
-  /// </typeparam>
   /// <remarks>
   ///   <para>
   ///     Data contexts can either use an explicit user-provided connections or
@@ -53,7 +48,6 @@ namespace Nuclex::ThinOrm::Connections {
   ///     exposed connection object gets destroyed or similar.
   ///   </para>
   /// </remarks>
-  template<typename TDataContext = void>
   class NUCLEX_THINORM_TYPE ConnectionPool {
 
     /// <summary>Frees all resources owned by the connection pool</summary>

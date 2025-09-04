@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
-#include "Nuclex/ThinOrm/Connections/ConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/UniqueConnectionPool.h"
 
 namespace Nuclex::ThinOrm::Connections {
   class ConnectionFactory;
@@ -45,7 +45,7 @@ namespace Nuclex::ThinOrm::Connections {
   ///   connection
   /// </remarks>
   template<typename TDataContext = void>
-  class NUCLEX_THINORM_TYPE StandardConnectionPool : ConnectionPool<TDataContext> {
+  class NUCLEX_THINORM_TYPE StandardConnectionPool : public UniqueConnectionPool<TDataContext> {
 
     /// <summary>Initializes a new connection pool with the specified settings</summary>
     /// <param name="connectionFactory">
