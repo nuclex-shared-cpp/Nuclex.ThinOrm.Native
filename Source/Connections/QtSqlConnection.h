@@ -17,30 +17,21 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
-#define NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTION_H
+#define NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTION_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Connections/ConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/Connection.h"
 
 namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>
-  ///   Connection pool with a template argument to make each database's connection pool
-  ///   a unique type for dependency injectors
-  /// </summary>
-  /// <typeparam name="TDataContext">
-  ///   Specialization to distinguish the types in C++ dependency injectors.
-  ///   Ignroe this if you do not use a dependency injector or if you only
-  ///   access a single database in your application.
-  /// </typeparam>
-  template<typename TDataContext = void>
-  class NUCLEX_THINORM_TYPE UniqueConnectionPool : public ConnectionPool {
+  /// <summary>Database connection using Qt's SQL module</summary>
+  class NUCLEX_THINORM_TYPE QtSqlConnection : public Connection {
 
-    /// <summary>Frees all resources owned by the connection pool</summary>
-    public: NUCLEX_THINORM_API virtual ~UniqueConnectionPool() = default;
+    /// <summary>Frees all resources owned by the connection factory</summary>
+    public: NUCLEX_THINORM_API virtual ~QtSqlConnection() = default;
 
   };
 
@@ -48,4 +39,4 @@ namespace Nuclex::ThinOrm::Connections {
 
 } // namespace Nuclex::ThinOrm::Connections
 
-#endif // NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
+#endif // NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTION_H

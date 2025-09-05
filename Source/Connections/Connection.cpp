@@ -17,35 +17,18 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
-#define NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
+// If the library is compiled as a DLL, this ensures symbols are exported
+#define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Connections/ConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/Connection.h"
 
 namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>
-  ///   Connection pool with a template argument to make each database's connection pool
-  ///   a unique type for dependency injectors
-  /// </summary>
-  /// <typeparam name="TDataContext">
-  ///   Specialization to distinguish the types in C++ dependency injectors.
-  ///   Ignroe this if you do not use a dependency injector or if you only
-  ///   access a single database in your application.
-  /// </typeparam>
-  template<typename TDataContext = void>
-  class NUCLEX_THINORM_TYPE UniqueConnectionPool : public ConnectionPool {
-
-    /// <summary>Frees all resources owned by the connection pool</summary>
-    public: NUCLEX_THINORM_API virtual ~UniqueConnectionPool() = default;
-
-  };
+  // This file is only here to guarantee that its associated header has no hidden
+  // dependencies and can be included on its own
 
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Connections
-
-#endif // NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H

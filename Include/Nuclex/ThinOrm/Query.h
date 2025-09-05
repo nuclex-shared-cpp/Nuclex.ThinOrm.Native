@@ -17,39 +17,34 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_DATABASECONNECTION_H
-#define NUCLEX_THINORM_DATABASECONNECTION_H
+#ifndef NUCLEX_THINORM_QUERIES_DATACONTEXTFACTORY_H
+#define NUCLEX_THINORM_QUERIES_DATACONTEXTFACTORY_H
 
 #include "Nuclex/ThinOrm/Config.h"
 
-#include <stop_token> // for std::stop_token
+#include <memory> // for std::shared_ptr
 
-namespace Nuclex { namespace ThinOrm {
-  class Command;
-}} // namespace Nuclex::ThinOrm
+namespace Nuclex::ThinOrm::Configuration {
+  class ConnectionProperties;
+}
+namespace Nuclex::ThinOrm::Connections {
+  class Connection;
+}
 
-namespace Nuclex { namespace ThinOrm {
+namespace Nuclex::ThinOrm::Queries {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Connection to a database on which commands can be executed</summary>
-  class NUCLEX_THINORM_TYPE DatabaseConnection {
+  /// <summary>Creates new data contexts (database connection with table accessors)</summary>
+  class NUCLEX_THINORM_TYPE DataContextFactory {
 
-    /// <summary>Frees all resources owned by the command</summary>
-    public: NUCLEX_THINORM_API virtual ~DatabaseConnection() = default;
-
-    public: virtual const std::u8string &GetDatabaseProductName() = 0;
-
-    public: virtual const std::u8string &GetDialectName() = 0;
-
-    public: virtual const std::u8string &GetConnectorName() = 0;
-
-    public: virtual void Prepare(const Command &command) = 0;
+    /// <summary>Frees all resources owned by the connection factory</summary>
+    public: NUCLEX_THINORM_API virtual ~DataContextFactory() = default;
 
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::ThinOrm
+} // namespace Nuclex::ThinOrm::Queries
 
-#endif // NUCLEX_THINORM_DATABASECONNECTION_H
+#endif // NUCLEX_THINORM_QUERIES_DATACONTEXTFACTORY_H

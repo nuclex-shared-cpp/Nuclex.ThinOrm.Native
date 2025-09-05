@@ -23,10 +23,10 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
 #include "Nuclex/ThinOrm/Connections/UniqueConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/ConnectionFactory.h"
 
-namespace Nuclex::ThinOrm::Connections {
-  class ConnectionFactory;
-}
+#include <queue> // for std::queue
+#include <mutex> // for std::mutex
 
 namespace Nuclex::ThinOrm::Connections {
 
@@ -73,6 +73,26 @@ namespace Nuclex::ThinOrm::Connections {
     /// <summary>Frees all resources owned by the connection pool</summary>
     public: NUCLEX_THINORM_API inline ~StandardConnectionPool() = default;
 
+    /// <summary>Retrieves the current number of connections that the pool will retain</summary>
+    /// <returns>The maximum number of connections the pool currently retains</summary>
+    public: NUCLEX_THINORM_API inline std::size_t GetMaximumRetainedConnectionCount() const;
+
+    /// <summary<Updates the number of connections the pool should retain</summary>
+    /// <param name="newMaximumRetainedConnectionCount">
+    ///   The new number of connections the pool should retain at most
+    /// </param>
+    /// <remarks>
+    ///   This will immediately evict (close) currently retained connections if set to
+    ///   a value below the number of connections the pool is holding on to. You can also set
+    ///   this number to 0 in order to never pool any connections. This is useful for debugging
+    ///   (i.e. integration testing where you want a new mock connection being created) or to
+    ///   work with classes that, for simplicity, work via the <see cref="ConnectionPool" />
+    ///   interface only without providing a <see cref="ConnectionFactory" /> based variant.
+    /// </remarks>
+    public: NUCLEX_THINORM_API inline void SetMaximumRetainedConnectionCount(
+      std::size_t newMaximumRetainedConnectionCount
+    );
+
     /// <summary>
     ///   Establishes the specified number of connections and puts them into the pool
     /// </summary>
@@ -114,9 +134,118 @@ namespace Nuclex::ThinOrm::Connections {
     private: std::shared_ptr<ConnectionFactory> connectionFactory;
     /// <summary>>Settings to use when establishing a new connection</summary>
     private: const Configuration::ConnectionProperties connectionProperties;
+    /// <summary>Mutex that must be held to access the connections</summary>
+    private: std::mutex connectionsAccessMutex;
+    /// <summary>Maximum number of connections the pool should retain</summary>
+    private: std::size_t maximumRetainedConnectionCount;
+    /// <summary>Connections currently retained in the connection pool</summary>
+    private: std::queue<std::shared_ptr<Connection>> connections;
 
   };
 
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TDataContext>
+  inline StandardConnectionPool<TDataContext>::StandardConnectionPool(
+    const std::shared_ptr<ConnectionFactory> &connectionFactory,
+    const Configuration::ConnectionProperties &connectionProperties,
+    const std::size_t maximumRetainedConnectionCount /* = 3 */
+  ) :
+    connectionFactory(connectionFactory),
+    connectionProperties(connectionProperties),
+    connectionsAccessMutex(),
+    maximumRetainedConnectionCount(maximumRetainedConnectionCount),
+    connections() {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TDataContext>
+  inline std::size_t StandardConnectionPool<
+    TDataContext
+  >::GetMaximumRetainedConnectionCount() const {
+    return this->maximumRetainedConnectionCount;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TDataContext>
+  inline void StandardConnectionPool<TDataContext>::SetMaximumRetainedConnectionCount(
+    std::size_t maximumRetainedConnectionCount
+  ) {
+    std::unique_lock<std::mutex> connectionsAccessScope(this->connectionsAccessMutex);
+
+    this->maximumRetainedConnectionCount = maximumRetainedConnectionCount;
+    while(maximumRetainedConnectionCount < this->connections.size()) {
+      this->connections.pop();
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TDataContext>
+  inline void StandardConnectionPool<TDataContext>::Ready(std::size_t connectionCount) {
+    std::size_t actualConnectionCount;
+    {
+      std::unique_lock<std::mutex> connectionsAccessScope(this->connectionsAccessMutex);
+      actualConnectionCount = this->connections.size();
+    }
+
+    while(actualConnectionCount < connectionCount) {
+      std::shared_ptr<Connection> newConnection = (
+        this->connectionFactory->Connect(this->connectionProperties)
+      );
+
+      // Small optimization, we don't keep the locked while establishing a connection
+      // so that potential borrowers aren't blocked for the entire duration it takes to
+      // add a new connection to the pool.
+      {
+        std::unique_lock<std::mutex> connectionsAccessScope(this->connectionsAccessMutex);
+        actualConnectionCount = this->connections.size();
+        if(actualConnectionCount < connectionCount) {
+          this->connections.push(std::move(newConnection));
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TDataContext>
+  inline void StandardConnectionPool<TDataContext>::EvictAll() {
+    std::unique_lock<std::mutex> connectionsAccessScope(this->connectionsAccessMutex);
+    while(!this->connections.empty()) {
+      this->connections.pop();
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TDataContext>
+  inline std::shared_ptr<Connection> StandardConnectionPool<TDataContext>::BorrowConnection() {
+    {
+      std::unique_lock<std::mutex> connectionsAccessScope(this->connectionsAccessMutex);
+      if(!this->connections.empty()) {
+        std::shared_ptr<Connection> result = this->connections.front();
+        this->connections.pop();
+        return result;
+      }
+    }
+
+    return this->connectionFactory->Connect(this->connectionProperties);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TDataContext>
+  inline void StandardConnectionPool<TDataContext>::ReturnConnection(
+    const std::shared_ptr<Connection> &connection
+  ) {
+    std::unique_lock<std::mutex> connectionsAccessScope(this->connectionsAccessMutex);
+    if(this->connections.size() < this->maximumRetainedConnectionCount) {
+      this->connections.push(std::move(connection));
+    }
+  }
+  
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Connections
