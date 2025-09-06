@@ -21,13 +21,87 @@ limitations under the License.
 #define NUCLEX_THINORM_SOURCE 1
 
 #include "Nuclex/ThinOrm/Query.h"
+#include "./Query.Implementation.h"
 
 namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  // This file is only here to guarantee that its associated header has no hidden
-  // dependencies and can be included on its own
+  Query::Query(const std::u8string &sqlStatement) :
+    sqlStatement(sqlStatement),
+    stateMutex(),
+    implementation(std::make_unique<Implementation>()) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Query::Query(const Query &other) :
+    sqlStatement(other.sqlStatement),
+    stateMutex(),
+    implementation() {} //std::make_unique<Implementation>(other.implementation)) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Query::Query(Query &&other) :
+    sqlStatement(std::move(other.sqlStatement)),
+    stateMutex(),
+    implementation(std::move(other.implementation)) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Query::~Query() = default;
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const std::u8string &Query::GetSqlStatement() const {
+    return this->sqlStatement;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::size_t Query::CountParameters() const {
+    throw u8"Not implemented yet";
+    //return 0; // TODO This needs basic SQL statement parsing
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const Value &Query::GetParameterValue(std::size_t index) const {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const Value &Query::GetParameterValue(const std::u8string &name) const {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void Query::SetParameterValue(std::size_t index, const Value &value) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void Query::SetParameterValue(const std::u8string &name, const Value &value) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Query &Query::operator =(const Query &other) {
+    this->sqlStatement = other.sqlStatement;
+    //this->implementation = std::make_unique<Implementation>(other.implementation);
+    return *this;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Query &Query::operator =(Query &&other) {
+    this->sqlStatement = std::move(other.sqlStatement);
+    this->implementation = std::move(other.implementation);
+    return *this;
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
