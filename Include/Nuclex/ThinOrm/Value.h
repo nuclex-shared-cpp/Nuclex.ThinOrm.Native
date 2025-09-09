@@ -35,7 +35,12 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>SQL query that can be executed on a database connection</summary>
+  /// <summary>Value returned from a query or provided as parameter to one</summary>
+  /// <remarks>
+  ///   This is in essence a &quot;variant&quot; class which can store one of many different
+  ///   data types. Once a value has been stored, it will retain its type and becomes
+  ///   immutable, but upon reading, it can be coerced into any of the supported types.
+  /// </remarks>
   class NUCLEX_THINORM_TYPE Value {
 
     /// <summary>Initializes a new value as a copy of an existing value</summary>
@@ -75,6 +80,8 @@ namespace Nuclex::ThinOrm {
     /// <summary>Initializes a new value as container of a blob value</summary>
     /// <param name="blobValue">Blob value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::optional<std::vector<std::byte>> blobValue);
+    /// <summary>Frees all memory owned by the value</summary>
+    public: NUCLEX_THINORM_API ~Value();
 
     /// <summary>Retrieves the type of value stored in the value container</summary>
     /// <returns>The type of value currently held in the container</returns>
@@ -230,7 +237,11 @@ namespace Nuclex::ThinOrm {
     /// <summary>Whether the value currently stored is empty (NULL)</summary>
     private: bool empty;
     /// <summary>Actual value as a union</summary>
-    private: union {
+    private: union ValueContainer {
+      /// <summary>Do-nothing constructor, needed because of the non-trivial types</summary>
+      public: ValueContainer();
+      /// <summary>Do-nothing destructor, needed because of the non-trivial types</summary>
+      public: ~ValueContainer();
       /// <summary>Boolean value if the container stores a boolean</summary>
       public: bool BooleanValue;
       /// <summary>8-bit integer value if the container stores an 8-bit integer</summary>

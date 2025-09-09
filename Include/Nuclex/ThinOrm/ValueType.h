@@ -35,7 +35,7 @@ namespace Nuclex::ThinOrm {
     Boolean,
 
     /// <summary>An 8-bit integer with values from 0 to 255 (usually unsigned)</summary>
-    Int8,
+    UInt8,
 
     /// <summary>A 16-bit integer with values from -32768 to 32767</summary>
     Int16,
