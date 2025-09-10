@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
+    </Filter>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{281d21e9-54ae-41ff-b4d5-d1af944e82a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Configuration">
+      <UniqueIdentifier>{b3a3170d-d7d3-4c3b-986a-3e0bd8145554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Connections">
+      <UniqueIdentifier>{0be81110-9ae8-42bf-b9ec-082737c697dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Queries">
+      <UniqueIdentifier>{880bcec9-0f9f-41c2-8722-b33c04b10dd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Configuration">
+      <UniqueIdentifier>{adc4b367-b634-4761-83aa-c846b7086f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Connections">
+      <UniqueIdentifier>{40215190-12bb-4c39-b66f-26653554277e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Mapping">
+      <UniqueIdentifier>{6c9f6c3b-2edf-44e0-8568-cfd8801366ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Plumbing">
+      <UniqueIdentifier>{ffb93fa2-6377-46f2-98ba-4e597459525f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Queries">
+      <UniqueIdentifier>{c7a7874d-0982-4df7-9cb9-9a00ae161076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Errors">
+      <UniqueIdentifier>{d9eae2bb-a098-4d63-9e91-bb8ee5afa156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{357deb57-c960-437e-8249-6a9d6bb9d314}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Config.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Query.Implementation.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Connections\QtSqlConnection.h">
+      <Filter>Source\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Command.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\DataContext.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Decimal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\IsolationLevel.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Query.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Value.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\ValueType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionProperties.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionString.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionUrl.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\WritableConnectionProperties.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Connection.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionFactory.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionPool.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Driver.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\DriverBasedConnectionFactory.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\QtSqlConnectionFactory.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\StandardConnectionPool.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\UniqueConnectionPool.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Mapping\TableMappingSyntax.h">
+      <Filter>Include\Mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Plumbing\Task.h">
+      <Filter>Include\Plumbing</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadValueTypeError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Decimal.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IsolationLevel.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Query.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Query.Implementation.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Value.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ValueType.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\ConnectionProperties.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\ConnectionString.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\ConnectionUrl.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\WritableConnectionProperties.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\Connection.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\ConnectionFactory.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\ConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\Driver.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\DriverBasedConnectionFactory.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSqlConnection.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSqlConnectionFactory.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\StandardConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\UniqueConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\BadValueTypeError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Value.Conversion.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.md" />
+    <None Include="Nuclex.ThinOrm.Native.def">
+      <Filter>Source</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Nuclex.Support.Native.ref" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Copyright.md">
+      <Filter>Documents</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
