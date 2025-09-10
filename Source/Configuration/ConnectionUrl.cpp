@@ -140,6 +140,23 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
+  ConnectionUrl::ConnectionUrl(const ConnectionProperties &other) :
+    driver(other.GetDriver()),
+    hostnameOrPath(other.GetHostnameOrPath()),
+    port(other.GetPort()),
+    user(other.GetUser()),
+    password(other.GetPassword()),
+    databaseName(other.GetDatabaseName()),
+    options() {
+
+    std::vector<std::u8string> names = other.ListOptions();
+    for(const std::u8string& name : names) {
+      this->options[name] = other.GetOption(name).value(); // safe, we query only existing ones
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   ConnectionUrl ConnectionUrl::Parse(const std::u8string &properties) {
     ConnectionUrl result;
 

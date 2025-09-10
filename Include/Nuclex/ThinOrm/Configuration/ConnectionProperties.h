@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 
+#include <vector> // for std::vector<>
 #include <string> // for std::u8string
 #include <cstdint> // for std::uint16_t
 #include <optional> // for std::optional<>
@@ -108,6 +109,10 @@ namespace Nuclex::ThinOrm::Configuration {
     public: virtual std::optional<std::u8string> GetOption(
       const std::u8string &name
     ) const = 0;
+
+    /// <summary>Lists all option names that have been set</summary>
+    /// <returns>A vector containing the names of all options that have been set</returns>
+    public: virtual std::vector<std::u8string> ListOptions() const = 0;
 
   };
 

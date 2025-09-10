@@ -21,7 +21,7 @@ limitations under the License.
 #define NUCLEX_THINORM_CONNECTIONS_STANDARDCONNECTIONPOOL_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
+#include "Nuclex/ThinOrm/Configuration/ConnectionString.h"
 #include "Nuclex/ThinOrm/Connections/UniqueConnectionPool.h"
 #include "Nuclex/ThinOrm/Connections/ConnectionFactory.h"
 
@@ -133,7 +133,7 @@ namespace Nuclex::ThinOrm::Connections {
     /// <summary>Connection factory through which new connections are established</summary>
     private: std::shared_ptr<ConnectionFactory> connectionFactory;
     /// <summary>>Settings to use when establishing a new connection</summary>
-    private: const Configuration::ConnectionProperties connectionProperties;
+    private: Configuration::ConnectionString connectionProperties;
     /// <summary>Mutex that must be held to access the connections</summary>
     private: std::mutex connectionsAccessMutex;
     /// <summary>Maximum number of connections the pool should retain</summary>

@@ -28,6 +28,8 @@ limitations under the License.
   #include <asyncpp/task.h> // for asyncpp::task
 #endif
 
+#include <string> // for std::u8string
+
 namespace Nuclex::ThinOrm::Connections {
 
   // ------------------------------------------------------------------------------------------- //

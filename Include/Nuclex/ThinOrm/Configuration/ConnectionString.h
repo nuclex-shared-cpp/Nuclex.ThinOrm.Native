@@ -76,6 +76,9 @@ namespace Nuclex::ThinOrm::Configuration {
 
     /// <summary>Initializes a new connection string with default settings</summary>
     public: NUCLEX_THINORM_API ConnectionString();
+    /// <summary>Initializes a new connection string copying existing settings</summary>
+    /// <param name="other">Existing settings that will be copied</param>
+    public: NUCLEX_THINORM_API ConnectionString(const ConnectionProperties &other);
     /// <summary>Frees all resources owned by the connection string</summary>
     public: NUCLEX_THINORM_API virtual ~ConnectionString() override = default;
 
@@ -101,9 +104,9 @@ namespace Nuclex::ThinOrm::Configuration {
     }
 
     /// <summary>Sets the driver to use to access the database</summary>
-    /// <param name="driver">The driver that should be used to access the database</param>
-    public: NUCLEX_THINORM_API void SetDriver(const std::u8string &driver) override {
-      this->driver = driver;
+    /// <param name="newDriver">The driver that should be used to access the database</param>
+    public: NUCLEX_THINORM_API void SetDriver(const std::u8string &newDriver) override {
+      this->driver = newDriver;
     }
 
     /// <summary>Retrieves the hostname of the database server or database path</summary>
@@ -120,13 +123,13 @@ namespace Nuclex::ThinOrm::Configuration {
     }
 
     /// <summary>Sets the hostname of the database server to connect to</summary>
-    /// <param name="hostnameOrPath">
+    /// <param name="newHostnameOrPath">
     ///   IP, hostname or single-file database path to use
     /// </param>
     public: NUCLEX_THINORM_API void SetHostnameOrPath(
-      const std::u8string &hostnameOrPath
+      const std::u8string &newHostnameOrPath
     ) override {
-      this->hostnameOrPath = hostnameOrPath;
+      this->hostnameOrPath = newHostnameOrPath;
     }
 
     /// <summary>Retrieves the TCP port to connect to the database server on</summary>
@@ -143,9 +146,9 @@ namespace Nuclex::ThinOrm::Configuration {
     /// <summary>Sets the TCP port on which the database server should be addressed</summary>
     /// <param name="port">TCP port number that should be used when connecting</param>
     public: NUCLEX_THINORM_API void SetPort(
-      const std::optional<std::uint16_t> &port = std::optional<std::uint16_t>()
+      const std::optional<std::uint16_t> &newPort = std::optional<std::uint16_t>()
     ) override {
-      this->port = port;
+      this->port = newPort;
     }
 
     /// <summary>Retrieves the name of the user to identify as when connecting</summary>
@@ -157,9 +160,9 @@ namespace Nuclex::ThinOrm::Configuration {
     /// <summary>Sets the name of the user to identify as when connecting</summary>
     /// <param name="user">User to identify as when connecting to the database server</param>
     public: NUCLEX_THINORM_API void SetUser(
-      const std::optional<std::u8string> &user = std::optional<std::u8string>()
+      const std::optional<std::u8string> &newUser = std::optional<std::u8string>()
     ) override {
-      this->user = user;
+      this->user = newUser;
     }
 
     /// <summary>Retrieves the password to use when connecting to the database</summary>
@@ -171,9 +174,9 @@ namespace Nuclex::ThinOrm::Configuration {
     /// <summary>Sets the password to use when connecting to the database</summary>
     /// <param name="password">Password to use when connecting to the database</param>
     public: NUCLEX_THINORM_API void SetPassword(
-      const std::optional<std::u8string> &password = std::optional<std::u8string>()
+      const std::optional<std::u8string> &newPassword = std::optional<std::u8string>()
     ) override {
-      this->password = password;
+      this->password = newPassword;
     }
 
     /// <summary>
@@ -185,11 +188,11 @@ namespace Nuclex::ThinOrm::Configuration {
     }
 
     /// <summary>Sets the name of the database to open upon connecting</summary>
-    /// <param name="databaseName">Database to open when connecting</param>
+    /// <param name="newDatabaseName">Database to open when connecting</param>
     public: NUCLEX_THINORM_API void SetDatabaseName(
-      const std::optional<std::u8string> &databaseName = std::optional<std::u8string>()
+      const std::optional<std::u8string> &newDatabaseName = std::optional<std::u8string>()
     ) override {
-      this->databaseName = databaseName;
+      this->databaseName = newDatabaseName;
     }
 
     /// <summary>Retrieves the value of an arbitrary option</summary>
@@ -201,13 +204,24 @@ namespace Nuclex::ThinOrm::Configuration {
 
     /// <summary>Sets the value of an arbitrary option or unsets the option</summary>
     /// <parma name="name">Name of the option whose value will be changed</param>
-    /// <param name=:value">
+    /// <param name="newValue">
     ///   Value that will be assigned to the option, or nothing to unset the option
     /// </param>
     public: NUCLEX_THINORM_API void SetOption(
       const std::u8string &name,
-      const std::optional<std::u8string> &value = std::optional<std::u8string>()
+      const std::optional<std::u8string> &newValue = std::optional<std::u8string>()
     ) override;
+
+    /// <summary>Lists all option names that have been set</summary>
+    /// <returns>A vector containing the names of all options that have been set</returns>
+    public: NUCLEX_THINORM_API std::vector<std::u8string> ListOptions() const override {
+      std::vector<std::u8string> names;
+      names.reserve(this->options.size());
+      for(const std::pair<const std::u8string, std::u8string> &entry : this->options) {
+        names.push_back(entry.first);
+      }
+      return names;
+    }
 
     /// <summary>Maps key names to key values for the arbitrary options</summary>
     private: typedef std::map<
