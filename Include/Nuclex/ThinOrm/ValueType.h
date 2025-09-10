@@ -74,6 +74,28 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+  /// <summary>
+  ///   Returns a string representation of a member of the <see cref="ValueType" /> enumeration
+  /// </summary>
+  /// <param name="valueType">Value type for which a string will be returned</param>
+  /// <returns>A string representaiton of the provided value type</returns>
+  NUCLEX_THINORM_API const std::u8string &StringFromValueType(ValueType valueType) noexcept;
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>
+  ///   Returns the <see cef="ValueTYpe" /> represented by the provided string which
+  ///   must match the strings returned from the <see cref="StringFromValueType" /> method
+  /// </summary>
+  /// <param name="valueTypeString">
+  ///   Value type represented as a string matching the strings returned by
+  ///   the <see cref="StringFromValueType" /> method
+  /// </param>
+  /// <returns>The value type matching the specified string</returns>
+  NUCLEX_THINORM_API ValueType ValueTypeFromString(const std::u8string &valueTypeString) noexcept;
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // namespace Nuclex::ThinOrm
 
 #endif // NUCLEX_THINORM_VALUETYPE_H
