@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/ValueType.h"
+#include "Nuclex/ThinOrm/DateTime.h"
 #include "Nuclex/ThinOrm/Decimal.h"
 
 #include <optional> // for std::optional
@@ -259,7 +260,7 @@ namespace Nuclex::ThinOrm {
       /// <summary>UTF-8 string value if the container stores a UTF-8 string</summary>
       public: std::u8string String;
       /// <summary>Date and time value if the container stores a date and/or time</summary>
-      public: std::tm DateTime;
+      public: DateTime DateTimeValue;
       /// <summary>Blob value if the container stores a blob</summary>
       public: std::vector<std::byte> Blob;
     } value;

@@ -43,25 +43,36 @@ namespace Nuclex::ThinOrm {
     /// <param name="value">Integer whose value the decimal will assume</param>
     public: NUCLEX_THINORM_API Decimal(int value);
     /// <summary>Initializes a new decimal from the specified integer</summary>
+    /// <param name="value">Integer whose value the decimal will assume</param>
+    public: NUCLEX_THINORM_API Decimal(std::int64_t value);
+    /// <summary>Initializes a new decimal from the specified integer</summary>
     /// <param name="value">Integer whose value the decimal will be based on</param>
-    /// <param name="decimalPlaces">
+    /// <param name="decimalDigitCount">
     ///   Number of decimal places to move the integer to the right (i.e. if you
     ///   specify 3 here, the integer would be treated as if it was divided by 10
     ///   three times)
     /// </param>
-    public: NUCLEX_THINORM_API Decimal(int value, int decimalPlaces);
+    public: NUCLEX_THINORM_API Decimal(int value, int decimalDigitCount);
+    /// <summary>Initializes a new decimal from the specified integer</summary>
+    /// <param name="value">Integer whose value the decimal will be based on</param>
+    /// <param name="decimalDigitCount">
+    ///   Number of decimal places to move the integer to the right (i.e. if you
+    ///   specify 3 here, the integer would be treated as if it was divided by 10
+    ///   three times)
+    /// </param>
+    public: NUCLEX_THINORM_API Decimal(std::int64_t value, int decimalDigitCount);
     /// <summary>Initializes a new decimal from the specified 32-bit float</summary>
     /// <param name="value">Floating point value the decimal will be set to</param>
-    /// <param name="decimalPlaces">Number of decimal places to preserve in the float</param>
-    public: NUCLEX_THINORM_API Decimal(float value, int decimalPlaces = 3);
+    /// <param name="decimalDigitCount">Number of decimal places to preserve in the float</param>
+    public: NUCLEX_THINORM_API Decimal(float value, int decimalDigitCount = 3);
     /// <summary>Initializes a new decimal from the specified 64-bit float</summary>
     /// <param name="value">Floating point value the decimal will be set to</param>
-    /// <param name="decimalPlaces">Number of decimal places to preserve in the float</param>
-    public: NUCLEX_THINORM_API Decimal(double value, int decimalPlaces = 3);
+    /// <param name="decimalDigitCount">Number of decimal places to preserve in the float</param>
+    public: NUCLEX_THINORM_API Decimal(double value, int decimalDigitCount = 3);
 
     /// <summary>Checks whether the decimal has the value 0</summary>
     /// <returns>True if the decimal contains the value 0</returns>
-    public: NUCLEX_THINORM_API bool IsZero() const noexcept;
+    public: NUCLEX_THINORM_API inline bool IsZero() const noexcept;
 
     /// <summary>Returns the value of the decimal rounded to the nearest integer</summary>
     /// <returns>True decimal rounded to the nearest full integer</returns>
@@ -110,7 +121,20 @@ namespace Nuclex::ThinOrm {
     /// <returns>The stored value as a UTF-8 string</returns>
     public: NUCLEX_THINORM_API explicit operator std::u8string() const;
 
-  }; // TODO Implement decimal values
+    /// <summary>The lower 64 bits of the 128-bit fixed point value</summary>
+    private: std::uint64_t lowInt64;
+    /// <summary>The higher 64 bits of the 128-bit fixed point value</summary>
+    private: std::int64_t highInt64;
+    /// <summary>Number of decimal places that apply to the stored value</summary>
+    private: std::size_t decimalDigitCount;
+
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline bool Decimal::IsZero() const noexcept {
+    return (this->lowInt64 == 0) && (this->highInt64 == 0);
+  }
 
   // ------------------------------------------------------------------------------------------- //
 

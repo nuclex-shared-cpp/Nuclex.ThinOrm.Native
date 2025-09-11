@@ -72,7 +72,9 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date:
         case ValueType::Time:
-        case ValueType::DateTime: { this->value.DateTime = other.value.DateTime; break; }
+        case ValueType::DateTime: {
+          new(&this->value.DateTimeValue) DateTime(other.value.DateTimeValue); break;
+        }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(other.value.Blob); break;
         }
@@ -105,7 +107,9 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date:
         case ValueType::Time:
-        case ValueType::DateTime: { this->value.DateTime = other.value.DateTime; break; }
+        case ValueType::DateTime: {
+          new(&this->value.DateTimeValue) DateTime(std::move(other.value.DateTimeValue)); break;
+        }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(std::move(other.value.Blob)); break;
         }
@@ -290,7 +294,9 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date:
         case ValueType::Time:
-        case ValueType::DateTime: { this->value.DateTime = other.value.DateTime; break; }
+        case ValueType::DateTime: {
+          new(&this->value.DateTimeValue) DateTime(other.value.DateTimeValue); break;
+        }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(other.value.Blob); break;
         }
@@ -331,7 +337,9 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date:
         case ValueType::Time:
-        case ValueType::DateTime: { this->value.DateTime = other.value.DateTime; break; }
+        case ValueType::DateTime: {
+          new(&this->value.DateTimeValue) DateTime(std::move(other.value.DateTimeValue)); break;
+        }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(std::move(other.value.Blob)); break;
         }

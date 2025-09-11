@@ -29,6 +29,7 @@ limitations under the License.
 
 #include <ctime> // for std::gmtime()
 #include <cassert> // for assert()
+#include <algorithm> // for std::copy_n()
 
 // Turns a C++20 UTF-8 char8_t array (u8"") into a plain char array
 //
@@ -59,8 +60,24 @@ namespace {
   /// <summary>String for the word 'active' to indicate a boolean value is true</summary>
   const std::u8string activeBooleanLiteral(u8"active", 6);
 
+  /// <summary>String for the word 'false' to indicate a boolean value is false</summary>
+  const std::u8string falseBooleanLiteral(u8"false", 5);
+
+  /// <summary>Number of DateTime ticks on January, 1st in 1970</summary>
+  const std::int64_t TicksOnJanuary1st1970 = 621'355'968'000'000'000ll;
+
+  const std::vector<std::byte> trueBlob(1, std::byte(1));
+  const std::vector<std::byte> falseBlob(1, std::byte(0));
+
   // ------------------------------------------------------------------------------------------- //
 
+  /// <summary>Reads an integer value out of a binary blob</summary>
+  /// <param name="blob">Binary blob containing the data the integer will be read from</param>
+  /// <returns>The integer read from the blob</returns>
+  /// <remarks>
+  ///   This matches the behavior of most databases where coercing blob data into a type
+  ///   that is longer than the blob gives the result as if the blob was zero-padded.
+  /// </remarks>
   template<typename TInteger>
   TInteger readIntegerFromBlob(const std::vector<std::byte> &blob) {
     std::vector<std::byte>::size_type size = blob.size();
@@ -111,6 +128,21 @@ namespace {
     return result;
   }
 
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Reads an integer value out of a binary blob</summary>
+  /// <param name="blob">Binary blob containing the data the integer will be read from</param>
+  /// <returns>The integer read from the blob</returns>
+  /// <remarks>
+  ///   This matches the behavior of most databases where coercing blob data into a type
+  ///   that is longer than the blob gives the result as if the blob was zero-padded.
+  /// </remarks>
+  template<typename TInteger>
+  void writeIntegerToBlob(std::vector<std::byte> &blob, TInteger value) {
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // anonymous namespace
 
 namespace Nuclex::ThinOrm {
@@ -142,28 +174,13 @@ namespace Nuclex::ThinOrm {
           );
         }
         case ValueType::Date: {
-          return (
-            (this->value.DateTime.tm_year != 0) ||
-            (this->value.DateTime.tm_mon != 0) ||
-            (this->value.DateTime.tm_yday != 0)
-          );
+          return (this->value.DateTimeValue.GetDateOnly().GetTicks() != 0);
         }
         case ValueType::Time: {
-          return (
-            (this->value.DateTime.tm_hour != 0) ||
-            (this->value.DateTime.tm_min != 0) ||
-            (this->value.DateTime.tm_sec != 0)
-          );
+          return (this->value.DateTimeValue.GetTimeOnly().GetTicks() != 0);
         }
         case ValueType::DateTime: {
-          return (
-            (this->value.DateTime.tm_year != 0) ||
-            (this->value.DateTime.tm_mon != 0) ||
-            (this->value.DateTime.tm_yday != 0) ||
-            (this->value.DateTime.tm_hour != 0) ||
-            (this->value.DateTime.tm_min != 0) ||
-            (this->value.DateTime.tm_sec != 0)
-          );
+          return this->value.DateTimeValue.GetTicks() != 0;
         }
         case ValueType::Blob: {
           return !this->value.Blob.empty();
@@ -206,20 +223,20 @@ namespace Nuclex::ThinOrm {
         case ValueType::String: {
           return Nuclex::Support::Text::lexical_cast<std::uint8_t>(this->value.String);
         }
-        case ValueType::Date:
-        case ValueType::DateTime: {
-          // For the date-only type, the hours, minutes and seconds should be set to zero,
-          // so we'd obtain the seconds since the UNIX epoch in multiples of 86'400 (= days)
-          std::tm dateTimeCopy = this->value.DateTime;
-          std::time_t secondsSinceUnixEpoch = std::mktime(&dateTimeCopy);
-          return static_cast<std::uint8_t>(secondsSinceUnixEpoch);
+        case ValueType::Date: {
+          return static_cast<std::uint8_t>(
+            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+          );
         }
         case ValueType::Time: {
-          // If a time is stored, year, month and day should be set to zero,
-          // so we'd obtain the seconds since midnight.
-          std::tm dateTimeCopy = this->value.DateTime;
-          std::time_t secondsSinceUnixEpoch = std::mktime(&dateTimeCopy);
-          return static_cast<std::uint8_t>(secondsSinceUnixEpoch);
+          return static_cast<std::uint8_t>(
+            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::DateTime: {
+          return static_cast<std::uint8_t>(
+            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+          );
         }
         case ValueType::Blob: {
           if(this->value.Blob.empty()) {
@@ -230,7 +247,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return false;
+          return 0;
         }
       }
     }
@@ -266,27 +283,402 @@ namespace Nuclex::ThinOrm {
         case ValueType::String: {
           return Nuclex::Support::Text::lexical_cast<std::int16_t>(this->value.String);
         }
-        case ValueType::Date:
-        case ValueType::DateTime: {
-          // For the date-only type, the hours, minutes and seconds should be set to zero,
-          // so we'd obtain the seconds since the UNIX epoch in multiples of 86'400 (= days)
-          std::tm dateTimeCopy = this->value.DateTime;
-          std::time_t secondsSinceUnixEpoch = std::mktime(&dateTimeCopy);
-          return static_cast<std::int16_t>(secondsSinceUnixEpoch);
+        case ValueType::Date: {
+          return static_cast<std::int16_t>(
+            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+          );
         }
         case ValueType::Time: {
-          // If a time is stored, year, month and day should be set to zero,
-          // so we'd obtain the seconds since midnight.
-          std::tm dateTimeCopy = this->value.DateTime;
-          std::time_t secondsSinceUnixEpoch = std::mktime(&dateTimeCopy);
-          return static_cast<std::int16_t>(secondsSinceUnixEpoch);
+          return static_cast<std::int16_t>(
+            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::DateTime: {
+          return static_cast<std::int16_t>(
+            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+          );
         }
         case ValueType::Blob: {
           return readIntegerFromBlob<std::int16_t>(this->value.Blob);
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return false;
+          return 0;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<std::int32_t> Value::ToInt32() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<std::int32_t>();
+    } else {
+      switch(this->type) {
+        case ValueType::Boolean: { return this->value.Boolean ? 1 : 0; }
+        case ValueType::UInt8: { return static_cast<std::int32_t>(this->value.Uint8); }
+        case ValueType::Int16: { return static_cast<std::int32_t>(this->value.Int16); }
+        case ValueType::Int32: { return this->value.Int32; }
+        case ValueType::Int64: { return static_cast<std::int32_t>(this->value.Int64); }
+        case ValueType::Decimal: {
+          return static_cast<std::int32_t>(
+            this->value.DecimalValue.RoundToInt()
+          );
+        }
+        case ValueType::Float: {
+          return static_cast<std::int32_t>(
+            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Float)
+          );
+        }
+        case ValueType::Double: {
+          return static_cast<std::int32_t>(
+            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Double)
+          );
+        }
+        case ValueType::String: {
+          return Nuclex::Support::Text::lexical_cast<std::int32_t>(this->value.String);
+        }
+        case ValueType::Date: {
+          return static_cast<std::int32_t>(
+            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::Time: {
+          return static_cast<std::int32_t>(
+            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::DateTime: {
+          return static_cast<std::int32_t>(
+            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::Blob: {
+          return readIntegerFromBlob<std::int32_t>(this->value.Blob);
+        }
+        default: {
+          assert(false && u8"Unsupported value type");
+          return 0;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<std::int64_t> Value::ToInt64() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<std::int64_t>();
+    } else {
+      switch(this->type) {
+        case ValueType::Boolean: { return this->value.Boolean ? 1 : 0; }
+        case ValueType::UInt8: { return static_cast<std::int64_t>(this->value.Uint8); }
+        case ValueType::Int16: { return static_cast<std::int64_t>(this->value.Int16); }
+        case ValueType::Int32: { return static_cast<std::int64_t>(this->value.Int32); }
+        case ValueType::Int64: { return this->value.Int64; }
+        case ValueType::Decimal: {
+          return static_cast<std::int64_t>(
+            this->value.DecimalValue.RoundToInt() // TODO: Maybe add ToInt64()?
+          );
+        }
+        case ValueType::Float: {
+          return static_cast<std::int64_t>(
+            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Float)
+          );
+        }
+        case ValueType::Double: {
+          return static_cast<std::int64_t>(
+            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Double)
+          );
+        }
+        case ValueType::String: {
+          return Nuclex::Support::Text::lexical_cast<std::int64_t>(this->value.String);
+        }
+        case ValueType::Date: {
+          return static_cast<std::int64_t>(
+            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::Time: {
+          return static_cast<std::int64_t>(
+            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::DateTime: {
+          return static_cast<std::int64_t>(
+            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::Blob: {
+          return readIntegerFromBlob<std::int64_t>(this->value.Blob);
+        }
+        default: {
+          assert(false && u8"Unsupported value type");
+          return 0;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<Decimal> Value::ToDecimal() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<Decimal>();
+    } else {
+      switch(this->type) {
+        case ValueType::Boolean: { return this->value.Boolean ? Decimal(1) : Decimal(0); }
+        case ValueType::UInt8: { return Decimal(this->value.Uint8); }
+        case ValueType::Int16: { return Decimal(this->value.Int16); }
+        case ValueType::Int32: { return Decimal(this->value.Int32); }
+        case ValueType::Int64: { return Decimal(this->value.Int64); }
+        case ValueType::Decimal: { return this->value.DecimalValue; }
+        case ValueType::Float: { return Decimal(this->value.Float); }
+        case ValueType::Double: { return Decimal(this->value.Double); }
+        case ValueType::String: {
+          return Decimal(0); // TODO: Parse 128-bit decimals from strings :-O
+        }
+        case ValueType::Date: {
+          return Decimal(
+            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::Time: {
+          return Decimal(
+            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+          ); // TOOD: Add fractional seconds as decimal places
+        }
+        case ValueType::DateTime: {
+          return Decimal(
+            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+          ); // TODO: Add fractional seconds as decimal places
+        }
+        case ValueType::Blob: {
+          // TODO: Implement reading 128-bit decimals from blobs
+          return Decimal(readIntegerFromBlob<std::int64_t>(this->value.Blob));
+        }
+        default: {
+          assert(false && u8"Unsupported value type");
+          return 0;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<float> Value::ToFloat() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<float>();
+    } else {
+      switch(this->type) {
+        case ValueType::Boolean: { return this->value.Boolean ? 1.0f : 0.0f; }
+        case ValueType::UInt8: { return static_cast<float>(this->value.Uint8); }
+        case ValueType::Int16: { return static_cast<float>(this->value.Int16); }
+        case ValueType::Int32: { return static_cast<float>(this->value.Int32); }
+        case ValueType::Int64: { return static_cast<float>(this->value.Int64); }
+        case ValueType::Decimal: { return this->value.DecimalValue.ToFloat(); }
+        case ValueType::Float: { return this->value.Float; }
+        case ValueType::Double: { return static_cast<float>(this->value.Double); }
+        case ValueType::String: {
+          return Nuclex::Support::Text::lexical_cast<float>(this->value.String);
+        }
+        case ValueType::Date: {
+          return static_cast<float>(
+            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::Time: {
+          return static_cast<float>(
+            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+          ) + this->value.DateTimeValue.GetSecondFraction();
+        }
+        case ValueType::DateTime: {
+          return static_cast<float>(
+            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+          ) + this->value.DateTimeValue.GetSecondFraction();
+        }
+        case ValueType::Blob: {
+          // TODO: Implement readFloatFromBlob()
+          return readIntegerFromBlob<std::int64_t>(this->value.Blob);
+        }
+        default: {
+          assert(false && u8"Unsupported value type");
+          return 0.0f;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<double> Value::ToDouble() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<double>();
+    } else {
+      switch(this->type) {
+        case ValueType::Boolean: { return this->value.Boolean ? 1.0 : 0.0; }
+        case ValueType::UInt8: { return static_cast<double>(this->value.Uint8); }
+        case ValueType::Int16: { return static_cast<double>(this->value.Int16); }
+        case ValueType::Int32: { return static_cast<double>(this->value.Int32); }
+        case ValueType::Int64: { return static_cast<double>(this->value.Int64); }
+        case ValueType::Decimal: { return this->value.DecimalValue.ToFloat(); }
+        case ValueType::Float: { static_cast<double>(this->value.Float); }
+        case ValueType::Double: { return this->value.Double; }
+        case ValueType::String: {
+          return Nuclex::Support::Text::lexical_cast<double>(this->value.String);
+        }
+        case ValueType::Date: {
+          return static_cast<double>(
+            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+          );
+        }
+        case ValueType::Time: {
+          return static_cast<double>(
+            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+          ) + this->value.DateTimeValue.GetSecondFraction();
+        }
+        case ValueType::DateTime: {
+          return static_cast<double>(
+            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+          ) + this->value.DateTimeValue.GetSecondFraction();
+        }
+        case ValueType::Blob: {
+          // TODO: Implement readFloatFromBlob()
+          return readIntegerFromBlob<std::int64_t>(this->value.Blob);
+        }
+        default: {
+          assert(false && u8"Unsupported value type");
+          return 0.0;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<std::u8string> Value::ToString() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<std::u8string>();
+    } else {
+      switch(this->type) {
+        case ValueType::Boolean: {
+          return this->value.Boolean ? trueBooleanLiteral : falseBooleanLiteral;
+        }
+        case ValueType::UInt8: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Uint8);
+        }
+        case ValueType::Int16: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Int16);
+        }
+        case ValueType::Int32: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Int32);
+        }
+        case ValueType::Int64: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Int64);
+        }
+        case ValueType::Decimal: { return this->value.DecimalValue.ToString(); }
+        case ValueType::Float: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Float);
+        }
+        case ValueType::Double: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Double);
+        }
+        case ValueType::String: { return this->value.String; }
+        case ValueType::Date: {
+          return this->value.DateTimeValue.GetDateOnly().ToIso8601DateTime();
+        }
+        case ValueType::Time: {
+          return this->value.DateTimeValue.ToIso8601Time();
+        }
+        case ValueType::DateTime: {
+          return this->value.DateTimeValue.ToIso8601DateTime();
+        }
+        case ValueType::Blob: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Blob.size());
+        }
+        default: {
+          assert(false && u8"Unsupported value type");
+          return std::u8string();
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<std::vector<std::byte>> Value::ToBlob() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<std::vector<std::byte>>();
+    } else {
+      std::vector<std::byte> result;
+      switch(this->type) {
+        case ValueType::Boolean: {
+          result.reserve(1);
+          result.push_back(std::byte(this->value.Boolean ? 1 : 0));
+          break;
+        }
+        case ValueType::UInt8: {
+          result.reserve(1);
+          writeIntegerToBlob(result, this->value.Uint8);
+          break;
+        }
+        case ValueType::Int16: {
+          result.reserve(2);
+          writeIntegerToBlob(result, this->value.Int16);
+          break;
+        }
+        case ValueType::Int32: {
+          result.reserve(4);
+          writeIntegerToBlob(result, this->value.Int32);
+          break;
+        }
+        case ValueType::Int64: {
+          result.reserve(8);
+          writeIntegerToBlob(result, this->value.Int64);
+          break;
+        }
+        case ValueType::Decimal: {
+          // TODO: Implement 'Decimal' to blob conversion
+          break;
+        }
+        case ValueType::Float: {
+          // TODO: Implement float to blob conversion
+          break;
+        }
+        case ValueType::Double: {
+          // TODO: Implement double to blob conversion
+          break;
+        }
+        case ValueType::String: {
+          result.resize(this->value.String.size());
+          std::copy_n(
+            this->value.String.data(),
+            this->value.String.size(),
+            reinterpret_cast<char8_t *>(result.data())
+          );
+          break;
+        }
+        case ValueType::Date: {
+          result.reserve(8);
+          writeIntegerToBlob(result, this->value.DateTimeValue.GetDateOnly().GetTicks());
+          break;
+        }
+        case ValueType::Time: {
+          result.reserve(8);
+          writeIntegerToBlob(result, this->value.DateTimeValue.GetTimeOnly().GetTicks());
+        }
+        case ValueType::DateTime: {
+          result.reserve(8);
+          writeIntegerToBlob(result, this->value.DateTimeValue.GetTicks());
+        }
+        case ValueType::Blob: {
+          return this->value.Blob;
+        }
+        default: {
+          assert(false && u8"Unsupported value type");
+          return std::vector<std::byte>();
         }
       }
     }
