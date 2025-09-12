@@ -20,11 +20,15 @@ limitations under the License.
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/ThinOrm/IsolationLevel.h"
+#include "Nuclex/ThinOrm/Transactions/IsolationLevel.h"
 
-namespace Nuclex { namespace ThinOrm {
+namespace Nuclex::ThinOrm::Transactions {
 
   // ------------------------------------------------------------------------------------------- //
+
+  // This file is only here to guarantee that its associated header has no hidden
+  // dependencies and can be included on its own
+
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::ThinOrm
+} // namespace Nuclex::ThinOrm::Transactions

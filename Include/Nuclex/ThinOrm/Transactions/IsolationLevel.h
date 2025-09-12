@@ -17,12 +17,12 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_ISOLATIONLEVEL_H
-#define NUCLEX_THINORM_ISOLATIONLEVEL_H
+#ifndef NUCLEX_THINORM_TRANSACTIONS_ISOLATIONLEVEL_H
+#define NUCLEX_THINORM_TRANSACTIONS_ISOLATIONLEVEL_H
 
 #include "Nuclex/ThinOrm/Config.h"
 
-namespace Nuclex { namespace ThinOrm {
+namespace Nuclex::ThinOrm::Transactions {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -126,6 +126,6 @@ namespace Nuclex { namespace ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::ThinOrm
+} // namespace Nuclex::ThinOrm::Transactions
 
-#endif // NUCLEX_THINORM_ISOLATIONLEVEL_H
+#endif // NUCLEX_THINORM_TRANSACTIONS_ISOLATIONLEVEL_H
