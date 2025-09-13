@@ -77,7 +77,7 @@ namespace Nuclex::ThinOrm {
     Query query(queryString);
 
     const std::vector<QueryParameterView> &parameters = query.GetParameterInfo();
-    EXPECT_EQ(parameters.size(), 1U);
+    ASSERT_EQ(parameters.size(), 1U);
     EXPECT_TRUE(parameters.at(0).Name == std::u8string(u8"userName"));
   }
 
@@ -102,6 +102,19 @@ namespace Nuclex::ThinOrm {
       Value parameterValue = query.GetParameterValue(u8"userName"),
       Nuclex::ThinOrm::Errors::UnassignedParameterError
     );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(QueryTest, CurlyBracesCanBeEscaped) {
+    std::u8string queryString(
+      u8"SELECT * FROM users WHERE age >= {minimumAge} AND name='{{curly}}'", 66
+    );
+    Query query(queryString);
+
+    const std::vector<QueryParameterView> &parameters = query.GetParameterInfo();
+    ASSERT_EQ(parameters.size(), 1U);
+    EXPECT_TRUE(parameters.at(0).Name == std::u8string(u8"minimumAge"));
   }
 
   // ------------------------------------------------------------------------------------------- //
