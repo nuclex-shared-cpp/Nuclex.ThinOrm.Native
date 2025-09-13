@@ -21,9 +21,9 @@ limitations under the License.
 #define NUCLEX_THINORM_QUERY_H
 
 #include "Nuclex/ThinOrm/Config.h"
+#include "Nuclex/ThinOrm/QueryParameterView.h"
 
 #include <string> // for std::u8string
-#include <mutex> // for std::mutex
 #include <memory> // for std::unique_ptr
 
 namespace Nuclex::ThinOrm {
@@ -64,6 +64,40 @@ namespace Nuclex::ThinOrm {
     /// <returns>The number of parameters in the SQL statement</returns>
     public: NUCLEX_THINORM_API std::size_t CountParameters() const;
 
+    /// <summary>
+    ///   Retrieves the names and locations of parameter placeholders in the SQL statement
+    /// </summary>
+    /// <returns>
+    ///   A list of the name and location of each parameter in the SQL statement
+    /// </returns>
+    /// <remarks>
+    ///   This is typically not required to run queryies, but it is used by implementations
+    ///   of the <see cref="Connection" /> class to preprocess the query and transform
+    ///   the query's generic parameter placeholders into the notation expected by
+    ///   the respective database engine.
+    /// </remarks>
+    public: const std::vector<QueryParameterView> &GetParameterInfo() const;
+
+#if 0 // IDs could unexpectedly recycle when another Query gets the same memory address :-()
+    /// <summary>Unique value that remains the same between cloned query instances</summary>
+    /// <remarks>
+    ///   <para>
+    ///     When a <see cref="Query" /> is constructed, its SQL statement is set it stone.
+    ///     That allows <see cref="Connection" /> implementations for different database
+    ///     engines to cache their &quot;materialization&quot; of the query which will speed
+    ///     up future executions of the same query.
+    ///   </para>
+    ///   <para>
+    ///     So even when you use the copy constructor or assignment operator to clone queries,
+    ///     the &quot;materialization&quot; of the SQL statement for the database engine stays
+    ///     the same. This immutable ID can be used to identify &quot;Queries&quot; that have
+    ///     identical SQL statements and thus allow for quick and efficient caching of their
+    ///     &quot;materialization&quot;.
+    ///   </para>
+    /// </remarks>
+    public: NUCLEX_THINORM_API inline std::uintptr_t GetImmutableId() const;
+#endif
+
     /// <summary>Retrieves the value assigned to a parameter by index</summary>
     /// <param name="index">Zero-based index of the parameter whose value to fetch</param>
     /// <returns>The current value of the parameter with the specified index</returns>
@@ -98,20 +132,24 @@ namespace Nuclex::ThinOrm {
     /// <returns>This query</returns>
     public: NUCLEX_THINORM_API Query &operator =(Query &&other);
 
-    // TODO: Expose protected methods to allow connections to store connection-specific blobs
-
-    /// <summary>Private implementation details</summary>
+    /// <summary>The part of the query that remains the same when the query is copied</summary>
+    private: class ImmutableState;
+    /// <summary>The part of the query that can change (i.e. basic pImpl idiom)</summary>
     private: class Implementation;
 
-    /// <summary>SQL statement the query will execute</summary>
-    private: std::u8string sqlStatement;
-    /// <summary>Mutex to synchronize state (parameters + prepared statement) updates</summary>
-    private: std::mutex stateMutex;
-    /// <summary>Private implementation details</summary>
+    /// <summary>Unchanging part of the query that is cached for multiple executions</summary>
+    private: std::shared_ptr<const ImmutableState> immutableState;
+    /// <summary>Transient state, including parameters, belonging only to one query</summary>
     private: std::unique_ptr<Implementation> implementation;
 
   };
 
+  // ------------------------------------------------------------------------------------------- //
+#if 0 // see comment in class, this design is dangerous
+  inline std::uintptr_t Query::GetImmutableId() const {
+    return reinterpret_cast<std::uintptr_t>(this->immutableState.get());
+  }
+#endif
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm

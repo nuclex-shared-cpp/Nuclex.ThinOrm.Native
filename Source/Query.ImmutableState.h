@@ -17,43 +17,37 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_QUERY_IMPLEMENTATION_H
-#define NUCLEX_THINORM_QUERY_IMPLEMENTATION_H
+#ifndef NUCLEX_THINORM_QUERY_IMMUTABLESTATE_H
+#define NUCLEX_THINORM_QUERY_IMMUTABLESTATE_H
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Query.h"
-#include "Nuclex/ThinOrm/Value.h"
 
 #include <unordered_set>
-#include <unordered_map>
-#include <mutex> // for std::mutex
 
 namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Private implementation of the Query class</summary>
-  class Query::Implementation {
+  class Query::ImmutableState {
 
     /// <summary>Initializes the implementation details for a query</summary>
-    public: Implementation();
+    public: ImmutableState();
     /// <summary>Initializes the implementation details for a query</summary>
-    public: Implementation(const Implementation &other);
+    public: ImmutableState(const ImmutableState &other);
     /// <summary>Initializes the implementation details for a query</summary>
-    public: Implementation(Implementation &&other);
-
+    public: ImmutableState(ImmutableState &&other);
     /// <summary>Frees all resources owned by the implementation details</summary>
-    public: ~Implementation();
+    public: ~ImmutableState();
 
+    /// <summary>
     private: typedef std::unordered_set<std::u8string> ParameterSet;
-    private: typedef std::unordered_map<std::u8string, Value> ParameterValueMap;
 
-    /// <summary>Mutex to synchronize state (parameters + prepared statement) updates</summary>
-    private: std::mutex stateMutex;
-
+    /// <summary>SQL statement the query will execute</summary>
+    private: std::u8string sqlStatement;
     /// <summary>Parameters the query expects to be filled</summary>
     private: ParameterSet requiredParameters;
-    private: ParameterValueMap parameterValues;
 
   };
 
@@ -61,4 +55,4 @@ namespace Nuclex::ThinOrm {
 
 } // namespace Nuclex::ThinOrm
 
-#endif // NUCLEX_THINORM_QUERY_IMPLEMENTATION_H
+#endif // NUCLEX_THINORM_QUERY_IMMUTABLESTATE_H
