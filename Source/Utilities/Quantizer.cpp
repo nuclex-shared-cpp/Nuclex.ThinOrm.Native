@@ -1,7 +1,7 @@
 #pragma region Apache License 2.0
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2025 Markus Ewald / Nuclex Development Labs
+Copyright (C) 2002-2024 Markus Ewald / Nuclex Development Labs
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,22 +20,15 @@ limitations under the License.
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_THINORM_SOURCE 1
 
-#include <gtest/gtest.h>
+#include "./Quantizer.h"
 
-namespace {
-
-  // ------------------------------------------------------------------------------------------- //
-  // ------------------------------------------------------------------------------------------- //
-
-} // anonymous namespace
-
-namespace Nuclex { namespace ThinOrm {
+namespace Nuclex::ThinOrm::Utilities {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(SqlCommandTest, HasDefaultConstructor) {
-  }
+  // This file is only here to guarantee that its associated header has no hidden
+  // dependencies and can be included on its own
 
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::ThinOrm
+} // namespace Nuclex::ThinOrm::Utilities

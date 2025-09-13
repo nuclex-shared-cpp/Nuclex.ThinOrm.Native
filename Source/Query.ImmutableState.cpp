@@ -68,7 +68,7 @@ namespace {
         // curly braces for parameter names is simply not allowed.
         current.Length = index - current.StartIndex + 1;
         current.Name = std::u8string_view(
-          sqlStatement.data() + current.StartIndex + 1, index -1
+          sqlStatement.data() + current.StartIndex + 1, current.Length - 2
         );
         result.push_back(current);
 

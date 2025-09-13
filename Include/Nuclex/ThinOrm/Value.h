@@ -50,34 +50,64 @@ namespace Nuclex::ThinOrm {
 
     /// <summary>Initializes a new value as container of a boolean value</summary>
     /// <param name="booleanValue">Boolean value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<bool> booleanValue) noexcept;
+    public: NUCLEX_THINORM_API Value(bool booleanValue) noexcept;
     /// <summary>Initializes a new value as container of an 8-bit integer value</summary>
     /// <param name="uint8Value">8-bit integer value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<std::uint8_t> uint8Value) noexcept;
+    public: NUCLEX_THINORM_API Value(std::uint8_t uint8Value) noexcept;
     /// <summary>Initializes a new value as container of a 16-bit integer value</summary>
     /// <param name="int16Value">16-bit integer value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<std::int16_t> int16Value) noexcept;
+    public: NUCLEX_THINORM_API Value(std::int16_t int16Value) noexcept;
     /// <summary>Initializes a new value as container of a 32-bit integer value</summary>
     /// <param name="int32Value">32-bit integer value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<std::int32_t> int32Value) noexcept;
+    public: NUCLEX_THINORM_API Value(std::int32_t int32Value) noexcept;
     /// <summary>Initializes a new value as container of a 64-bit integer value</summary>
     /// <param name="int64Value">64-bit integer value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<std::int64_t> int64Value) noexcept;
+    public: NUCLEX_THINORM_API Value(std::int64_t int64Value) noexcept;
     /// <summary>Initializes a new value as container of a decimal value</summary>
     /// <param name="decimalValue">Decimal value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<Decimal> decimalValue) noexcept;
+    public: NUCLEX_THINORM_API Value(const Decimal &decimalValue) noexcept;
     /// <summary>Initializes a new value as container of a 32-bit floating point value</summary>
     /// <param name="floatValue">32-bit floating point value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<float> floatValue) noexcept;
+    public: NUCLEX_THINORM_API Value(float floatValue) noexcept;
     /// <summary>Initializes a new value as container of a 64-bit floating point value</summary>
     /// <param name="doubleValue">64-bit floating point value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<double> doubleValue) noexcept;
+    public: NUCLEX_THINORM_API Value(double doubleValue) noexcept;
     /// <summary>Initializes a new value as container of a string value</summary>
     /// <param name="stringValue">String value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<std::u8string> stringValue) noexcept;
+    public: NUCLEX_THINORM_API Value(const std::u8string &stringValue) noexcept;
     /// <summary>Initializes a new value as container of a blob value</summary>
     /// <param name="blobValue">Blob value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<std::vector<std::byte>> blobValue) noexcept;
+    public: NUCLEX_THINORM_API Value(const std::vector<std::byte> &blobValue) noexcept;
+    /// <summary>Initializes a new value as container of a boolean value</summary>
+    /// <param name="booleanValue">Boolean value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<bool> &booleanValue) noexcept;
+    /// <summary>Initializes a new value as container of an 8-bit integer value</summary>
+    /// <param name="uint8Value">8-bit integer value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<std::uint8_t> &uint8Value) noexcept;
+    /// <summary>Initializes a new value as container of a 16-bit integer value</summary>
+    /// <param name="int16Value">16-bit integer value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<std::int16_t> &int16Value) noexcept;
+    /// <summary>Initializes a new value as container of a 32-bit integer value</summary>
+    /// <param name="int32Value">32-bit integer value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<std::int32_t> &int32Value) noexcept;
+    /// <summary>Initializes a new value as container of a 64-bit integer value</summary>
+    /// <param name="int64Value">64-bit integer value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<std::int64_t> &int64Value) noexcept;
+    /// <summary>Initializes a new value as container of a decimal value</summary>
+    /// <param name="decimalValue">Decimal value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<Decimal> &decimalValue) noexcept;
+    /// <summary>Initializes a new value as container of a 32-bit floating point value</summary>
+    /// <param name="floatValue">32-bit floating point value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<float> &floatValue) noexcept;
+    /// <summary>Initializes a new value as container of a 64-bit floating point value</summary>
+    /// <param name="doubleValue">64-bit floating point value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<double> &doubleValue) noexcept;
+    /// <summary>Initializes a new value as container of a string value</summary>
+    /// <param name="stringValue">String value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<std::u8string> &stringValue) noexcept;
+    /// <summary>Initializes a new value as container of a blob value</summary>
+    /// <param name="blobValue">Blob value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<std::vector<std::byte>> &blobValue) noexcept;
     /// <summary>Frees all memory owned by the value</summary>
     public: NUCLEX_THINORM_API ~Value() noexcept;
 
