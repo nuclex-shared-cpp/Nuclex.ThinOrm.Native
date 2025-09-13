@@ -25,12 +25,10 @@ limitations under the License.
 
 #include <string> // for std::u8string
 #include <memory> // for std::unique_ptr
+#include <vector> // for std::vector
 
 namespace Nuclex::ThinOrm {
   class Value;
-}
-namespace Nuclex::ThinOrm::Connections {
-  class Connection;
 }
 
 namespace Nuclex::ThinOrm {
@@ -39,7 +37,6 @@ namespace Nuclex::ThinOrm {
 
   /// <summary>SQL query that can be executed on a database connection</summary>
   class NUCLEX_THINORM_TYPE Query {
-    friend Connections::Connection;
 
     /// <summary>Initializes a new query</summary>
     /// <param name="sqlStatement">SQL statement the query should run</param>
@@ -76,27 +73,7 @@ namespace Nuclex::ThinOrm {
     ///   the query's generic parameter placeholders into the notation expected by
     ///   the respective database engine.
     /// </remarks>
-    public: const std::vector<QueryParameterView> &GetParameterInfo() const;
-
-#if 0 // IDs could unexpectedly recycle when another Query gets the same memory address :-()
-    /// <summary>Unique value that remains the same between cloned query instances</summary>
-    /// <remarks>
-    ///   <para>
-    ///     When a <see cref="Query" /> is constructed, its SQL statement is set it stone.
-    ///     That allows <see cref="Connection" /> implementations for different database
-    ///     engines to cache their &quot;materialization&quot; of the query which will speed
-    ///     up future executions of the same query.
-    ///   </para>
-    ///   <para>
-    ///     So even when you use the copy constructor or assignment operator to clone queries,
-    ///     the &quot;materialization&quot; of the SQL statement for the database engine stays
-    ///     the same. This immutable ID can be used to identify &quot;Queries&quot; that have
-    ///     identical SQL statements and thus allow for quick and efficient caching of their
-    ///     &quot;materialization&quot;.
-    ///   </para>
-    /// </remarks>
-    public: NUCLEX_THINORM_API inline std::uintptr_t GetImmutableId() const;
-#endif
+    public: NUCLEX_THINORM_API const std::vector<QueryParameterView> &GetParameterInfo() const;
 
     /// <summary>Retrieves the value assigned to a parameter by index</summary>
     /// <param name="index">Zero-based index of the parameter whose value to fetch</param>
@@ -144,12 +121,6 @@ namespace Nuclex::ThinOrm {
 
   };
 
-  // ------------------------------------------------------------------------------------------- //
-#if 0 // see comment in class, this design is dangerous
-  inline std::uintptr_t Query::GetImmutableId() const {
-    return reinterpret_cast<std::uintptr_t>(this->immutableState.get());
-  }
-#endif
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm

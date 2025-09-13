@@ -24,8 +24,9 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Query.h"
 #include "Nuclex/ThinOrm/Value.h"
 
-#include <unordered_set>
-#include <unordered_map>
+#include <Nuclex/Support/Text/StringMatcher.h>
+
+#include <unordered_map> // for std::unordered_map
 #include <mutex> // for std::mutex
 
 namespace Nuclex::ThinOrm {
@@ -41,18 +42,41 @@ namespace Nuclex::ThinOrm {
     public: Implementation(const Implementation &other);
     /// <summary>Initializes the implementation details for a query</summary>
     public: Implementation(Implementation &&other);
-
     /// <summary>Frees all resources owned by the implementation details</summary>
     public: ~Implementation();
 
-    private: typedef std::unordered_set<std::u8string> ParameterSet;
-    private: typedef std::unordered_map<std::u8string, Value> ParameterValueMap;
+    /// <summary>Retrieves the value assigned to a parameter by index</summary>
+    /// <param name="index">Zero-based index of the parameter whose value to fetch</param>
+    /// <returns>The current value of the parameter with the specified index</returns>
+    public: const Value &GetParameterValue(std::size_t index) const;
+
+    /// <summary>Retrieves the value assigned to a parameter by its name</summary>
+    /// <param name="name">Name of the parameter whose value to fetch</param>
+    /// <returns>The current value of the parameter with the specified name</returns>
+    public: const Value &GetParameterValue(const std::u8string &name) const;
+
+    /// <summary>Sets the value assigned to a parameter by index</summary>
+    /// <param name="index">Zero-based index of the parameter whose value to set</param>
+    /// <param name="value">Value to assign to the parameter</param>
+    public: void SetParameterValueUnchecked(
+      std::size_t index, const Value &value
+    );
+
+    /// <summary>Sets the value assigned to a parameter by its name</summary>
+    /// <param name="name">Name of the parameter whose value to set</param>
+    /// <param name="value">Value to assign to the parameter</param>
+    public: void SetParameterValueUnchecked(
+      const std::u8string &name, const Value &value
+    );
+
+    /// <summary>Map of values indexed by the name</summary>
+    private: typedef std::unordered_map<
+      std::u8string, Value, Nuclex::Support::Text::CaseInsensitiveUtf8Hash
+    > ParameterValueMap;
 
     /// <summary>Mutex to synchronize state (parameters + prepared statement) updates</summary>
     private: std::mutex stateMutex;
-
-    /// <summary>Parameters the query expects to be filled</summary>
-    private: ParameterSet requiredParameters;
+    /// <summary>Values assigned to the parameters in the query</summary>
     private: ParameterValueMap parameterValues;
 
   };

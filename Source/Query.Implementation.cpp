@@ -22,15 +22,68 @@ limitations under the License.
 
 #include "./Query.Implementation.h"
 
+#include "Nuclex/ThinOrm/Errors/BadParameterNameError.h"
+
 namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  Query::Implementation::Implementation() {}
+  Query::Implementation::Implementation() :
+    stateMutex(),
+    parameterValues() {}
 
   // ------------------------------------------------------------------------------------------- //
 
-  Query::Implementation::~Implementation() {}
+  Query::Implementation::Implementation(const Implementation &other) :
+    stateMutex(),
+    parameterValues(other.parameterValues) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Query::Implementation::Implementation(Implementation &&other) :
+    stateMutex(),
+    parameterValues(std::move(other.parameterValues)) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Query::Implementation::~Implementation() = default;
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const Value &Query::Implementation::GetParameterValue(std::size_t index) const {
+    throw Errors::BadParameterNameError(u8"Parameter look-up by index not supported");
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+  
+  const Value &Query::Implementation::GetParameterValue(const std::u8string &name) const {
+    ParameterValueMap::const_iterator iterator = this->parameterValues.find(name);
+    if(iterator == this->parameterValues.end()) {
+      std::u8string message(u8"No such query parameter: '", 26);
+      message.append(name);
+      message.push_back(u8'\'');
+      throw Errors::BadParameterNameError(message);
+    }
+    return iterator->second;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void Query::Implementation::SetParameterValueUnchecked(
+    std::size_t index, const Value &value
+  ) {
+    throw Errors::BadParameterNameError(u8"Parameter look-up by index not supported");
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void Query::Implementation::SetParameterValueUnchecked(
+    const std::u8string &name, const Value &value
+  ) {
+    this->parameterValues.insert(
+      ParameterValueMap::value_type(name, value)
+    );
+  }
 
   // ------------------------------------------------------------------------------------------- //
 

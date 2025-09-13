@@ -23,8 +23,6 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Query.h"
 
-#include <unordered_set>
-
 namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
@@ -33,7 +31,8 @@ namespace Nuclex::ThinOrm {
   class Query::ImmutableState {
 
     /// <summary>Initializes the implementation details for a query</summary>
-    public: ImmutableState();
+    /// <param name="sqlStatement">SQL statement the query will execute</param>
+    public: ImmutableState(const std::u8string &sqlStatement);
     /// <summary>Initializes the implementation details for a query</summary>
     public: ImmutableState(const ImmutableState &other);
     /// <summary>Initializes the implementation details for a query</summary>
@@ -41,15 +40,39 @@ namespace Nuclex::ThinOrm {
     /// <summary>Frees all resources owned by the implementation details</summary>
     public: ~ImmutableState();
 
+    /// <summary>Retrieves the SQL statement the query was build for</summary>
+    /// <returns>The SQL statement the query will execute</returns>
+    public: inline const std::u8string &GetSqlStatement() const;
+
     /// <summary>
-    private: typedef std::unordered_set<std::u8string> ParameterSet;
+    ///   Retrieves the names and locations of parameter placeholders in the SQL statement
+    /// </summary>
+    /// <returns>
+    ///   A list of the name and location of each parameter in the SQL statement
+    /// </returns>
+    public: inline const std::vector<QueryParameterView> &GetParameterInfo() const;
+
+    /// <summary>Stores names and locations of parameters</summary>
+    private: typedef std::vector<QueryParameterView> ParameterViewVector;
 
     /// <summary>SQL statement the query will execute</summary>
     private: std::u8string sqlStatement;
-    /// <summary>Parameters the query expects to be filled</summary>
-    private: ParameterSet requiredParameters;
+    /// <summary>Names and locations of the query parameters in the query string</summary>
+    private: ParameterViewVector parameters;
 
   };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline const std::u8string &Query::ImmutableState::GetSqlStatement() const {
+    return this->sqlStatement;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const std::vector<QueryParameterView> &Query::ImmutableState::GetParameterInfo() const {
+    return this->parameters;
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
