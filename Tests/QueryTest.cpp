@@ -25,6 +25,7 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Query.h"
 #include "Nuclex/ThinOrm/Value.h"
 #include "Nuclex/ThinOrm/Errors/BadParameterNameError.h"
+#include "Nuclex/ThinOrm/Errors/UnassignedParameterError.h"
 
 namespace {
 
@@ -78,6 +79,29 @@ namespace Nuclex::ThinOrm {
     const std::vector<QueryParameterView> &parameters = query.GetParameterInfo();
     EXPECT_EQ(parameters.size(), 1U);
     EXPECT_TRUE(parameters.at(0).Name == std::u8string(u8"userName"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(QueryTest, ParametersInQueryStringCanBeAssigned) {
+    std::u8string queryString(u8"SELECT * FROM users WHERE name={userName}", 41);
+    Query query(queryString);
+
+    query.SetParameterValue(u8"userName", 123);
+    Value parameterValue = query.GetParameterValue(u8"userName");
+    EXPECT_EQ(parameterValue.ToInt32(), 123);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(QueryTest, ReadingUnassignedParametersIsAnError) {
+    std::u8string queryString(u8"SELECT * FROM users WHERE name={userName}", 41);
+    Query query(queryString);
+
+    EXPECT_THROW(
+      Value parameterValue = query.GetParameterValue(u8"userName"),
+      Nuclex::ThinOrm::Errors::UnassignedParameterError
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //

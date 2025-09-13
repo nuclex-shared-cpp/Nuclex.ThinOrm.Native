@@ -41,7 +41,9 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+#if defined(_MSC_VER)
   [[gsl::suppress("type.6")]] // uninitialized members -- intentional, union is managed by outer
+#endif
   Value::ValueContainer::ValueContainer() noexcept {}
 
   // ------------------------------------------------------------------------------------------- //
@@ -141,7 +143,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(std::int16_t int16Value) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Int16),
     empty(false),
     value() {
     this->value.Int16 = int16Value;
@@ -150,7 +152,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(std::int32_t int32Value) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Int32),
     empty(false),
     value() {
     this->value.Int32 = int32Value;
@@ -159,7 +161,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(std::int64_t int64Value) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Int64),
     empty(false),
     value() {
     this->value.Int64 = int64Value;
@@ -168,7 +170,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const Decimal &decimalValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Decimal),
     empty(false),
     value() {
     this->value.DecimalValue = decimalValue;
@@ -177,7 +179,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(float floatValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Float),
     empty(false),
     value() {
     this->value.Float = floatValue;
@@ -186,7 +188,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(double doubleValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Double),
     empty(false),
     value() {
     this->value.Double = doubleValue;
@@ -195,7 +197,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::u8string &stringValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::String),
     empty(false),
     value() {
     this->value.String = stringValue;
@@ -204,7 +206,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::vector<std::byte> &blobValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Blob),
     empty(false),
     value() {
     this->value.Blob = blobValue;
@@ -235,7 +237,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<std::int16_t> &int16Value) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Int16),
     empty(!int16Value.has_value()),
     value() {
     if(!empty) {
@@ -246,7 +248,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<std::int32_t> &int32Value) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Int32),
     empty(!int32Value.has_value()),
     value() {
     if(!empty) {
@@ -257,7 +259,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<std::int64_t> &int64Value) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Int64),
     empty(!int64Value.has_value()),
     value() {
     if(!empty) {
@@ -268,7 +270,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<Decimal> &decimalValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Decimal),
     empty(!decimalValue.has_value()),
     value() {
     if(!empty) {
@@ -279,7 +281,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<float> &floatValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Float),
     empty(!floatValue.has_value()),
     value() {
     if(!empty) {
@@ -290,7 +292,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<double> &doubleValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Double),
     empty(!doubleValue.has_value()),
     value() {
     if(!empty) {
@@ -301,7 +303,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<std::u8string> &stringValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::String),
     empty(!stringValue.has_value()),
     value() {
     if(!empty) {
@@ -312,7 +314,7 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   Value::Value(const std::optional<std::vector<std::byte>> &blobValue) noexcept :
-    type(ValueType::Boolean),
+    type(ValueType::Blob),
     empty(!blobValue.has_value()),
     value() {
     if(!empty) {

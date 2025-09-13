@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "./Query.Implementation.h"
 
-#include "Nuclex/ThinOrm/Errors/BadParameterNameError.h"
+#include "Nuclex/ThinOrm/Errors/UnassignedParameterError.h"
 
 namespace Nuclex::ThinOrm {
 
@@ -49,30 +49,16 @@ namespace Nuclex::ThinOrm {
   Query::Implementation::~Implementation() = default;
 
   // ------------------------------------------------------------------------------------------- //
-
-  const Value &Query::Implementation::GetParameterValue(std::size_t index) const {
-    throw Errors::BadParameterNameError(u8"Parameter look-up by index not supported");
-  }
-
-  // ------------------------------------------------------------------------------------------- //
   
   const Value &Query::Implementation::GetParameterValue(const std::u8string &name) const {
     ParameterValueMap::const_iterator iterator = this->parameterValues.find(name);
     if(iterator == this->parameterValues.end()) {
-      std::u8string message(u8"No such query parameter: '", 26);
+      std::u8string message(u8"Parameter '", 11);
       message.append(name);
-      message.push_back(u8'\'');
-      throw Errors::BadParameterNameError(message);
+      message.append(u8"' has not been given a value yet", 32);
+      throw Errors::UnassignedParameterError(message);
     }
     return iterator->second;
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  void Query::Implementation::SetParameterValueUnchecked(
-    std::size_t index, const Value &value
-  ) {
-    throw Errors::BadParameterNameError(u8"Parameter look-up by index not supported");
   }
 
   // ------------------------------------------------------------------------------------------- //

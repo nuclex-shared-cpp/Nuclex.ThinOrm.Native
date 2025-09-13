@@ -45,22 +45,10 @@ namespace Nuclex::ThinOrm {
     /// <summary>Frees all resources owned by the implementation details</summary>
     public: ~Implementation();
 
-    /// <summary>Retrieves the value assigned to a parameter by index</summary>
-    /// <param name="index">Zero-based index of the parameter whose value to fetch</param>
-    /// <returns>The current value of the parameter with the specified index</returns>
-    public: const Value &GetParameterValue(std::size_t index) const;
-
     /// <summary>Retrieves the value assigned to a parameter by its name</summary>
     /// <param name="name">Name of the parameter whose value to fetch</param>
     /// <returns>The current value of the parameter with the specified name</returns>
     public: const Value &GetParameterValue(const std::u8string &name) const;
-
-    /// <summary>Sets the value assigned to a parameter by index</summary>
-    /// <param name="index">Zero-based index of the parameter whose value to set</param>
-    /// <param name="value">Value to assign to the parameter</param>
-    public: void SetParameterValueUnchecked(
-      std::size_t index, const Value &value
-    );
 
     /// <summary>Sets the value assigned to a parameter by its name</summary>
     /// <param name="name">Name of the parameter whose value to set</param>

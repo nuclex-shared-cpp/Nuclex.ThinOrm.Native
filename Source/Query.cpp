@@ -79,7 +79,20 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   const Value &Query::GetParameterValue(const std::u8string &name) const {
-    return this->implementation->GetParameterValue(name);
+    using Nuclex::Support::Text::StringMatcher;
+    constexpr bool CaseSensitive = false;
+
+    const std::vector<QueryParameterView> &parameters = this->immutableState->GetParameterInfo();
+    for(std::size_t index = 0; index < parameters.size(); ++index) {
+      if(StringMatcher::AreEqual<CaseSensitive>(parameters[index].Name, name)) {
+        return this->implementation->GetParameterValue(name);
+      }
+    }
+
+    std::u8string message(u8"No such query parameter: '", 26);
+    message.append(name);
+    message.push_back(u8'\'');
+    throw Errors::BadParameterNameError(message);
   }
 
   // ------------------------------------------------------------------------------------------- //
