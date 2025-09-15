@@ -20,15 +20,26 @@ limitations under the License.
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_THINORM_SOURCE 1
 
-#include "./QtSqlConnection.h"
+#include "Nuclex/ThinOrm/Errors/MissingDriverError.h"
 
-namespace Nuclex::ThinOrm::Connections {
-
-  // ------------------------------------------------------------------------------------------- //
-
-  // This file is only here to guarantee that its associated header has no hidden
-  // dependencies and can be included on its own
+namespace Nuclex::ThinOrm::Errors {
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Connections
+  MissingDriverError::MissingDriverError(const std::u8string &message) noexcept :
+    std::logic_error(
+      std::string(
+        reinterpret_cast<const char *>(message.data()), message.length()
+      )
+    ) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  MissingDriverError::MissingDriverError(const char8_t *message) noexcept :
+    std::logic_error(reinterpret_cast<const char *>(message)) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // namespace Nuclex::ThinOrm::Errors
+
+#pragma once

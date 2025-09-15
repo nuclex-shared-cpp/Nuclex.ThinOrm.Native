@@ -17,8 +17,8 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_ERRORS_UNASSIGNEDPARAMETERERROR_H
-#define NUCLEX_THINORM_ERRORS_UNASSIGNEDPARAMETERERROR_H
+#ifndef NUCLEX_THINORM_ERRORS_MISSINGDRIVERERROR_H
+#define NUCLEX_THINORM_ERRORS_MISSINGDRIVERERROR_H
 
 #include "Nuclex/ThinOrm/Config.h"
 
@@ -30,19 +30,19 @@ namespace Nuclex::ThinOrm::Errors {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>
-  ///   Indicates that a parameter has not been given a value when it should have
+  ///   Indicates that a specified database driver was unknown to not registered
   /// </summary>
-  class NUCLEX_THINORM_TYPE UnassignedParameterError : public std::invalid_argument {
+  class NUCLEX_THINORM_TYPE MissingDriverError : public std::logic_error {
 
     /// <summary>Initializes a bad parameter name error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: NUCLEX_THINORM_API explicit UnassignedParameterError(
+    public: NUCLEX_THINORM_API explicit MissingDriverError(
       const std::u8string &message
     ) noexcept;
 
     /// <summary>Initializes a bad parameter name type error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: NUCLEX_THINORM_API explicit UnassignedParameterError(
+    public: NUCLEX_THINORM_API explicit MissingDriverError(
       const char8_t *message
     ) noexcept;
 
@@ -52,4 +52,4 @@ namespace Nuclex::ThinOrm::Errors {
 
 } // namespace Nuclex::ThinOrm::Errors
 
-#endif // NUCLEX_THINORM_ERRORS_UNASSIGNEDPARAMETERERROR_H
+#endif // NUCLEX_THINORM_ERRORS_MISSINGDRIVERERROR_H

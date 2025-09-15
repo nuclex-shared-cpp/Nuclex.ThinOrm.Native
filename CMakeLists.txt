@@ -16,6 +16,14 @@ option(
 )
 
 option(
+  NUCLEX_THINORM_SUPPORT_ASYNCPP
+  "Whether methods should be exposed that use C++20 couroutines for \
+  slow operations such as establishing database connections and running \
+  queries. This will require the AsyncPP library."
+  ON
+)
+
+option(
   BUILD_UNIT_TESTS
   "Whether to build the unit test executable. This will require an extra \
   compilation of the entire source tree as well as the GoogleTest library."
@@ -40,12 +48,26 @@ include("../build-system/cmake/cplusplus.cmake")
 #   https://en.wikipedia.org/wiki/Pthreads
 find_package(Threads REQUIRED)
 
+# Locate Qt, the cross-platform User Interface and base API abstraction library
+# we're using for the built-in SQL database clients
+find_package(Qt5 COMPONENTS REQUIRED Sql Core)
+
 # Add Nuclex.Support.Native as a sub-project, we link it for utility methods.
 if(NOT (TARGET NuclexSupportNative))
   add_subdirectory(
     ${PROJECT_SOURCE_DIR}/../Nuclex.Support.Native
     ${CMAKE_BINARY_DIR}/NuclexSupportNative
   )
+endif()
+
+# Add AsyncPP as a sub-project, we use for the task-based coroutines.
+if(NUCLEX_THINORM_SUPPORT_ASYNCPP)
+  if(NOT (TARGET AsyncPP))
+    add_subdirectory(
+      ${PROJECT_SOURCE_DIR}/../third-party/nuclex-asyncpp
+      ${CMAKE_BINARY_DIR}/asyncpp
+    )
+  endif()
 endif()
 
 message(STATUS "Enabled options for Nuclex.ThinOrm.Native:")
@@ -125,6 +147,19 @@ file(
 # -------------------------------------------------------------------------------------------------
 
 function(add_third_party_libraries target_name)
+
+  if(NUCLEX_THINORM_SUPPORT_ASYNCPP)
+    target_link_libraries(
+      ${target_name}
+      PUBLIC AsyncPP
+    )
+  endif()
+
+  target_link_libraries(
+    ${target_name}
+    PRIVATE Qt5::Sql
+    PRIVATE Qt5::Core
+  )
 
   # On Unix systems, the library and unit test executable should look for
   # dependencies in its own directory first.
