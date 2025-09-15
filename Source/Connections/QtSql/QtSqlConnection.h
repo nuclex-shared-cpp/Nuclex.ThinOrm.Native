@@ -29,7 +29,7 @@ limitations under the License.
 #include <memory> // for std::shared_ptr
 
 namespace Nuclex::ThinOrm::Configuration {
-  class ConnecitonProperties;
+  class ConnectionProperties;
 }
 
 namespace Nuclex::ThinOrm::Connections::QtSql {
@@ -47,20 +47,36 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     ///   Unique connection id provided by the unique name generator
     /// </param>
     /// <param name="database">Database connection holder from Qt SQL</param>
-    protected: QtSqlConnection(
+    public: QtSqlConnection(
       std::u8string databaseName, std::uint64_t uniqueId, QSqlDatabase database
     );
     /// <summary>Frees all resources owned by the database connection</summary>
     public: ~QtSqlConnection() override;
 
-#if 0
     /// <summary>Establishes a new connection to a database via QtSql</summary>
     /// <param name="properties">Settings to use for connection to the database</param>
     /// <returns>A new database connection estblashed with the provided parameters</returns>
     public: static std::shared_ptr<QtSqlConnection> Connect(
       const Configuration::ConnectionProperties &properties
     );
-#endif
+
+    /// <summary>Prepares the specified query for execution</summary>
+    /// <param name="query">Query that will be prepared for execution</param>
+    public: void Prepare(const Query &query) override;
+
+    /// <summary>Executes an SQL query that has no results on the database</summary>
+    /// <param name="statement">Statement that will be executed</param>
+    public: void RunStatement(const Query &statement) override;
+
+    /// <summary>Executes an SQL query that has a single result on the database</summary>
+    /// <param name="scalarQuery">Query that will be executed</param>
+    /// <returns>The result of the query</returns>
+    public: Value RunScalarQuery(const Query &scalarQuery) override;
+
+    /// <summary>Executes an SQL query that has result rows on the database</summary>
+    /// <param name="rowQuery">Query that will be executed</param>
+    /// <returns>A reader that can be used to fetch individual rows</returns>
+    public: RowReader RunRowQuery(const Query &rowQuery) override;
 
     /// <summary>Generates unique numbers for each database name</summary>
     private: static UniqueNameGenerator uniqueNameGenerator;

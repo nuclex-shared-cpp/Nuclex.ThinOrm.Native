@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{281d21e9-54ae-41ff-b4d5-d1af944e82a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Hardware">
+      <UniqueIdentifier>{7bdff441-a1d8-4222-885f-b2a74b65c2db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Interaction">
+      <UniqueIdentifier>{6ee89a3e-e99c-4f4e-b419-10eac7dc419c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Tasks">
+      <UniqueIdentifier>{112dec7a-48f7-4e4a-a6e1-2599706d3cfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Hardware">
+      <UniqueIdentifier>{f0423309-0382-4478-b112-432eea3bd510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Interaction">
+      <UniqueIdentifier>{be2c5026-1dac-4a7e-8c7d-fd48a87901e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{bc1479f6-3664-42fc-a04a-ab2340514a68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tasks">
+      <UniqueIdentifier>{aa0fd183-37f7-4f68-b4b5-cb30cfa82301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{56e5cb89-1259-433c-b502-7e90be281981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Tasks">
+      <UniqueIdentifier>{2bbe504a-85b3-4c42-b387-5b3aeb023aa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{7ff401dc-2d86-48b8-9ccf-94a476888005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Errors">
+      <UniqueIdentifier>{3ebbd493-bc07-4bf8-9d35-e984707a2ad8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Platform\Errors\InsufficientPermissionsError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\CpuInfo.h">
+      <Filter>Include\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\StoreInfo.h">
+      <Filter>Include\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\GpuInfo.h">
+      <Filter>Include\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\MemoryInfo.h">
+      <Filter>Include\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\PlatformAppraiser.h">
+      <Filter>Include\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\ActiveWindowTracker.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\ExtendedMessageService.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\GuiMessageService.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\Message.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageIcon.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageService.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\ModernGuiMessageService.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\TerminalMessageService.h">
+      <Filter>Include\Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\NaiveTaskCoordinator.h">
+      <Filter>Include\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceManifest.h">
+      <Filter>Include\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceType.h">
+      <Filter>Include\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\Task.h">
+      <Filter>Include\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskCoordinator.h">
+      <Filter>Include\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskEnvironment.h">
+      <Filter>Include\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\ThreadedTask.h">
+      <Filter>Include\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Platform\Config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Hardware\WindowsRegistryVolumeInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Hardware\WindowsWmiStorageInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Errors\InsufficientPermissionsError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\CpuInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\GpuInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\LinuxProcCpuInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\LinuxProcCpuInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Hardware\LinuxProcMemInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\LinuxProcMemInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Hardware\LinuxSysCpuTreeReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\LinuxSysCpuTreeReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Hardware\MemoryInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxCpuInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxMemoryInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsCpuInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsMemoryInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsStorageInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\StoreInfo.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\StringHelper.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\StringHelper.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Hardware\WindowsBasicCpuInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\WindowsBasicCpuInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Hardware\WindowsBasicVolumeInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\WindowsBasicVolumeInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Hardware\WindowsRegistryCpuInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\WindowsRegistryCpuInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Hardware\WindowsWmiCpuInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Hardware\WindowsWmiCpuInfoReader.h">
+      <Filter>Source\Hardware</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Interaction\ActiveWindowTracker.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\ExtendedMessageService.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\GuiMessageService.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\GuiMessageService.Gtk.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\GuiMessageService.Kde.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\GuiMessageService.Windows.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\Message.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\MessageIcon.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\MessageService.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\ModernGuiMessageService.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\ModernGuiMessageService.Windows.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\TerminalMessageService.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Interaction\TerminalMessageService.Windows.cpp">
+      <Filter>Source\Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platform\GtkApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\GtkApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\GtkDialogApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\GtkDialogApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixDynamicLibraryApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixDynamicLibraryApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsConsoleApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsConsoleApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsDeviceApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsDeviceApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsFileApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsFileApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsMessageBoxApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsMessageBoxApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsSysInfoApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsSysInfoApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsTaskDialogApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsTaskDialogApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsRegistryApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsRegistryApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsWmiApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsWmiApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Tasks\NaiveTaskCoordinator.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\ResourceBudget.Allocate.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\ResourceBudget.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Tasks\ResourceBudget.h">
+      <Filter>Source\Tasks</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Tasks\ResourceBudget.Release.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\ResourceManifest.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\ResourceType.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\Task.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\TaskCoordinator.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\TaskEnvironment.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tasks\ThreadedTask.cpp">
+      <Filter>Source\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\WindowsRegistryVolumeInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Hardware\WindowsWmiStorageInfoReader.cpp">
+      <Filter>Source\Hardware</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\Tasks\NaiveTaskCoordinatorTest.cpp">
+      <Filter>Tests\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Tasks\ResourceBudgetTest.cpp">
+      <Filter>Tests\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Tasks\ResourceManifestTest.cpp">
+      <Filter>Tests\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Tasks\ThreadedTaskTest.cpp">
+      <Filter>Tests\Tasks</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.md" />
+    <None Include="Nuclex.Platform.Native.def">
+      <Filter>Resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Nuclex.Support.Native.ref" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Copyright.md">
+      <Filter>Documents</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

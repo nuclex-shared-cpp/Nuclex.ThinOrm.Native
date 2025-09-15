@@ -24,9 +24,16 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
 #include "Nuclex/ThinOrm/Errors/MissingDriverError.h"
+#include "Nuclex/ThinOrm/Value.h"
+#include "Nuclex/ThinOrm/RowReader.h"
+
+#include "../../Utilities/QStringConverter.h" // for QStringConverter
 
 #include <Nuclex/Support/Text/LexicalAppend.h> // for lexical_append<>
 #include <Nuclex/Support/ScopeGuard.h> // for ON_SCOPE_EXIT_TRANSACTION
+
+#include <QSqlError> // for QSqlError
+#include <stdexcept> // for std::runtime_error
 
 namespace {
 
@@ -57,15 +64,17 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   }
 
   // ------------------------------------------------------------------------------------------- //
-#if 0
+
   std::shared_ptr<QtSqlConnection> QtSqlConnection::Connect(
     const Configuration::ConnectionProperties &properties
   ) {
+    using Nuclex::ThinOrm::Utilities::QStringConverter;
+
     std::u8string driverName = properties.GetDriver();
 
     // Check if the driver exists explicitly. While this error would be caught when
     // attempting to open the connection, this way we can deliver a decent error message
-    if(!QSqlDatabase::isDriverAvailable(QString::fromStdString(driverName))) [[unlikely]] {
+    if(!QSqlDatabase::isDriverAvailable(QStringConverter::FromU8(driverName))) [[unlikely]] {
       std::u8string message(
         u8"Unable to open database connection. Either the driver name is invalid outirght or "
         u8"the Qt library being used was built with enabling the '", 137
@@ -102,17 +111,105 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
       std::u8string uniqueDatabaseName = databaseName;
       uniqueDatabaseName.push_back(u8'-');
-      Nuclex::Support::Text::lexical_append(uniqueDatabaseName, uniqueId;
+      Nuclex::Support::Text::lexical_append(uniqueDatabaseName, uniqueId);
 
       QSqlDatabase database = QSqlDatabase::addDatabase(
-        QString::fromStdString(driverName), QString::fromStdString(uniqueDatabaseName)
+        QStringConverter::FromU8(driverName), QStringConverter::FromU8(uniqueDatabaseName)
       );
+      {
+        auto removeDatabaseScope = ON_SCOPE_EXIT_TRANSACTION {
+          QSqlDatabase::removeDatabase(QStringConverter::FromU8(uniqueDatabaseName));
+        };
 
-      returnUniqueIdScope.Commit();
+        if(!database.isValid()) [[unlikely]] {
+          std::u8string message(
+            u8"Error configuring database via Qt SQL. Most likely, the specified driver, '", 75
+          );
+          message.append(driverName);
+          message.append(u8"' could not be loaded due to missing dependencies", 49);
+          throw std::runtime_error(
+            std::string(reinterpret_cast<const char *>(message.data()), message.length())
+          );
+        }
+
+        std::u8string hostname = properties.GetHostnameOrPath();
+        database.setHostName(QStringConverter::FromU8(hostname));
+
+        std::optional<std::u8string> databaseName2 = properties.GetDatabaseName();
+        if(databaseName2.has_value()) {
+          database.setDatabaseName(QStringConverter::FromU8(databaseName2.value()));
+        }
+
+        std::optional<std::uint16_t> port = properties.GetPort();
+        if(port.has_value()) {
+          database.setPort(port.value());
+        }
+
+        std::optional<std::u8string> userName = properties.GetUser();
+        if(userName.has_value()) {
+          database.setUserName(QStringConverter::FromU8(userName.value()));
+        }
+
+        std::optional<std::u8string> password = properties.GetPassword();
+        if(password.has_value()) {
+          database.setPassword(QStringConverter::FromU8(password.value()));
+        }
+
+        bool opened = database.open();
+        if(!opened) {
+          std::u8string message(u8"Failed to open database connection to '", 39);
+          if(databaseName2.has_value()) {
+            message.append(databaseName2.value());
+            message.append(u8"' on '", 6);
+          }
+          message.append(hostname);
+          message.push_back(u8'\'');
+          if(userName.has_value()) {
+            message.append(u8" as '", 5);
+            message.append(userName.value());
+            message.push_back(u8'\'');
+          }
+          message.push_back(u8':');
+          message.append(QStringConverter::ToU8(database.lastError().text()));
+          throw std::runtime_error(
+            std::string(reinterpret_cast<const char *>(message.data()), message.length())
+          );
+        }
+
+        std::shared_ptr<QtSqlConnection> result = std::make_shared<QtSqlConnection>(
+          databaseName, uniqueId, database
+        );
+        removeDatabaseScope.Commit();
+        returnUniqueIdScope.Commit();
+        return result;
+      }
     }
-    
   }
-#endif
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void QtSqlConnection::Prepare(const Query &query) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void QtSqlConnection::RunStatement(const Query &statement) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value QtSqlConnection::RunScalarQuery(const Query &scalarQuery) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  RowReader QtSqlConnection::RunRowQuery(const Query &rowQuery) {
+    throw u8"Not implemented yet";
+  }
+
   // ------------------------------------------------------------------------------------------- //
 
   UniqueNameGenerator QtSqlConnection::uniqueNameGenerator;

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{71122a31-da07-456a-817c-0068dfe7513f}</ProjectGuid>
+    <RootNamespace>NuclexPlatformNativeTests</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Nuclex.Platform.Native.Tests (msvc-14.3)</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Platform)'=='Win32'">
+    <SanePlatform>x86</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <SanePlatform>amd64</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='ARM'">
+    <SanePlatform>armhf</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PLATFORM_EXECUTABLE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\nuclex-googletest\build\googletest\include\</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <DisableSpecificWarnings>4458</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;gtest.lib;gtest_main.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\third-party\nuclex-googletest\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Platform.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PLATFORM_EXECUTABLE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\nuclex-googletest\build\googletest\include\</AdditionalIncludeDirectories>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <DisableSpecificWarnings>4458</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;gtest.lib;gtest_main.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\third-party\nuclex-googletest\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Platform.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PLATFORM_EXECUTABLE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\nuclex-googletest\build\googletest\include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <DisableSpecificWarnings>4458</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;gtest.lib;gtest_main.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\third-party\nuclex-googletest\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Pixel.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PLATFORM_EXECUTABLE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\nuclex-googletest\build\googletest\include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <DisableSpecificWarnings>4458</DisableSpecificWarnings>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;gtest.lib;gtest_main.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\third-party\nuclex-googletest\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Platform.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Platform\Errors\InsufficientPermissionsError.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\CpuInfo.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\StoreInfo.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\GpuInfo.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\MemoryInfo.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Hardware\PlatformAppraiser.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\ActiveWindowTracker.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\ExtendedMessageService.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\GuiMessageService.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\Message.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageIcon.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageService.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\ModernGuiMessageService.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Interaction\TerminalMessageService.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\NaiveTaskCoordinator.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceManifest.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceType.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\Task.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskCoordinator.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskEnvironment.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Tasks\ThreadedTask.h" />
+    <ClInclude Include="Include\Nuclex\Platform\Config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Errors\InsufficientPermissionsError.cpp" />
+    <ClCompile Include="Source\Hardware\CpuInfo.cpp" />
+    <ClCompile Include="Source\Hardware\GpuInfo.cpp" />
+    <ClCompile Include="Source\Hardware\LinuxProcCpuInfoReader.cpp" />
+    <ClInclude Include="Source\Hardware\LinuxProcCpuInfoReader.h" />
+    <ClCompile Include="Source\Hardware\LinuxProcMemInfoReader.cpp" />
+    <ClInclude Include="Source\Hardware\LinuxProcMemInfoReader.h" />
+    <ClCompile Include="Source\Hardware\LinuxSysCpuTreeReader.cpp" />
+    <ClInclude Include="Source\Hardware\LinuxSysCpuTreeReader.h" />
+    <ClCompile Include="Source\Hardware\MemoryInfo.cpp" />
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.cpp" />
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxCpuInfo.cpp" />
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxMemoryInfo.cpp" />
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsCpuInfo.cpp" />
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsMemoryInfo.cpp" />
+    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsStorageInfo.cpp" />
+    <ClCompile Include="Source\Hardware\StoreInfo.cpp" />
+    <ClCompile Include="Source\Hardware\StringHelper.cpp" />
+    <ClInclude Include="Source\Hardware\StringHelper.h" />
+    <ClCompile Include="Source\Hardware\WindowsBasicCpuInfoReader.cpp" />
+    <ClInclude Include="Source\Hardware\WindowsBasicCpuInfoReader.h" />
+    <ClCompile Include="Source\Hardware\WindowsBasicVolumeInfoReader.cpp" />
+    <ClInclude Include="Source\Hardware\WindowsBasicVolumeInfoReader.h" />
+    <ClCompile Include="Source\Hardware\WindowsRegistryCpuInfoReader.cpp" />
+    <ClInclude Include="Source\Hardware\WindowsRegistryCpuInfoReader.h" />
+    <ClCompile Include="Source\Hardware\WindowsRegistryVolumeInfoReader.cpp" />
+    <ClCompile Include="Source\Hardware\WindowsWmiCpuInfoReader.cpp" />
+    <ClInclude Include="Source\Hardware\WindowsRegistryVolumeInfoReader.h" />
+    <ClInclude Include="Source\Hardware\WindowsWmiCpuInfoReader.h" />
+    <ClCompile Include="Source\Hardware\WindowsWmiStorageInfoReader.cpp" />
+    <ClCompile Include="Source\Interaction\ActiveWindowTracker.cpp" />
+    <ClCompile Include="Source\Interaction\ExtendedMessageService.cpp" />
+    <ClCompile Include="Source\Interaction\GuiMessageService.cpp" />
+    <ClCompile Include="Source\Interaction\GuiMessageService.Gtk.cpp" />
+    <ClCompile Include="Source\Interaction\GuiMessageService.Kde.cpp" />
+    <ClCompile Include="Source\Interaction\GuiMessageService.Windows.cpp" />
+    <ClCompile Include="Source\Interaction\Message.cpp" />
+    <ClCompile Include="Source\Interaction\MessageIcon.cpp" />
+    <ClCompile Include="Source\Interaction\MessageService.cpp" />
+    <ClCompile Include="Source\Interaction\ModernGuiMessageService.cpp" />
+    <ClCompile Include="Source\Interaction\ModernGuiMessageService.Windows.cpp" />
+    <ClCompile Include="Source\Interaction\TerminalMessageService.cpp" />
+    <ClCompile Include="Source\Interaction\TerminalMessageService.Windows.cpp" />
+    <ClCompile Include="Source\Platform\GtkApi.cpp" />
+    <ClInclude Include="Source\Hardware\WindowsWmiStorageInfoReader.h" />
+    <ClInclude Include="Source\Platform\GtkApi.h" />
+    <ClCompile Include="Source\Platform\GtkDialogApi.cpp" />
+    <ClInclude Include="Source\Platform\GtkDialogApi.h" />
+    <ClCompile Include="Source\Platform\PosixApi.cpp" />
+    <ClInclude Include="Source\Platform\PosixApi.h" />
+    <ClCompile Include="Source\Platform\PosixDynamicLibraryApi.cpp" />
+    <ClInclude Include="Source\Platform\PosixDynamicLibraryApi.h" />
+    <ClCompile Include="Source\Platform\WindowsApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsApi.h" />
+    <ClCompile Include="Source\Platform\WindowsConsoleApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsConsoleApi.h" />
+    <ClCompile Include="Source\Platform\WindowsDeviceApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsDeviceApi.h" />
+    <ClCompile Include="Source\Platform\WindowsFileApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsFileApi.h" />
+    <ClCompile Include="Source\Platform\WindowsMessageBoxApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsMessageBoxApi.h" />
+    <ClCompile Include="Source\Platform\WindowsRegistryApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsRegistryApi.h" />
+    <ClCompile Include="Source\Platform\WindowsSysInfoApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsSysInfoApi.h" />
+    <ClCompile Include="Source\Platform\WindowsTaskDialogApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsTaskDialogApi.h" />
+    <ClCompile Include="Source\Platform\WindowsWmiApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsWmiApi.h" />
+    <ClCompile Include="Source\Tasks\NaiveTaskCoordinator.cpp" />
+    <ClCompile Include="Source\Tasks\ResourceBudget.Allocate.cpp" />
+    <ClCompile Include="Source\Tasks\ResourceBudget.cpp" />
+    <ClInclude Include="Source\Tasks\ResourceBudget.h" />
+    <ClCompile Include="Source\Tasks\ResourceBudget.Release.cpp" />
+    <ClCompile Include="Source\Tasks\ResourceManifest.cpp" />
+    <ClCompile Include="Source\Tasks\ResourceType.cpp" />
+    <ClCompile Include="Source\Tasks\Task.cpp" />
+    <ClCompile Include="Source\Tasks\TaskCoordinator.cpp" />
+    <ClCompile Include="Source\Tasks\TaskEnvironment.cpp" />
+    <ClCompile Include="Source\Tasks\ThreadedTask.cpp" />
+    <ClCompile Include="Source\Config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\Tasks\NaiveTaskCoordinatorTest.cpp" />
+    <ClCompile Include="Tests\Tasks\ResourceBudgetTest.cpp" />
+    <ClCompile Include="Tests\Tasks\ResourceManifestTest.cpp" />
+    <ClCompile Include="Tests\Tasks\ThreadedTaskTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Copyright.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Nuclex.Support.Native.ref">
+      <FileType>Document</FileType>
+      <Command>COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message>Copying %(Filename) into target directory...</Message>
+      <Outputs>$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs>$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects>false</LinkObjects>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuild>
+    <None Include="Nuclex.Platform.Native.def" />
+    <None Include="ReadMe.md" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

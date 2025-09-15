@@ -17,23 +17,28 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-// If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_THINORM_SOURCE 1
+#ifndef NUCLEX_THINORM_ROWREADER_H
+#define NUCLEX_THINORM_ROWREADER_H
 
-#include "Nuclex/ThinOrm/Connections/QtSqlConnectionFactory.h"
+#include "Nuclex/ThinOrm/Config.h"
 
-#include "./QtSql/QtSqlConnection.h"
+#include <cstdint> // for std::int16_t, std::int32_t, etc.
+#include <string> // for std::u8string
 
-namespace Nuclex::ThinOrm::Connections {
-
-  // ------------------------------------------------------------------------------------------- //
-
-  std::shared_ptr<Connection> QtSqlConnectionFactory::Connect(
-    const Configuration::ConnectionProperties &connectionProperties
-  ) const {
-    return QtSql::QtSqlConnection::Connect(connectionProperties);
-  }
+namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Connections
+  /// <summary>Reads rows from a query that results in multiple rows</summary>
+  class NUCLEX_THINORM_TYPE RowReader {
+
+    public: NUCLEX_THINORM_API RowReader() {}
+    public: NUCLEX_THINORM_API virtual ~RowReader() = default;
+
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // namespace Nuclex::ThinOrm
+
+#endif // NUCLEX_THINORM_ROWREADER_H

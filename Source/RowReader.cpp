@@ -20,20 +20,18 @@ limitations under the License.
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/ThinOrm/Connections/QtSqlConnectionFactory.h"
+#include "Nuclex/ThinOrm/RowReader.h"
 
-#include "./QtSql/QtSqlConnection.h"
-
-namespace Nuclex::ThinOrm::Connections {
+namespace {
 
   // ------------------------------------------------------------------------------------------- //
-
-  std::shared_ptr<Connection> QtSqlConnectionFactory::Connect(
-    const Configuration::ConnectionProperties &connectionProperties
-  ) const {
-    return QtSql::QtSqlConnection::Connect(connectionProperties);
-  }
-
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Connections
+} // anonymous namespace
+
+namespace Nuclex::ThinOrm {
+
+  // ------------------------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------------------------- //
+
+} // namespace Nuclex::ThinOrm

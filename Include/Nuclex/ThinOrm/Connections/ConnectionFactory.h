@@ -27,7 +27,7 @@ limitations under the License.
 namespace Nuclex::ThinOrm::Configuration {
   class ConnectionProperties;
 }
-namespace Nuclex::ThinOrm {
+namespace Nuclex::ThinOrm::Connections {
   class Connection;
 }
 
