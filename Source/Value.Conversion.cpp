@@ -66,7 +66,10 @@ namespace {
   /// <summary>Number of DateTime ticks on January, 1st in 1970</summary>
   const std::int64_t TicksOnJanuary1st1970 = 621'355'968'000'000'000ll;
 
+  /// <summary>Blob that stores the binary state of a true boolean</summary>
   const std::vector<std::byte> trueBlob(1, std::byte(1));
+
+  /// <summary>Blob that stores the binary state of a false boolean</summary>
   const std::vector<std::byte> falseBlob(1, std::byte(0));
 
   // ------------------------------------------------------------------------------------------- //

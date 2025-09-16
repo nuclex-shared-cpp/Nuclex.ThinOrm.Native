@@ -22,7 +22,6 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Value.h"
 
-#include <stdexcept> // for std::
 #include <cassert> // for assert()
 
 #include "Nuclex/ThinOrm//Errors/BadValueTypeError.h" // for BadValueTypeError
