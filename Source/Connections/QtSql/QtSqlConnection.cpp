@@ -172,8 +172,6 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
         return result;
       }
     }
-
-    throw -1;
   }
 
   // ------------------------------------------------------------------------------------------- //

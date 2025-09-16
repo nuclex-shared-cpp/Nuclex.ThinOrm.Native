@@ -53,7 +53,7 @@ namespace Nuclex::ThinOrm::Connections {
     ///   or the full name ('SQLite', 'MariaDB C/C++ Connector') of a driver that was
     ///   previously registered to the driver-based connection factory.
     /// </remarks>
-    public: NUCLEX_THINORM_API std::shared_ptr<Connection> Connect(
+    public: NUCLEX_THINORM_API [[nodiscard]] std::shared_ptr<Connection> Connect(
       const Configuration::ConnectionProperties &connectionProperties
     ) const override;
 

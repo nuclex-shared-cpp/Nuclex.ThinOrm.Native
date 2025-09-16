@@ -127,16 +127,14 @@ namespace Nuclex::ThinOrm::Connections {
     // the filename of the database in here (whilst we have those separated). That can
     // be overriden via a custom database name formatter, for which we query below:
     std::optional<std::u8string> qtDatabaseName;
-    /*
     {
-      DriverFormatterMap::iterator iterator = this->formatters.find(driverName);
+      DriverFormatterMap::const_iterator iterator = this->formatters.find(driverName);
       if(iterator == this->formatters.end()) [[likely]] {
         qtDatabaseName = connectionProperties.GetDatabaseName();
       } else {
         qtDatabaseName = iterator->second->operator()(connectionProperties);
       }
     }
-      */
 
     // We finally have the string on which the unique connection name should be based
     // and optionally a database name to pass on to Qt, so now leave the actual work
