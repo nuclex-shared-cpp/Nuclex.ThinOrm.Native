@@ -43,6 +43,33 @@ namespace {
   std::u8string DatabaseNameOptionName(u8"DatabaseName", 12);
 
   // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Determines if the specified driver refers to a file-based database</summary>
+  /// <param name="driver">Driver that will be checked</param>
+  /// <returns>True if the specified driver is for a file-based database engine</returns>
+  /// <remarks>
+  ///   <para>
+  ///     This, unfortunately, is a crutch to avoid an issue that will pop up when using
+  ///     the <see cref="QtSqlConnectionFactory" /> with JDBC-style database URLs: parsing
+  ///     such an URL will split the &quot;hostname or path&quot; from
+  ///     the &quot;database name&quot;.
+  ///   </para>
+  ///   <para>
+  ///     This library's sqlite driver, for example, knows to put path and database name
+  ///     together, but Qt will ignore the hostname for <code>QSQLITE</code> and thus, open
+  ///     a database in the current working directory even though a path was specified.
+  ///     This method is asked to know when to concatenate hostname and database name for
+  ///     Qt, but of course it will only work for the known and buit-in Qt SQL drivers.
+  ///   </para>
+  /// </remarks>
+  bool isFileBasedDatabase(const std::u8string &driver) {
+    return (
+      (driver == std::u8string(u8"QSQLITE", 7)) ||
+      (driver == std::u8string(u8"QIBASE", 6))
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
   
 } // anonymous namespace
 
@@ -71,54 +98,27 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
 
     std::u8string driverName = properties.GetDriver();
-
-    // Check if the driver exists explicitly. While this error would be caught when
-    // attempting to open the connection, this way we can deliver a decent error message
-    if(!QSqlDatabase::isDriverAvailable(QStringConverter::FromU8(driverName))) [[unlikely]] {
-      std::u8string message(
-        u8"Unable to open database connection. Either the driver name is invalid outirght or "
-        u8"the Qt library being used was built with enabling the '", 137
-      );
-      message.append(driverName);
-      message.append(u8"' driver.", 9);
-      throw Nuclex::ThinOrm::Errors::MissingDriverError(message);
-    }
+    requireQtSqlDriver(driverName);
 
     // Figure out the name of the database to use for the QSqlDatabase (Qt SQL globally
     // manages connections, which is counter to our design
-    std::u8string databaseName;
-    {
-      std::optional<std::u8string> customDatabaseName = (
-        properties.GetOption(DatabaseNameOptionName)
-      );
-      if(customDatabaseName.has_value()) {
-        databaseName = std::move(customDatabaseName.value());
-      } else {
-        customDatabaseName = properties.GetDatabaseName();
-        if(customDatabaseName.has_value()) {
-          databaseName = std::move(customDatabaseName.value());
-        } else {
-          databaseName = std::move(properties.GetHostnameOrPath());
-        }
-      }
-    }
-
-    std::uint64_t uniqueId = uniqueNameGenerator.BorrowUniqueId(databaseName);
+    std::u8string uniqueDatabaseName = determineUniqueDatabaseName(properties);
+    std::uint64_t uniqueId = uniqueNameGenerator.BorrowUniqueId(uniqueDatabaseName);
     {
       auto returnUniqueIdScope = ON_SCOPE_EXIT_TRANSACTION {
-        uniqueNameGenerator.ReturnUniqueId(databaseName);
+        uniqueNameGenerator.ReturnUniqueId(uniqueDatabaseName);
       };
 
-      std::u8string uniqueDatabaseName = databaseName;
-      uniqueDatabaseName.push_back(u8'-');
-      Nuclex::Support::Text::lexical_append(uniqueDatabaseName, uniqueId);
+      std::u8string uniqueDatabaseNameForQt = uniqueDatabaseName;
+      uniqueDatabaseNameForQt.push_back(u8'-');
+      Nuclex::Support::Text::lexical_append(uniqueDatabaseNameForQt, uniqueId);
 
       QSqlDatabase database = QSqlDatabase::addDatabase(
-        QStringConverter::FromU8(driverName), QStringConverter::FromU8(uniqueDatabaseName)
+        QStringConverter::FromU8(driverName), QStringConverter::FromU8(uniqueDatabaseNameForQt)
       );
       {
         auto removeDatabaseScope = ON_SCOPE_EXIT_TRANSACTION {
-          QSqlDatabase::removeDatabase(QStringConverter::FromU8(uniqueDatabaseName));
+          QSqlDatabase::removeDatabase(QStringConverter::FromU8(uniqueDatabaseNameForQt));
         };
 
         if(!database.isValid()) [[unlikely]] {
@@ -133,11 +133,23 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
         }
 
         std::u8string hostname = properties.GetHostnameOrPath();
-        database.setHostName(QStringConverter::FromU8(hostname));
+        std::optional<std::u8string> databaseName = properties.GetDatabaseName();
 
-        std::optional<std::u8string> databaseName2 = properties.GetDatabaseName();
-        if(databaseName2.has_value()) {
-          database.setDatabaseName(QStringConverter::FromU8(databaseName2.value()));
+        if(isFileBasedDatabase(driverName)) [[likely]] {
+          if(databaseName.has_value()) {
+            databaseName = (
+              std::filesystem::path(hostname) / std::filesystem::path(databaseName.value())
+            ).u8string();
+          } else {
+            databaseName = std::move(hostname);
+          }
+          hostname = std::u8string(u8"local file system");
+          database.setDatabaseName(QStringConverter::FromU8(databaseName.value()));
+        } else {
+          database.setHostName(QStringConverter::FromU8(hostname));
+          if(databaseName.has_value()) {
+            database.setDatabaseName(QStringConverter::FromU8(databaseName.value()));
+          }
         }
 
         std::optional<std::uint16_t> port = properties.GetPort();
@@ -158,8 +170,8 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
         bool opened = database.open();
         if(!opened) {
           std::u8string message(u8"Failed to open database connection to '", 39);
-          if(databaseName2.has_value()) {
-            message.append(databaseName2.value());
+          if(databaseName.has_value()) {
+            message.append(databaseName.value());
             message.append(u8"' on '", 6);
           }
           message.append(hostname);
@@ -177,7 +189,7 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
         }
 
         std::shared_ptr<QtSqlConnection> result = std::make_shared<QtSqlConnection>(
-          databaseName, uniqueId, database
+          uniqueDatabaseName, uniqueId, database
         );
         removeDatabaseScope.Commit();
         returnUniqueIdScope.Commit();
@@ -208,6 +220,44 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   RowReader QtSqlConnection::RunRowQuery(const Query &rowQuery) {
     throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void QtSqlConnection::requireQtSqlDriver(const std::u8string &driver) {
+    using Nuclex::ThinOrm::Utilities::QStringConverter;
+
+    // Check if the driver exists explicitly. While this error would be caught when
+    // attempting to open the connection, this way we can deliver a decent error message
+    if(!QSqlDatabase::isDriverAvailable(QStringConverter::FromU8(driver))) [[unlikely]] {
+      std::u8string message(
+        u8"Unable to open database connection. Either the driver name is invalid outright or "
+        u8"the Qt library being used was built without enabling the '", 137
+      );
+      message.append(driver);
+      message.append(u8"' driver.", 9);
+      throw Nuclex::ThinOrm::Errors::MissingDriverError(message);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::u8string QtSqlConnection::determineUniqueDatabaseName(
+    const Configuration::ConnectionProperties &properties
+  ) {
+    std::optional<std::u8string> customDatabaseName = (
+      properties.GetOption(DatabaseNameOptionName)
+    );
+    if(customDatabaseName.has_value()) [[unlikely]] {
+      return customDatabaseName.value();
+    }
+
+    customDatabaseName = properties.GetDatabaseName();
+    if(customDatabaseName.has_value()) [[likely]] {
+      return customDatabaseName.value();
+    }
+
+    return properties.GetHostnameOrPath();
   }
 
   // ------------------------------------------------------------------------------------------- //

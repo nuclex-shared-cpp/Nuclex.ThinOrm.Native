@@ -78,6 +78,24 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>A reader that can be used to fetch individual rows</returns>
     public: RowReader RunRowQuery(const Query &rowQuery) override;
 
+    /// <summary>Throws an exception if the specified driver isn't available</summary>
+    /// <param name="driver">Driver that will be checked for availability</param>
+    private: static void requireQtSqlDriver(const std::u8string &driver);
+
+    /// <summary>Forms a unique name for the database being accessed</summary>
+    /// <param name="properties">Connection settings for the database</param>
+    /// <returns>A unique name under which the database can be managed</returns>
+    /// <remarks>
+    ///   This name is not unique per connection but unique per connection settings
+    ///   (with a &quot;decent chance&quot; guarantee, not an absolute guarantee),
+    ///   so it needs to be combined with the <see cref="UniqueNameGenerator" /> to
+    ///   create a really unique database name that can be registered in Qt (which sadly
+    ///   manages open database connections globally and demands a unique name for each)
+    /// </remarks>
+    private: static std::u8string determineUniqueDatabaseName(
+      const Configuration::ConnectionProperties &properties
+    );
+
     /// <summary>Generates unique numbers for each database name</summary>
     private: static UniqueNameGenerator uniqueNameGenerator;
 
