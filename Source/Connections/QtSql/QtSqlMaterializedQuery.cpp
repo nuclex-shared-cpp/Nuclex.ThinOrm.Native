@@ -24,7 +24,11 @@ limitations under the License.
 
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
+#include "../../Utilities/QStringConverter.h"
+
+#include <QSqlQuery> // for QSqlQuery
 #include <QSqlError> // for QSqlError
+
 #include <stdexcept> // for std::runtime_error
 
 namespace {
@@ -37,6 +41,19 @@ namespace {
 namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
+
+  std::unique_ptr<QtMaterializedQuery> QtMaterializedQuery::Materialize(
+    QSqlDatabase &database, const Query &query
+  ) {
+    using Nuclex::ThinOrm::Utilities::QStringConverter;
+
+    QSqlQuery qtQuery(database);
+
+    std::u8string sqlStatement = query.GetSqlStatement();
+    qtQuery.prepare(QStringConverter::FromU8(sqlStatement));
+
+  }
+
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Connections::QtSql

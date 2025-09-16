@@ -93,7 +93,11 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>A reader that can be used to fetch individual rows</returns>
     public: RowReader RunRowQuery(const Query &rowQuery) override;
 
-    //private: static configure
+    private: static void configureQSqlDatabase(
+      QSqlDatabase &database,
+      const Configuration::ConnectionProperties &properties,
+      const std::optional<std::u8string> &databaseName
+    );
 
     /// <summary>Generates unique numbers for each database name</summary>
     private: static UniqueNameGenerator uniqueNameGenerator;

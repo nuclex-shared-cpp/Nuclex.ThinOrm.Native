@@ -24,7 +24,9 @@ limitations under the License.
 
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
+#include "Nuclex/ThinOrm/Query.h" // for Query
 #include <QSqlDatabase> // for QSqlDatabase
+#include <memory> // for std::unique_ptr
 
 namespace Nuclex::ThinOrm::Connections::QtSql {
 
@@ -32,6 +34,10 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   /// <summary>Cached materialization of a Query prepared for Qt SQL</summary>
   class QtMaterializedQuery {
+
+    public: static std::unique_ptr<QtMaterializedQuery> Materialize(
+      QSqlDatabase &database, const Query &query
+    );
 
   };
 

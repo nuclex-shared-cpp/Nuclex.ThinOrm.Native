@@ -24,11 +24,12 @@ limitations under the License.
 
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
-#include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
-#include "Nuclex/ThinOrm/Value.h"
-#include "Nuclex/ThinOrm/RowReader.h"
+#include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h" // for ConnectionProperties
+#include "Nuclex/ThinOrm/Value.h" // for Value
+#include "Nuclex/ThinOrm/RowReader.h" // for RowReader
 
 #include "../../Utilities/QStringConverter.h" // for QStringConverter
+#include "./QtSqlMaterializedQuery.h" // for QtSqlMaterializedQuery
 
 #include <Nuclex/Support/Text/LexicalAppend.h> // for lexical_append<>
 #include <Nuclex/Support/ScopeGuard.h> // for ON_SCOPE_EXIT_TRANSACTION
@@ -88,19 +89,23 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   ) {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
 
-    // Figure out the name of the database to use for the QSqlDatabase (Qt SQL globally
-    // manages connections, which is counter to our design
+    // The Qt SQL module manages connections globally, which is counter to our design
+    // that should play well in singleton-free, dependency injected environments, so
+    // we'll need a unique name for the database (but we'll keep it readable by using
+    // the database name with a unique number - that may help with debugging)
     std::uint64_t uniqueId = uniqueNameGenerator.BorrowUniqueId(connectionBaseName);
     {
       auto returnUniqueIdScope = ON_SCOPE_EXIT_TRANSACTION {
         uniqueNameGenerator.ReturnUniqueId(connectionBaseName);
       };
-
-      std::u8string driverName = properties.GetDriver();
       QString uniqueConnectionName = makeUniqueConnectionName(
         connectionBaseName, uniqueId
       );
 
+      // Register the database with the user-specified Qt SQL driver under the unique name
+      // we generated for it. This can fail if the driver doesn't exist or is missing
+      // dependencies such as shared objects or DLLs.
+      std::u8string driverName = properties.GetDriver();
       QSqlDatabase database = QSqlDatabase::addDatabase(
         QStringConverter::FromU8(driverName), uniqueConnectionName
       );
@@ -108,7 +113,6 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
         auto removeDatabaseScope = ON_SCOPE_EXIT_TRANSACTION {
           QSqlDatabase::removeDatabase(uniqueConnectionName);
         };
-
         if(!database.isValid()) [[unlikely]] {
           std::u8string message(
             u8"Error configuring database via Qt SQL. Most likely, the specified driver, '", 75
@@ -120,29 +124,14 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
           );
         }
 
-        std::u8string hostname = properties.GetHostnameOrPath();
-        database.setHostName(QStringConverter::FromU8(hostname));
+        // The driver was found and the database has been added to Qt's global registry,
+        // so now we'll configure it according to the parameters the user has specified.
+        configureQSqlDatabase(database, properties, databaseName);
 
-        // databaseName is processed in the QtSqlConnectionFactory
-        if(databaseName.has_value()) {
-          database.setDatabaseName(QStringConverter::FromU8(databaseName.value()));
-        }
-
-        std::optional<std::uint16_t> port = properties.GetPort();
-        if(port.has_value()) {
-          database.setPort(port.value());
-        }
-
-        std::optional<std::u8string> userName = properties.GetUser();
-        if(userName.has_value()) {
-          database.setUserName(QStringConverter::FromU8(userName.value()));
-        }
-
-        std::optional<std::u8string> password = properties.GetPassword();
-        if(password.has_value()) {
-          database.setPassword(QStringConverter::FromU8(password.value()));
-        }
-
+        // With the database configured, attempt to open a connection to it. This is where
+        // things are most likely to fail because the connection settings may be invalid or
+        // the database server may not respond, so this step puts extra care into delivering
+        // a sensible error message when that happens.
         bool opened = database.open();
         if(!opened) {
           std::u8string message(u8"Failed to open database connection to '", 39);
@@ -151,20 +140,27 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
             message.append(rawDatabaseName.value());
             message.append(u8"' on or in '", 6);
           }
+
+          std::u8string hostname = properties.GetHostnameOrPath();
           message.append(hostname);
           message.push_back(u8'\'');
+
+          std::optional<std::u8string> userName = properties.GetUser();
           if(userName.has_value()) {
             message.append(u8" as '", 5);
             message.append(userName.value());
             message.push_back(u8'\'');
           }
-          message.push_back(u8':');
+          message.append(u8": ", 2);
+
           message.append(QStringConverter::ToU8(database.lastError().text()));
           throw std::runtime_error(
             std::string(reinterpret_cast<const char *>(message.data()), message.length())
           );
         }
 
+        // With the database successfully opened, we can create the QtSqlConnection instance
+        // and disarm all scope guards that would tear down the connection again
         std::shared_ptr<QtSqlConnection> result = std::make_shared<QtSqlConnection>(
           connectionBaseName, uniqueId, database//, uniqueConnectionName
         );
@@ -197,6 +193,41 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   RowReader QtSqlConnection::RunRowQuery(const Query &rowQuery) {
     throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void QtSqlConnection::configureQSqlDatabase(
+    QSqlDatabase &database,
+    const Configuration::ConnectionProperties &properties,
+    const std::optional<std::u8string> &databaseName
+  ) {
+    using Nuclex::ThinOrm::Utilities::QStringConverter;
+
+    std::u8string hostname = properties.GetHostnameOrPath();
+    database.setHostName(QStringConverter::FromU8(hostname));
+
+    // Note that databaseName is processed in the QtSqlConnectionFactory, giving it a chance
+    // to transform the value (i.e. for file-based databases, the directory path stored in
+    // the "hostname or path" field needs to be combine with the database name for Qt)
+    if(databaseName.has_value()) {
+      database.setDatabaseName(QStringConverter::FromU8(databaseName.value()));
+    }
+
+    std::optional<std::uint16_t> port = properties.GetPort();
+    if(port.has_value()) {
+      database.setPort(port.value());
+    }
+
+    std::optional<std::u8string> userName = properties.GetUser();
+    if(userName.has_value()) {
+      database.setUserName(QStringConverter::FromU8(userName.value()));
+    }
+
+    std::optional<std::u8string> password = properties.GetPassword();
+    if(password.has_value()) {
+      database.setPassword(QStringConverter::FromU8(password.value()));
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
