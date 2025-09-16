@@ -54,7 +54,7 @@ namespace Nuclex::ThinOrm::Connections {
     ///   auto-generated but can be prefixed with an identifier you can control by using
     ///   an options named <see cref="ConnectionNameOptionName" /> in the connection settings.
     /// </remarks>
-    public: virtual std::shared_ptr<Connection> Connect(
+    public: [[nodiscard]] virtual std::shared_ptr<Connection> Connect(
       const Configuration::ConnectionProperties &connectionProperties
     ) const = 0;
 

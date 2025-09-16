@@ -27,6 +27,7 @@ limitations under the License.
 
 #include <QSqlDatabase> // for QSqlDatabase
 #include <memory> // for std::shared_ptr
+#include <optional> // for std::optional
 
 namespace Nuclex::ThinOrm::Configuration {
   class ConnectionProperties;
@@ -55,9 +56,20 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
     /// <summary>Establishes a new connection to a database via QtSql</summary>
     /// <param name="properties">Settings to use for connection to the database</param>
+    /// <param name="connectionBaseName">
+    ///   Base name to use for the connection name passed to QSqlDatabase::addDatabase(),
+    ///   will be made completely unique by appending a generated unique id
+    /// </param>
+    /// <param name="databaseName">
+    ///   Database name that should be passed to QSqlDatabase::setDatabaseName(),
+    ///   contains either the name of the database on the server or a file path,
+    ///   an empty value means the setter method will not be called.
+    /// </param>
     /// <returns>A new database connection estblashed with the provided parameters</returns>
     public: static std::shared_ptr<QtSqlConnection> Connect(
-      const Configuration::ConnectionProperties &properties
+      const Configuration::ConnectionProperties &properties,
+      const std::u8string connectionBaseName,
+      const std::optional<std::u8string> databaseName
     );
 
     /// <summary>Prepares the specified query for execution</summary>
@@ -78,33 +90,19 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>A reader that can be used to fetch individual rows</returns>
     public: RowReader RunRowQuery(const Query &rowQuery) override;
 
-    /// <summary>Throws an exception if the specified driver isn't available</summary>
-    /// <param name="driver">Driver that will be checked for availability</param>
-    private: static void requireQtSqlDriver(const std::u8string &driver);
-
-    /// <summary>Forms a unique name for the database being accessed</summary>
-    /// <param name="properties">Connection settings for the database</param>
-    /// <returns>A unique name under which the database can be managed</returns>
-    /// <remarks>
-    ///   This name is not unique per connection but unique per connection settings
-    ///   (with a &quot;decent chance&quot; guarantee, not an absolute guarantee),
-    ///   so it needs to be combined with the <see cref="UniqueNameGenerator" /> to
-    ///   create a really unique database name that can be registered in Qt (which sadly
-    ///   manages open database connections globally and demands a unique name for each)
-    /// </remarks>
-    private: static std::u8string determineUniqueDatabaseName(
-      const Configuration::ConnectionProperties &properties
-    );
+    //private: static configure
 
     /// <summary>Generates unique numbers for each database name</summary>
     private: static UniqueNameGenerator uniqueNameGenerator;
 
     /// <summary>Name of the database being accessed, important for unique name</summary>
-    private: std::u8string databaseName;
+    private: std::u8string connectionBaseName;
     /// <summary>Unique id assigned to the instance, important for unique name</summary>
     private: std::uint64_t uniqueId;
     /// <summary>Opened database connection from the QtSql module</summary>
     private: QSqlDatabase database;
+    /// <summary>Unique connection name the connection is registered under to Qt</summary>
+    private: QString uniqueConnectionName;
 
   };
 
