@@ -22,6 +22,8 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 #include <string> // for std::u8string
 #include <unordered_map> // for std::unordered_map<>
 #include <cstdint> // for std::uint64_t
@@ -70,3 +72,5 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 } // namespace Nuclex::ThinOrm::Connections::QtSql
 
 #endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_UNIQUENAMEGENERATOR_H
+
+#endif // #if defined(NUCLEX_THINORM_ENABLE_QT)

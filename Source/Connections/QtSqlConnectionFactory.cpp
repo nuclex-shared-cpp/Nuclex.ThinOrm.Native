@@ -21,6 +21,9 @@ limitations under the License.
 #define NUCLEX_THINORM_SOURCE 1
 
 #include "Nuclex/ThinOrm/Connections/QtSqlConnectionFactory.h"
+
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 #include "Nuclex/ThinOrm/Configuration/ConnectionProperties.h"
 #include "Nuclex/ThinOrm/Errors/MissingDriverError.h"
 
@@ -176,3 +179,5 @@ namespace Nuclex::ThinOrm::Connections {
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Connections
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)

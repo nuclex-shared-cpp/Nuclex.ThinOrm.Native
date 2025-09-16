@@ -16,6 +16,22 @@ option(
 )
 
 option(
+  NUCLEX_THINORM_ENABLE_QT5
+  "Whether to include support for using Qt's SQL module for accessing \
+  databases. This will add a hard dependency on Qt 5 but may simplify your \
+  build by sharing any database client libraries compiled into your Qt 5."
+  ON
+)
+
+option(
+  NUCLEX_THINORM_ENABLE_QT6
+  "Whether to include support for using Qt's SQL module for accessing \
+  databases. This will add a hard dependency on Qt 6 but may simplify your \
+  build by sharing any database client libraries compiled into your Qt 6."
+  OFF
+)
+
+option(
   NUCLEX_THINORM_SUPPORT_ASYNCPP
   "Whether methods should be exposed that use C++20 couroutines for \
   slow operations such as establishing database connections and running \
@@ -29,6 +45,7 @@ option(
   compilation of the entire source tree as well as the GoogleTest library."
   OFF
 )
+
 option(
   BUILD_BENCHMARK
   "Whether to build the benchmark executable. This will require an extra \
@@ -48,10 +65,6 @@ include("../build-system/cmake/cplusplus.cmake")
 #   https://en.wikipedia.org/wiki/Pthreads
 find_package(Threads REQUIRED)
 
-# Locate Qt, the cross-platform User Interface and base API abstraction library
-# we're using for the built-in SQL database clients
-find_package(Qt5 COMPONENTS REQUIRED Sql Core)
-
 # Add Nuclex.Support.Native as a sub-project, we link it for utility methods.
 if(NOT (TARGET NuclexSupportNative))
   add_subdirectory(
@@ -60,8 +73,26 @@ if(NOT (TARGET NuclexSupportNative))
   )
 endif()
 
+message(STATUS "Enabled options for Nuclex.ThinOrm.Native:")
+message(STATUS "  ⚫ Build core library")
+
+# Locate Qt, the cross-platform User Interface and base API abstraction library
+# we're using for the built-in SQL database clients
+if(NUCLEX_THINORM_ENABLE_QT5 AND NUCLEX_THINORM_ENABLE_QT6)
+  message(FATAL "Qt5 and Qt6 cannot both be enabled at the same time")
+endif()
+if(NUCLEX_THINORM_ENABLE_QT5)
+  message(STATUS "  ⚫ Support Qt5 database access")
+  find_package(Qt5 COMPONENTS REQUIRED Sql Core)
+endif()
+if(NUCLEX_THINORM_ENABLE_QT6)
+  message(STATUS "  ⚫ Support Qt6 database access")
+  find_package(Qt6 COMPONENTS REQUIRED Sql Core)
+endif()
+
 # Add AsyncPP as a sub-project, we use for the task-based coroutines.
 if(NUCLEX_THINORM_SUPPORT_ASYNCPP)
+  message(STATUS "  ⚫ Support coroutines via AsyncPP")
   if(NOT (TARGET AsyncPP))
     add_subdirectory(
       ${PROJECT_SOURCE_DIR}/../third-party/nuclex-asyncpp
@@ -70,8 +101,6 @@ if(NUCLEX_THINORM_SUPPORT_ASYNCPP)
   endif()
 endif()
 
-message(STATUS "Enabled options for Nuclex.ThinOrm.Native:")
-message(STATUS "  ⚫ Build core library")
 
 if(BUILD_UNIT_TESTS)
   message(STATUS "  ⚫ Build unit tests")
@@ -99,6 +128,7 @@ endif()
 
 # Use CMake's own package for locating Doxygen on the system
 if(BUILD_DOCS)
+  message(STATUS "  ⚫ Generate HTML documentation")
   find_package(Doxygen)
 endif()
 
@@ -148,18 +178,45 @@ file(
 
 function(add_third_party_libraries target_name)
 
+  # Link against PThreads and Nuclex.Support.Native
+  target_link_libraries(
+    ${target_name}
+    PRIVATE Threads::Threads
+    PUBLIC NuclexSupportNative
+  )
+
+  # Link against Qt5 if support is enabled
+  if(NUCLEX_THINORM_ENABLE_QT5)
+    target_link_libraries(
+      ${target_name}
+      PRIVATE Qt5::Sql
+      PRIVATE Qt5::Core
+    )
+  endif()
+
+  # Link against Qt6 if support is enabled
+  if(NUCLEX_THINORM_ENABLE_QT6)
+    target_link_libraries(
+      ${target_name}
+      PRIVATE Qt6::Sql
+      PRIVATE Qt6::Core
+    )
+  endif()
+
+  if(NUCLEX_THINORM_ENABLE_QT5 OR NUCLEX_THINORM_ENABLE_QT6)
+    target_compile_definitions(
+      ${target_name}
+      PUBLIC NUCLEX_THINORM_ENABLE_QT
+    )
+  endif()
+
+  # Link against AsyncPP for coroutines, if enabled
   if(NUCLEX_THINORM_SUPPORT_ASYNCPP)
     target_link_libraries(
       ${target_name}
       PUBLIC AsyncPP
     )
   endif()
-
-  target_link_libraries(
-    ${target_name}
-    PRIVATE Qt5::Sql
-    PRIVATE Qt5::Core
-  )
 
   # On Unix systems, the library and unit test executable should look for
   # dependencies in its own directory first.
@@ -199,13 +256,6 @@ target_sources(
   NuclexThinOrmNative
   PUBLIC ${headerFiles}
   PRIVATE ${sourceFiles}
-)
-
-# Link against PThreads and Nuclex.Support.Native
-target_link_libraries(
-  NuclexThinOrmNative
-  PRIVATE Threads::Threads
-  PUBLIC NuclexSupportNative
 )
 
 # Add include directories and static libraries of all enabled image formats
@@ -259,13 +309,10 @@ if(BUILD_UNIT_TESTS)
   )
 
   # Link GoogleTest and the main() function supplied by GoogleTest
-  # Also link against PThreads
   target_link_libraries(
     NuclexThinOrmNativeTests
     PRIVATE GoogleTest::Static
     PRIVATE GoogleTest::Main
-    PRIVATE Threads::Threads
-    PUBLIC NuclexSupportNative
   )
 
   add_third_party_libraries(NuclexThinOrmNativeTests)
@@ -320,12 +367,9 @@ if(BUILD_BENCHMARK)
   )
 
   # Link Celero
-  # Also link against PThreads
   target_link_libraries(
     NuclexThinOrmNativeBenchmark
     PRIVATE Celero
-    PRIVATE Threads::Threads
-    PUBLIC NuclexSupportNative
   )
 
   add_third_party_libraries(NuclexThinOrmNativeBenchmark)
@@ -402,90 +446,5 @@ if(BUILD_DOCS)
   )
 
 endif()
-
-# -------------------------------------------------------------------------------------------------
-
-file(
-  WRITE "${PROJECT_SOURCE_DIR}/NuclexThinOrmNativeConfig.cmake"
-  "#!/usr/bin/cmake
-
-# Configuration to include Nuclex.ThinOrm.Native in a CMake-based project. If you want to
-# reference Nuclex.ThinOrm.Native as an externally compiled static library, do this:
-#
-#    set(NuclexThinOrmNative_DIR \"../Nuclex.ThinOrm.Native\")
-#    find_package(NuclexThinOrmNative REQUIRED CONFIG)
-#
-#    target_link_libraries(
-#        MyAwesomeProject
-#        PRIVATE NuclexThinOrmNative::Dynamic
-#    )
-#
-# Alternatively, if you want to build Nuclex.ThinOrm.Native together with your project,
-# use the normal CMakeLists.txt with CMake's add_subdirectory() command:
-#
-#    add_subdirectory(
-#        \"\${PROJECT_SOURCE_DIR}/../Nuclex.ThinOrm.Native\"
-#        \"\${CMAKE_BINARY_DIR}/nuclex.pixels.native\"
-#    )
-#
-#    target_link_libraries(
-#        MyAwesomeProject
-#        PRIVATE NuclexThinOrmNative
-#    )
-#
-
-# -------------------------------------------------------------------------------------------------
-
-if(NOT DEFINED NUCLEX_COMPILER_TAG)
-	message(
-		FATAL_ERROR
-		\"NUCLEX_COMPILER_TAG not defined! Include cplusplus.cmake before importing this package \\
-		in order to generate a tag identifying the platform/compiler/architecture/variant!\"
-	)
-endif()
-
-# -------------------------------------------------------------------------------------------------
-
-if(NOT EXISTS \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}\")
-	# TODO: Warn and link release build when compiling in debug mode
-	# TODO: Warn and link build for older compiler version if found
-	message(
-		FATAL_ERROR
-		\"Directory '\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}' not found. \\
-		Please either build and install this project before importing it via \\
-		find_package() or use this project's main CMakeFiles.txt via add_subdirectory()!\"
-	)
-endif()
-
-# -------------------------------------------------------------------------------------------------
-
-add_library(NuclexThinOrmNative::Dynamic SHARED IMPORTED)
-
-# This may cause warnings on recent GCC versions (10.0.0+?) with LTO because GCC detects
-# that the headers used during build (residing in build/) are not the same used when
-# linking the library (copies resising in Include/).
-#
-# CMake doesn't run the install step during build, so the only way to get the headers
-# in place before building would be by copying them rather than installing them.
-set_target_properties(
-	NuclexThinOrmNative::Dynamic PROPERTIES
-	INTERFACE_INCLUDE_DIRECTORIES \"\${CMAKE_CURRENT_LIST_DIR}/Include\"
-	IMPORTED_LINK_INTERFACE_LANGUAGES \"C\"
-)
-
-if(WIN32)
-	set_target_properties(
-		NuclexThinOrmNative::Dynamic PROPERTIES
-		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/Nuclex.ThinOrm.Native.lib\"
-	)
-else()
-	set_target_properties(
-		NuclexThinOrmNative::Dynamic PROPERTIES
-		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/libNuclexThinOrmNative.so\"
-	)
-endif()
-
-message(STATUS \"Imported Nuclex.ThinOrm.Native targets with binaries in '\${CMAKE_CURRENT_LIST_DIR}'\")"
-)
 
 # -------------------------------------------------------------------------------------------------

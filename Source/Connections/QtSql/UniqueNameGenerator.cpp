@@ -22,6 +22,8 @@ limitations under the License.
 
 #include "./UniqueNameGenerator.h"
 
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 #include <cassert> // for assert()
 
 namespace Nuclex::ThinOrm::Connections::QtSql {
@@ -62,3 +64,5 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Connections::QtSql
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)

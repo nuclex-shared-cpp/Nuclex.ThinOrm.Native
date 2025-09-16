@@ -13,6 +13,8 @@
       "command": "cmake",
       "args": [
         "-B", "obj/cmake-Debug",
+        "-DNUCLEX_THINORM_ENABLE_QT5=ON",
+        "-DNUCLEX_THINORM_SUPPORT_ASYNCPP=ON",
         "-DCMAKE_BUILD_TYPE=Debug",
         "-DBUILD_UNIT_TESTS=ON"
       ],

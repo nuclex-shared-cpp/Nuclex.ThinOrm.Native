@@ -21,12 +21,10 @@ limitations under the License.
 #define NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTIONFACTORY_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Connections/ConnectionFactory.h"
 
-#if defined(NUCLEX_THINORM_SUPPORT_ASYNCPP)
-  #include <stop_token>
-  #include <asyncpp/task.h> // for asyncpp::task
-#endif
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
+#include "Nuclex/ThinOrm/Connections/ConnectionFactory.h"
 
 #include <string> // for std::u8string
 #include <memory> // for std::unique_ptr<>
@@ -170,3 +168,5 @@ namespace Nuclex::ThinOrm::Connections {
 } // namespace Nuclex::ThinOrm::Connections
 
 #endif // NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTIONFACTORY_H
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)

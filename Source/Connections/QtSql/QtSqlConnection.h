@@ -21,6 +21,9 @@ limitations under the License.
 #define NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLCONNECTION_H
 
 #include "Nuclex/ThinOrm/Config.h"
+
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 #include "Nuclex/ThinOrm/Connections/Connection.h"
 
 #include "./UniqueNameGenerator.h" // for UniqueNameGenerator
@@ -111,3 +114,5 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 } // namespace Nuclex::ThinOrm::Connections::QtSql
 
 #endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLCONNECTION_H
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)

@@ -1,0 +1,39 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/Include/**",
+                "${workspaceFolder}/../Nuclex.Support.Native/Include/**",
+                "${workspaceFolder}/../third-party/nuclex-asyncpp/build/include/**",
+                "${workspaceFolder}/../third-party/nuclex-googletest/build/googletest/include/**",
+                "${workspaceFolder}/../third-party/nuclex-celero/build/include/**",
+                "/usr/include/qt5/QtSql/**",
+                "/usr/include/qt5/QtCore/**",
+                "/usr/include/qt5/**"
+            ],
+            "defines": [
+                "NUCLEX_THINORM_ENABLE_QT",
+                "NUCLEX_THINORM_SUPPORT_ASYNCPP",
+                "NUCLEX_THINORM_EXECUTABLE",
+                "NUCLEX_THINORM_SOURCE"
+            ],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c11",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "gcc-x64",
+            "compilerArgs": [
+                "-fvisibility=hidden",
+                "-Wpedantic",
+                "-Wall",
+                "-Wextra",
+                "-Wno-unknown-pragmas",
+                "-fpic",
+                "-funsafe-math-optimizations",
+                "-std=c++20",
+                "-fvisibility-inlines-hidden"
+            ]
+        }
+    ],
+    "version": 4
+}
