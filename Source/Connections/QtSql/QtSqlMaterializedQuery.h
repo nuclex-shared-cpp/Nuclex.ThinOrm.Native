@@ -39,6 +39,14 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   /// <summary>Materialization of a generic Query, prepared for a Qt SQL database</summary>
   class QtSqlMaterializedQuery {
 
+    /// <summary>Initializes a new materialized query</summary>
+    /// <param name="database">Qt database the materialization will be bound to</summarize>
+    /// <param name="query">Query describing the SQL statement and parameters</param>
+    public: QtSqlMaterializedQuery(QSqlDatabase &database, const Query &query);
+    /// <summary>Destroys the materialized query and frees all resources</summary>
+    public: ~QtSqlMaterializedQuery();
+
+#if 0
     /// <summary>Materializes the specified query for a Qt SQL database</summary>
     /// <param name="database">Database for which the query will be materialized</param>
     /// <param name="query">Query that will be materialized</param>
@@ -46,6 +54,7 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     public: static std::unique_ptr<QtSqlMaterializedQuery> Materialize(
       QSqlDatabase &database, const Query &query
     );
+#endif
 
     /// <summary>Transforms the SQL statement into the format expected by Qt SQL</summary>
     /// <param name="sqlStatement">SQL statement that will be transformed</param>
@@ -57,7 +66,11 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
       const std::u8string &sqlStatement, const std::vector<QueryParameterView> &parameters
     );
 
+    /// <summary>
+    ///   The SQL statement as it has been passed to the <see cref="QSqlQuery" />
+    /// </summary>
     private: QString qtSqlStatement;
+    /// <summary>Prepared Qt SQL query awaiting execution</summary>
     private: QSqlQuery qtQuery;
 
   };

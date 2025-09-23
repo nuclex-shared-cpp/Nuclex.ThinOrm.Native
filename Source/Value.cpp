@@ -172,7 +172,7 @@ namespace Nuclex::ThinOrm {
     type(ValueType::Decimal),
     empty(false),
     value() {
-    this->value.DecimalValue = decimalValue;
+    new(&this->value.DecimalValue) Decimal(decimalValue);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -199,7 +199,7 @@ namespace Nuclex::ThinOrm {
     type(ValueType::String),
     empty(false),
     value() {
-    this->value.String = stringValue;
+    new(&this->value.String) std::u8string(stringValue);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -208,7 +208,7 @@ namespace Nuclex::ThinOrm {
     type(ValueType::Blob),
     empty(false),
     value() {
-    this->value.Blob = blobValue;
+    new(&this->value.Blob) std::vector<std::byte>(blobValue);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -273,7 +273,7 @@ namespace Nuclex::ThinOrm {
     empty(!decimalValue.has_value()),
     value() {
     if(!empty) {
-      this->value.DecimalValue = decimalValue.value();
+      new(&this->value.DecimalValue) Decimal(decimalValue.value());
     }
   }
 
@@ -306,7 +306,7 @@ namespace Nuclex::ThinOrm {
     empty(!stringValue.has_value()),
     value() {
     if(!empty) {
-      this->value.String = stringValue.value();
+      new(&this->value.String) std::u8string(stringValue.value());
     }
   }
 
@@ -317,7 +317,7 @@ namespace Nuclex::ThinOrm {
     empty(!blobValue.has_value()),
     value() {
     if(!empty) {
-      this->value.Blob = blobValue.value();
+      new(&this->value.Blob) std::vector<std::byte>(blobValue.value());
     }
   }
 

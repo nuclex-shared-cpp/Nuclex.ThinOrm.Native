@@ -23,31 +23,47 @@ limitations under the License.
 #include <gtest/gtest.h>
 
 #include "../../../Source/Connections/QtSql/QtSqlMaterializedQuery.h"
-#include "../../../Source/Utilities/QStringConverter.h"
-#include <Nuclex/Support/Text/LexicalAppend.h>
+#include "../../../Source/Utilities/QStringConverter.h" // for QStringConverter
+#include <Nuclex/Support/Text/LexicalAppend.h> // for lexical_append<>
 
-#include <QString>
+#include <QString> // for QString
 
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  class TemporaryDatabase {
-    public: inline TemporaryDatabase();
-    public: inline ~TemporaryDatabase();
+  /// <summary>Sets up a temporary in-memory Qt database for testing</summary>
+  class TemporaryDatabaseScope {
 
+    /// <summary>Prepares a new in-memory database</summary>
+    public: inline TemporaryDatabaseScope();
+    /// <summary>Destroys the in-memory database, invalidating all open queries</summary>
+    public: inline ~TemporaryDatabaseScope();
+
+    /// <summary>Opens the in-memory database. Must be called before use</summary>
     public: inline void OpenMemoryDatabase();
+
+    /// <summary>Fetches the Qt database instance (unique to the scope)</summary>
+    /// <returns>The Qt database instance</returns>
     public: inline QSqlDatabase &GetDatabase();
 
+    /// <summary>Builds a unique name for the database</summary>
+    /// <param name="uniqueId">
+    ///   A unique value that should only exist once per active database
+    /// </param>
+    /// <returns>A Qt string containing a unique but descriptive name</returns>
     private: inline static QString makeUniqueDatabaseName(std::uintptr_t uniqueId);
 
+    /// <summary>Name of the unique database instance, needed for cleanup</summary>
     private: QString connectionName;
+    /// <summary>The temporary in-memory database created for this scope</summary>
     private: QSqlDatabase qtDatabase;
+
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-  inline TemporaryDatabase::TemporaryDatabase() :
+  inline TemporaryDatabaseScope::TemporaryDatabaseScope() :
     connectionName(),
     qtDatabase() {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
@@ -62,7 +78,7 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  inline TemporaryDatabase::~TemporaryDatabase() {
+  inline TemporaryDatabaseScope::~TemporaryDatabaseScope() {
     if(this->qtDatabase.isOpen()) {
       this->qtDatabase.close();
     }
@@ -71,7 +87,7 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  inline void TemporaryDatabase::OpenMemoryDatabase() {
+  inline void TemporaryDatabaseScope::OpenMemoryDatabase() {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
 
     this->qtDatabase.setDatabaseName(
@@ -84,13 +100,13 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  inline QSqlDatabase &TemporaryDatabase::GetDatabase() {
+  inline QSqlDatabase &TemporaryDatabaseScope::GetDatabase() {
     return this->qtDatabase;
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  inline QString TemporaryDatabase::makeUniqueDatabaseName(std::uintptr_t uniqueId) {
+  inline QString TemporaryDatabaseScope::makeUniqueDatabaseName(std::uintptr_t uniqueId) {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
 
     std::u8string name(u8"temp-", 5);
@@ -108,29 +124,24 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(QtSqlMaterializedQueryTest, CanMaterializeParameterlessQuery) {
-    TemporaryDatabase tempDb;
+    TemporaryDatabaseScope tempDb;
     tempDb.OpenMemoryDatabase();
 
     Query testQuery(u8"SELECT * FROM users");
 
-    std::unique_ptr<QtSqlMaterializedQuery> materializedQuery = (
-      QtSqlMaterializedQuery::Materialize(tempDb.GetDatabase(), testQuery)
-    );
+    QtSqlMaterializedQuery materializedQuery(tempDb.GetDatabase(), testQuery);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(QtSqlMaterializedQueryTest, CanMaterializeQueryWithParameters) {
-    TemporaryDatabase tempDb;
+    TemporaryDatabaseScope tempDb;
     tempDb.OpenMemoryDatabase();
 
     Query testQuery(u8"SELECT * FROM users WHERE (age >= {minAge}) AND (role = {role})");
 
-    std::unique_ptr<QtSqlMaterializedQuery> materializedQuery = (
-      QtSqlMaterializedQuery::Materialize(tempDb.GetDatabase(), testQuery)
-    );
+    QtSqlMaterializedQuery materializedQuery(tempDb.GetDatabase(), testQuery);
   }
-
 
   // ------------------------------------------------------------------------------------------- //
 

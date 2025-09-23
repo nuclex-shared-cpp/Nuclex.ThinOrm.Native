@@ -42,25 +42,39 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
+  QtSqlMaterializedQuery::QtSqlMaterializedQuery(
+    QSqlDatabase &database, const Query &query
+  ) :
+    qtSqlStatement(transformSqlStatement(query.GetSqlStatement(), query.GetParameterInfo())),
+    qtQuery(qtSqlStatement) {
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  QtSqlMaterializedQuery::~QtSqlMaterializedQuery() = default;
+
+  // ------------------------------------------------------------------------------------------- //
+#if 0
   std::unique_ptr<QtSqlMaterializedQuery> QtSqlMaterializedQuery::Materialize(
     QSqlDatabase &database, const Query &query
   ) {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
 
     std::unique_ptr<QtSqlMaterializedQuery> materializedQuery = (
-      std::make_unique<QtSqlMaterializedQuery>()
+      std::make_unique<QtSqlMaterializedQuery>(database, query)
     );
-
+    /*
     const std::vector<QueryParameterView> &parameters = query.GetParameterInfo();
     materializedQuery->qtSqlStatement = transformSqlStatement(
       query.GetSqlStatement(), parameters
     );
 
     materializedQuery->qtQuery = QSqlQuery(materializedQuery->qtSqlStatement, database);
+    */
 
     return materializedQuery;
   }
-
+#endif
   // ------------------------------------------------------------------------------------------- //
 
   QString QtSqlMaterializedQuery::transformSqlStatement(
