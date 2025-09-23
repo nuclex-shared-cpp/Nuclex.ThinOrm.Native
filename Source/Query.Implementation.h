@@ -59,7 +59,9 @@ namespace Nuclex::ThinOrm {
 
     /// <summary>Map of values indexed by the name</summary>
     private: typedef std::unordered_map<
-      std::u8string, Value, Nuclex::Support::Text::CaseInsensitiveUtf8Hash
+      std::u8string, Value,
+      Nuclex::Support::Text::CaseInsensitiveUtf8Hash,
+      Nuclex::Support::Text::CaseInsensitiveUtf8EqualTo
     > ParameterValueMap;
 
     /// <summary>Mutex to synchronize state (parameters + prepared statement) updates</summary>

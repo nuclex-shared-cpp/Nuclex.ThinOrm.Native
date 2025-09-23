@@ -22,6 +22,8 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 #include <QString> // for Qt's QString
 #include <string> // for C++' std::u8string
 
@@ -47,12 +49,20 @@ namespace Nuclex::ThinOrm::Utilities {
     /// <summary>Forms a Qt QString from a C++ UTF-8 string</summary>
     /// <param name="utf8String">UTF-8 string that will be converted into a QString</param>
     /// <returns>A Qt QString with equivalent contents to the C++ UTF-8 string</returns>
-    public: inline static QString FromU8(const std::u8string &utf8String) {
-      return QString::fromUtf8(
-        U8CHARS(utf8String.data()),
-        static_cast<int>(utf8String.size())
-      );
-    }
+    public: inline static QString FromU8(const std::u8string &utf8String);
+
+    /// <summary>Forms a Qt QString from a C++ UTF-8 string view</summary>
+    /// <param name="utf8String">UTF-8 string that will be converted into a QString</param>
+    /// <returns>A Qt QString with equivalent contents to the C++ UTF-8 string</returns>
+    public: inline static QString FromU8(const std::u8string_view &utf8String);
+
+    /// <summary>Appends UTF-8 characters to a Qt QString</summary>
+    /// <param name="target">Qt QString the characters will be appended to</param>
+    /// <param name="source">UTF-8 characters that will be appended</param>
+    /// <param name="length">Number of UTF-8 characters to append</param>
+    public: static void AppendU8(
+      QString &target, const char8_t *source, std::size_t length
+    );
 
     /// <summary>Turns a Qt QString into a C++ UTF-8 string</summary>
     /// <param name="qtString">Qt QString that will be converted into a UTF-8 striong</param>
@@ -63,6 +73,26 @@ namespace Nuclex::ThinOrm::Utilities {
 
   // ------------------------------------------------------------------------------------------- //
 
+  inline QString QStringConverter::FromU8(const std::u8string &utf8String) {
+    return QString::fromUtf8(
+      U8CHARS(utf8String.data()),
+      static_cast<int>(utf8String.size())
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline QString QStringConverter::FromU8(const std::u8string_view &utf8String) {
+    return QString::fromUtf8(
+      U8CHARS(utf8String.data()),
+      static_cast<int>(utf8String.size())
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // namespace Nuclex::ThinOrm::Utilities
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)
 
 #endif // NUCLEX_THINORM_UTILITIES_QSTRINGCONVERTER_H

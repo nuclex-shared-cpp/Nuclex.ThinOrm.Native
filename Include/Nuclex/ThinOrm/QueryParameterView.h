@@ -46,6 +46,10 @@ namespace Nuclex::ThinOrm {
     public: std::u8string_view Name;
 
     /// <summary>Character index in the string as which the segment begins</summary>
+    /// <remarks>
+    ///   This is an index into the overall query string. It cannot be used with
+    ///   the <see cref="Name" /> string_view.
+    /// </remarks>
     public: std::u8string::size_type StartIndex;
 
     /// <summary>Length of the segment in characters</summary>

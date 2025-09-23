@@ -21,9 +21,13 @@ limitations under the License.
 
 #include "./QStringConverter.h"
 
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 #include <Nuclex/Support/Errors/CorruptStringError.h> // for CorruptStringError
+#include <Nuclex/Support/Text/UnicodeHelper.h> // for UnicodeHelper
 
 #include <stdexcept> // for std::runtime_error
+#include <cassert> // for assert()
 
 namespace {
 
@@ -66,49 +70,33 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Encodes the specified code point into UTF-8 characters</summary>
-  /// <param name="codePoint">Code point that will be encoded as UTF-8</param>
+  /// <summary>Encodes the specified code point into UTF-16 characters</summary>
+  /// <param name="codePoint">Code point that will be encoded as UTF-16</param>
   /// <param name="target">
-  ///   Address at which the UTF-8 characters will be deposited. Needs to have at
+  ///   Address at which the UTF-16 characters will be deposited. Needs to have at
   ///   least 4 bytes of usable space and will be moved to after the encoded characters
   /// </param>
   /// <returns>
   ///   The number of characters that have been encoded or std::size_t(-1) if
   ///   you specified an invalid code point.
   /// </returns>
-  inline std::size_t writeCodePoint(char8_t *target, char32_t codePoint) {
-    if(codePoint < 128) [[likely]] {
-      *target = static_cast<char8_t>(codePoint);
+  inline std::size_t writeCodePoint(QChar *&target, char32_t codePoint) {
+    if(codePoint < 65536) {
+      assert(
+        ((codePoint < 0xDC00) || (codePoint >= 0xE000)) &&
+        u8"Unicode code point has to be outside surrogate range (0xDC00-0xDFFF)"
+      );
+      // If Q_COMPILER_UNICODE_STRINGS is set, this should construct a QChar implicitly
+      *target = static_cast<char16_t>(codePoint);
       ++target;
       return 1;
-    } else if(codePoint < 2048) {
-      *target = char8_t(0xC0) | static_cast<char8_t>(codePoint >> 6);
-      ++target;
-      *target = char8_t(0x80) | static_cast<char8_t>(codePoint & 0x3F);
-      ++target;
-      return 2;
-    } else if(codePoint < 65536) {
-      *target = char8_t(0xE0) | static_cast<char8_t>(codePoint >> 12);
-      ++target;
-      *target = char8_t(0x80) | static_cast<char8_t>((codePoint >> 6) & 0x3F);
-      ++target;
-      *target = char8_t(0x80) | static_cast<char8_t>(codePoint & 0x3F);
-      ++target;
-      return 3;
     } else if(codePoint < 1114111) {
-      *target = char8_t(0xF0) | static_cast<char8_t>(codePoint >> 18);
-      ++target;
-      *target = char8_t(0x80) | static_cast<char8_t>((codePoint >> 12) & 0x3F);
-      ++target;
-      *target = char8_t(0x80) | static_cast<char8_t>((codePoint >> 6) & 0x3F);
-      ++target;
-      *target = char8_t(0x80) | static_cast<char8_t>(codePoint & 0x3F);
-      ++target;
-      return 4;
+      codePoint -= char32_t(65536);
+      *(target) = 0xD800 | static_cast<char16_t>(codePoint >> 10);
+      *(target + 1) = 0xDC00 | static_cast<char16_t>(codePoint & 0x03FF);
+      target += 2;
+      return 2;
     } else {
-      assert(
-        (codePoint < 1114111) && u8"Code point must be in valid unicode range"
-      );
       return std::size_t(-1);
     }
   }
@@ -118,6 +106,59 @@ namespace {
 } // anonymous namespace
 
 namespace Nuclex::ThinOrm::Utilities {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void QStringConverter::AppendU8(
+    QString &target, const char8_t *source, std::size_t length
+  ) {
+    QString::size_type actualLength = target.length();
+    QString::size_type guessedNewLength = actualLength;
+    if(length >= 4) {
+      guessedNewLength += length; // on the assumpton we're mostly dealing with ASCII
+    } else {
+      guessedNewLength += 4; // to not risk a buffer overflow, we need at least 4 bytes
+    }
+
+    target.resize(guessedNewLength);
+    QChar *write = target.data() + actualLength;
+
+    const char8_t *sourceEnd = source + length;
+    while(source < sourceEnd) {
+
+      // Read the next code point from the UTF-8 string. This will automatically update
+      // the source pointer, ensuring the while() eventually terminates
+      char32_t codePoint = (
+        Nuclex::Support::Text::UnicodeHelper::ReadCodePoint(source, sourceEnd)
+      );
+      if(codePoint == char32_t(-1)) [[unlikely]] {
+        throw Nuclex::Support::Errors::CorruptStringError(
+          reinterpret_cast<const char *>(u8"UTF-8 char array contains invalid characters")
+        );
+      }
+
+      // Write the code point into the QString (which is UTF-16 encoded). Unless we're
+      // dealing with code points outside the unicode table, this should always succeeed.
+      std::size_t writtenCharCount = writeCodePoint(write, codePoint);
+      if(writtenCharCount == std::size_t(-1)) [[unlikely]] {
+        throw Nuclex::Support::Errors::CorruptStringError(
+          reinterpret_cast<const char *>(u8"UTF-8 char array encodes invalid code points")
+        );
+      }
+
+      // While we expect to be dealing with ASCII mostly (table and column names are
+      // rarely localized), we still have to make sure not to overrun the available sapce
+      // in the QString, so resize it when needed.
+      actualLength += writtenCharCount;
+      if(actualLength + 4 >= guessedNewLength) [[unlikely]] {
+        target.resize(actualLength + length + 4);
+        write = target.data() + actualLength;
+      }
+
+    } // while source characters remaining
+
+    target.resize(actualLength);
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -146,7 +187,10 @@ namespace Nuclex::ThinOrm::Utilities {
 
         // At this point we always have at least 4 characters of space in the string,
         // so we can blindly write and check if we need to reallocate later
-        outIndex += writeCodePoint(&result[outIndex], codePoint);
+        {
+          char8_t *out = &result[outIndex];
+          outIndex += Nuclex::Support::Text::UnicodeHelper::WriteCodePoint(out, codePoint);
+        }
 
         // If this was the final character, exit the loop to avoid needlessly
         // enlarging the string in case we were close to the length limit
@@ -170,3 +214,5 @@ namespace Nuclex::ThinOrm::Utilities {
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Utilities
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)

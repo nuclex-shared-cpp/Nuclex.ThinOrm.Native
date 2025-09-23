@@ -42,16 +42,61 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::unique_ptr<QtMaterializedQuery> QtMaterializedQuery::Materialize(
+  std::unique_ptr<QtSqlMaterializedQuery> QtSqlMaterializedQuery::Materialize(
     QSqlDatabase &database, const Query &query
   ) {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
 
-    QSqlQuery qtQuery(database);
+    std::unique_ptr<QtSqlMaterializedQuery> materializedQuery = (
+      std::make_unique<QtSqlMaterializedQuery>()
+    );
 
-    std::u8string sqlStatement = query.GetSqlStatement();
-    qtQuery.prepare(QStringConverter::FromU8(sqlStatement));
+    const std::vector<QueryParameterView> &parameters = query.GetParameterInfo();
+    materializedQuery->qtSqlStatement = transformSqlStatement(
+      query.GetSqlStatement(), parameters
+    );
 
+    materializedQuery->qtQuery = QSqlQuery(materializedQuery->qtSqlStatement, database);
+
+    return materializedQuery;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  QString QtSqlMaterializedQuery::transformSqlStatement(
+    const std::u8string &sqlStatement, const std::vector<QueryParameterView> &parameters
+  ) {
+    using Nuclex::ThinOrm::Utilities::QStringConverter;
+
+    QString qtSqlStatement;
+
+    // The resulting SQL statement will turn {parameter} into :parameter, so it will
+    // be shorter by one character per each parameter in the statement
+    std::u8string::size_type length = sqlStatement.length();
+    qtSqlStatement.reserve(length - parameters.size());
+
+    // Skip ahead to each parameter, then append only the parameter name prefixed by
+    // a double colon and do it again until all parameters and the text inbetween
+    // them are appended to the QString
+    QString::size_type start = 0;
+    for(std::size_t index = 0; index < parameters.size(); ++index) {
+      std::u8string::size_type end = parameters[index].StartIndex;
+
+      // TODO: scan for u8':' (Qt's parameter format) and escape it if needed
+      std::u8string::size_type length = end - start;
+      QStringConverter::AppendU8(qtSqlStatement, sqlStatement.data() + start, length);
+      qtSqlStatement.push_back(QChar(':'));
+      QStringConverter::AppendU8(
+        qtSqlStatement, parameters[index].Name.data(), parameters[index].Name.length()
+      );
+
+      start = end + parameters[index].Length;
+    }
+    if(start < length) {
+      QStringConverter::AppendU8(qtSqlStatement, sqlStatement.data() + start, length - start);
+    }
+
+    return qtSqlStatement;
   }
 
   // ------------------------------------------------------------------------------------------- //

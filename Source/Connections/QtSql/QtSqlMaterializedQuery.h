@@ -25,19 +25,40 @@ limitations under the License.
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
 #include "Nuclex/ThinOrm/Query.h" // for Query
+
 #include <QSqlDatabase> // for QSqlDatabase
+#include <QSqlQuery> // for QSqlQuery
+#include <QString> // for QString
+
 #include <memory> // for std::unique_ptr
 
 namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Cached materialization of a Query prepared for Qt SQL</summary>
-  class QtMaterializedQuery {
+  /// <summary>Materialization of a generic Query, prepared for a Qt SQL database</summary>
+  class QtSqlMaterializedQuery {
 
-    public: static std::unique_ptr<QtMaterializedQuery> Materialize(
+    /// <summary>Materializes the specified query for a Qt SQL database</summary>
+    /// <param name="database">Database for which the query will be materialized</param>
+    /// <param name="query">Query that will be materialized</param>
+    /// <returns>A new Qt-specified prepared query ready for execution</returns>
+    public: static std::unique_ptr<QtSqlMaterializedQuery> Materialize(
       QSqlDatabase &database, const Query &query
     );
+
+    /// <summary>Transforms the SQL statement into the format expected by Qt SQL</summary>
+    /// <param name="sqlStatement">SQL statement that will be transformed</param>
+    /// <param name="parameters">Parameters contained in the SQL statement</param>
+    /// <returns>
+    ///   The SQL statement with its parameters in the format expeted by Qt SQL
+    /// </returns>
+    private: static QString transformSqlStatement(
+      const std::u8string &sqlStatement, const std::vector<QueryParameterView> &parameters
+    );
+
+    private: QString qtSqlStatement;
+    private: QSqlQuery qtQuery;
 
   };
 
