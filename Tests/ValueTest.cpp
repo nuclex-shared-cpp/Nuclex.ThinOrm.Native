@@ -39,7 +39,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromBoolean) {
     Value v(false);
     EXPECT_EQ(v.GetType(), ValueType::Boolean);
-    EXPECT_EQ(v.ToBool(), false);
+    EXPECT_EQ(v.AsBool(), false);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -47,7 +47,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromUInt8) {
     Value v(std::uint8_t(234));
     EXPECT_EQ(v.GetType(), ValueType::UInt8);
-    EXPECT_EQ(v.ToUInt8(), std::uint8_t(234));
+    EXPECT_EQ(v.AsUInt8(), std::uint8_t(234));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -55,7 +55,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromInt16) {
     Value v(std::int16_t(-23456));
     EXPECT_EQ(v.GetType(), ValueType::Int16);
-    EXPECT_EQ(v.ToInt16(), std::int16_t(-23456));
+    EXPECT_EQ(v.AsInt16(), std::int16_t(-23456));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -63,7 +63,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromInt32) {
     Value v(std::int32_t(-1234567890));
     EXPECT_EQ(v.GetType(), ValueType::Int32);
-    EXPECT_EQ(v.ToInt32(), std::int32_t(-1234567890));
+    EXPECT_EQ(v.AsInt32(), std::int32_t(-1234567890));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -71,7 +71,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromInt64) {
     Value v(std::int64_t(-1234567890123456789LL));
     EXPECT_EQ(v.GetType(), ValueType::Int64);
-    EXPECT_EQ(v.ToInt64(), std::int64_t(-1234567890123456789LL));
+    EXPECT_EQ(v.AsInt64(), std::int64_t(-1234567890123456789LL));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -79,7 +79,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromDecimal) {
     Value v(Decimal(123456789));
     EXPECT_EQ(v.GetType(), ValueType::Decimal);
-    //EXPECT_EQ(v.ToDecimal(), Decimal(123456789)); // TODO: Decimal needs operator ==()
+    //EXPECT_EQ(v.AsDecimal(), Decimal(123456789)); // TODO: Decimal needs operator ==()
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -87,7 +87,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromFloat) {
     Value v(1234.5678f);
     EXPECT_EQ(v.GetType(), ValueType::Float);
-    EXPECT_EQ(v.ToFloat(), 1234.5678f);
+    EXPECT_EQ(v.AsFloat(), 1234.5678f);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -95,7 +95,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromDouble) {
     Value v(1234.5678);
     EXPECT_EQ(v.GetType(), ValueType::Double);
-    EXPECT_EQ(v.ToDouble(), 1234.5678);
+    EXPECT_EQ(v.AsDouble(), 1234.5678);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -103,7 +103,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromU8String) {
     Value v(std::u8string(u8"Hello World"));
     EXPECT_EQ(v.GetType(), ValueType::String);
-    EXPECT_EQ(v.ToString(), std::u8string(u8"Hello World"));
+    EXPECT_EQ(v.AsString(), std::u8string(u8"Hello World"));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -111,7 +111,7 @@ namespace Nuclex::ThinOrm {
   TEST(ValueTest, CanBeConstructedFromBlob) {
     Value v(std::vector<std::byte> { std::byte(1), std::byte(91), std::byte(191) });
     EXPECT_EQ(v.GetType(), ValueType::Blob);
-    std::vector<std::byte> actual = v.ToBlob().value();
+    std::vector<std::byte> actual = v.AsBlob().value();
     ASSERT_EQ(actual.size(), 3U);
     EXPECT_EQ(actual.at(0), std::byte(1));
     EXPECT_EQ(actual.at(1), std::byte(91));
@@ -181,6 +181,32 @@ namespace Nuclex::ThinOrm {
       v.Require(ValueType::Float, true),
       Nuclex::ThinOrm::Errors::BadValueTypeError
     );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ValueTest, CertainStringsCoerceToBooleanTrues) {
+    Value arbitraryStringValue(std::u8string(u8"Hello World"));
+    Value zeroStringValue(std::u8string(u8"0.0"));
+
+    EXPECT_EQ(arbitraryStringValue.AsBool(), false);
+    EXPECT_EQ(zeroStringValue.AsBool(), false);
+
+    Value numberStringValue(u8"123.456");
+    Value oneStringValue(u8"1");
+    Value onStringValue(u8"on");
+    Value yesStringValue(u8"yes");
+    Value trueStringValue(u8"true");
+    Value enabledStringValue(u8"enabled");
+    Value activeStringValue(u8"active");
+
+    EXPECT_EQ(numberStringValue.AsBool(), true);
+    EXPECT_EQ(oneStringValue.AsBool(), true);
+    EXPECT_EQ(onStringValue.AsBool(), true);
+    EXPECT_EQ(yesStringValue.AsBool(), true);
+    EXPECT_EQ(trueStringValue.AsBool(), true);
+    EXPECT_EQ(enabledStringValue.AsBool(), true);
+    EXPECT_EQ(activeStringValue.AsBool(), true);
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -132,34 +132,34 @@ namespace Nuclex::ThinOrm {
 
     /// <summary>Returns the value in the container as boolean</summary>
     /// <returns>The container's stored value as a boolean</returns>
-    public: NUCLEX_THINORM_API std::optional<bool> ToBool() const;
+    public: NUCLEX_THINORM_API std::optional<bool> AsBool() const;
     /// <summary>Returns the value in the container as an 8-bit integer</summary>
     /// <returns>The container's stored value as an 8-bit integer</returns>
-    public: NUCLEX_THINORM_API std::optional<std::uint8_t> ToUInt8() const;
+    public: NUCLEX_THINORM_API std::optional<std::uint8_t> AsUInt8() const;
     /// <summary>Returns the value in the container as a 16-bit integer</summary>
     /// <returns>The container's stored value as a 16-bit integer</returns>
-    public: NUCLEX_THINORM_API std::optional<std::int16_t> ToInt16() const;
+    public: NUCLEX_THINORM_API std::optional<std::int16_t> AsInt16() const;
     /// <summary>Returns the value in the container as a 32-bit integer</summary>
     /// <returns>The container's stored value as a 32-bit integer</returns>
-    public: NUCLEX_THINORM_API std::optional<std::int32_t> ToInt32() const;
+    public: NUCLEX_THINORM_API std::optional<std::int32_t> AsInt32() const;
     /// <summary>Returns the value in the container as a 64-bit integer</summary>
     /// <returns>The container's stored value as a 64-bit integer</returns>
-    public: NUCLEX_THINORM_API std::optional<std::int64_t> ToInt64() const;
+    public: NUCLEX_THINORM_API std::optional<std::int64_t> AsInt64() const;
     /// <summary>Returns the value in the container as a fixed point decimal</summary>
     /// <returns>The container's stored value as a fixed point decimal</returns>
-    public: NUCLEX_THINORM_API std::optional<Decimal> ToDecimal() const;
+    public: NUCLEX_THINORM_API std::optional<Decimal> AsDecimal() const;
     /// <summary>Returns the value in the container as a 32-bit floating point value</summary>
     /// <returns>The container's stored value as a 32-bit floating point value</returns>
-    public: NUCLEX_THINORM_API std::optional<float> ToFloat() const;
+    public: NUCLEX_THINORM_API std::optional<float> AsFloat() const;
     /// <summary>Returns the value in the container as a 64-bit floating point value</summary>
     /// <returns>The container's stored value as a 64-bit floating point value</returns>
-    public: NUCLEX_THINORM_API std::optional<double> ToDouble() const;
+    public: NUCLEX_THINORM_API std::optional<double> AsDouble() const;
     /// <summary>Returns the value in the container as an UTF-8 string</summary>
     /// <returns>The container's stored value as an UTF-8 string</returns>
-    public: NUCLEX_THINORM_API std::optional<std::u8string> ToString() const;
+    public: NUCLEX_THINORM_API std::optional<std::u8string> AsString() const;
     /// <summary>Returns the value in the container as a binary blob</summary>
     /// <returns>The container's stored value as a binary blob</returns>
-    public: NUCLEX_THINORM_API std::optional<std::vector<std::byte>> ToBlob() const;
+    public: NUCLEX_THINORM_API std::optional<std::vector<std::byte>> AsBlob() const;
 
     /// <summary>Clones the value assumed by another value container</summary>
     /// <param name="other">Other value container whose contents will be cloned</param>

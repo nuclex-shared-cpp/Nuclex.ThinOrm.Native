@@ -24,12 +24,14 @@ limitations under the License.
 
 #include <Nuclex/Support/Text/StringMatcher.h> // for StringMatcher::AreEqual()
 #include <Nuclex/Support/Text/LexicalCast.h> // for lexical_cast<>
+#include <Nuclex/Support/Endian.h> // for Endian
 
 #include "./Utilities/Quantizer.h"
 
 #include <ctime> // for std::gmtime()
 #include <cassert> // for assert()
 #include <algorithm> // for std::copy_n()
+#include <cstring> // for std::memcpy()
 
 // Turns a C++20 UTF-8 char8_t array (u8"") into a plain char array
 //
@@ -123,7 +125,7 @@ namespace {
         [[fallthrough]];
       }
       case 1: {
-        result <= static_cast<TInteger>(std::to_integer<std::uint8_t>(blob[0]));
+        result |= static_cast<TInteger>(std::to_integer<std::uint8_t>(blob[0]));
         break;
       }
       default: { break; } // 0 bytes = leave result set to 0
@@ -133,15 +135,41 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Reads an integer value out of a binary blob</summary>
-  /// <param name="blob">Binary blob containing the data the integer will be read from</param>
-  /// <returns>The integer read from the blob</returns>
-  /// <remarks>
-  ///   This matches the behavior of most databases where coercing blob data into a type
-  ///   that is longer than the blob gives the result as if the blob was zero-padded.
-  /// </remarks>
+  /// <summary>Writes a little endian integer value into a binary blob</summary>
+  /// <typeparam name="TInteger">Type of integer that will be written</typeparam>
+  /// <param name="blob">Binary blob into which the integer will be written</param>
+  /// <param name="value">Integer value that will be written into the blob</param>
   template<typename TInteger>
   void writeIntegerToBlob(std::vector<std::byte> &blob, TInteger value) {
+    constexpr size_t byteCount = sizeof(TInteger);
+
+    blob.resize(byteCount);
+
+    if constexpr(byteCount >= 1) { blob[0] = static_cast<std::byte>(value >> (0*8)); }
+    if constexpr(byteCount >= 2) { blob[1] = static_cast<std::byte>(value >> (1*8)); }
+    if constexpr(byteCount >= 3) { blob[2] = static_cast<std::byte>(value >> (2*8)); }
+    if constexpr(byteCount >= 4) { blob[3] = static_cast<std::byte>(value >> (3*8)); }
+    if constexpr(byteCount >= 5) { blob[4] = static_cast<std::byte>(value >> (4*8)); }
+    if constexpr(byteCount >= 6) { blob[5] = static_cast<std::byte>(value >> (5*8)); }
+    if constexpr(byteCount >= 7) { blob[6] = static_cast<std::byte>(value >> (6*8)); }
+    if constexpr(byteCount >= 8) { blob[7] = static_cast<std::byte>(value >> (7*8)); }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Writes an IEEE-754 floating point value into a binary blob</summary>
+  /// <typeparam name="TFloat">Type of float that will be written</typeparam>
+  /// <param name="blob">Binary blob into which the float will be written</param>
+  /// <param name="value">Float value that will be written into the blob</param>
+  template<typename TFloat>
+  void writeFloatToBlob(std::vector<std::byte> &blob, TFloat value) {
+    typedef typename std::conditional<
+      sizeof(TFloat) == 4, std::uint32_t, std::uint64_t
+    >::type SameSizedIntegerType;
+
+    writeIntegerToBlob<SameSizedIntegerType>(
+      blob, std::bit_cast<SameSizedIntegerType>(value)
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -152,7 +180,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<bool> Value::ToBool() const {
+  std::optional<bool> Value::AsBool() const {
     if(this->empty) [[unlikely]] {
       return std::optional<bool>();
     } else {
@@ -168,13 +196,23 @@ namespace Nuclex::ThinOrm {
         case ValueType::String: {
           using Nuclex::Support::Text::StringMatcher;
           constexpr const bool caseSensitive = false;
-          return (
+          bool isSpecialTrueString = (
             StringMatcher::AreEqual<caseSensitive>(this->value.String, onBooleanLiteral) ||
             StringMatcher::AreEqual<caseSensitive>(this->value.String, yesBooleanLiteral) ||
             StringMatcher::AreEqual<caseSensitive>(this->value.String, trueBooleanLiteral) ||
             StringMatcher::AreEqual<caseSensitive>(this->value.String, enabledBooleanLiteral) ||
             StringMatcher::AreEqual<caseSensitive>(this->value.String, activeBooleanLiteral)
           );
+          if(isSpecialTrueString) {
+            return true;
+          }
+
+          if(this->value.String.find(u8'.') == std::string::npos) {
+            return Nuclex::Support::Text::lexical_cast<int>(this->value.String) != 0;
+          } else {
+            float floatValue = Nuclex::Support::Text::lexical_cast<float>(this->value.String);
+            return (floatValue < -0.5) || (floatValue >= 0.5);
+          }
         }
         case ValueType::Date: {
           return (this->value.DateTimeValue.GetDateOnly().GetTicks() != 0);
@@ -198,12 +236,14 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<std::uint8_t> Value::ToUInt8() const {
+  std::optional<std::uint8_t> Value::AsUInt8() const {
     if(this->empty) [[unlikely]] {
       return std::optional<std::uint8_t>();
     } else {
       switch(this->type) {
-        case ValueType::Boolean: { return this->value.Boolean ? 1 : 0; }
+        case ValueType::Boolean: {
+          return this->value.Boolean ? std::uint8_t(1) : std::uint8_t(0);
+        }
         case ValueType::UInt8: { return this->value.Uint8; }
         case ValueType::Int16: { return static_cast<std::uint8_t>(this->value.Int16); }
         case ValueType::Int32: { return static_cast<std::uint8_t>(this->value.Int32); }
@@ -224,7 +264,13 @@ namespace Nuclex::ThinOrm {
           );
         }
         case ValueType::String: {
-          return Nuclex::Support::Text::lexical_cast<std::uint8_t>(this->value.String);
+          if(this->value.String.find(u8'.') == std::string::npos) {
+            return Nuclex::Support::Text::lexical_cast<std::uint8_t>(this->value.String);
+          } else {
+            return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(
+              Nuclex::Support::Text::lexical_cast<float>(this->value.String)
+            );
+          }
         }
         case ValueType::Date: {
           return static_cast<std::uint8_t>(
@@ -258,7 +304,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<std::int16_t> Value::ToInt16() const {
+  std::optional<std::int16_t> Value::AsInt16() const {
     if(this->empty) [[unlikely]] {
       return std::optional<std::int16_t>();
     } else {
@@ -284,7 +330,13 @@ namespace Nuclex::ThinOrm {
           );
         }
         case ValueType::String: {
-          return Nuclex::Support::Text::lexical_cast<std::int16_t>(this->value.String);
+          if(this->value.String.find(u8'.') == std::string::npos) {
+            return Nuclex::Support::Text::lexical_cast<std::int16_t>(this->value.String);
+          } else {
+            return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(
+              Nuclex::Support::Text::lexical_cast<float>(this->value.String)
+            );
+          }
         }
         case ValueType::Date: {
           return static_cast<std::int16_t>(
@@ -314,7 +366,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<std::int32_t> Value::ToInt32() const {
+  std::optional<std::int32_t> Value::AsInt32() const {
     if(this->empty) [[unlikely]] {
       return std::optional<std::int32_t>();
     } else {
@@ -330,17 +382,19 @@ namespace Nuclex::ThinOrm {
           );
         }
         case ValueType::Float: {
-          return static_cast<std::int32_t>(
-            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Float)
-          );
+          return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Float);
         }
         case ValueType::Double: {
-          return static_cast<std::int32_t>(
-            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Double)
-          );
+          return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Double);
         }
         case ValueType::String: {
-          return Nuclex::Support::Text::lexical_cast<std::int32_t>(this->value.String);
+          if(this->value.String.find(u8'.') == std::string::npos) {
+            return Nuclex::Support::Text::lexical_cast<std::int32_t>(this->value.String);
+          } else {
+            return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(
+              Nuclex::Support::Text::lexical_cast<float>(this->value.String)
+            );
+          }
         }
         case ValueType::Date: {
           return static_cast<std::int32_t>(
@@ -370,7 +424,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<std::int64_t> Value::ToInt64() const {
+  std::optional<std::int64_t> Value::AsInt64() const {
     if(this->empty) [[unlikely]] {
       return std::optional<std::int64_t>();
     } else {
@@ -386,17 +440,19 @@ namespace Nuclex::ThinOrm {
           );
         }
         case ValueType::Float: {
-          return static_cast<std::int64_t>(
-            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Float)
-          );
+          return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt64(this->value.Float);
         }
         case ValueType::Double: {
-          return static_cast<std::int64_t>(
-            Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(this->value.Double)
-          );
+          return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt64(this->value.Double);
         }
         case ValueType::String: {
-          return Nuclex::Support::Text::lexical_cast<std::int64_t>(this->value.String);
+          if(this->value.String.find(u8'.') == std::string::npos) {
+            return Nuclex::Support::Text::lexical_cast<std::int64_t>(this->value.String);
+          } else {
+            return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt64(
+              Nuclex::Support::Text::lexical_cast<double>(this->value.String)
+            );
+          }
         }
         case ValueType::Date: {
           return static_cast<std::int64_t>(
@@ -426,7 +482,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<Decimal> Value::ToDecimal() const {
+  std::optional<Decimal> Value::AsDecimal() const {
     if(this->empty) [[unlikely]] {
       return std::optional<Decimal>();
     } else {
@@ -471,7 +527,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<float> Value::ToFloat() const {
+  std::optional<float> Value::AsFloat() const {
     if(this->empty) [[unlikely]] {
       return std::optional<float>();
     } else {
@@ -516,7 +572,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<double> Value::ToDouble() const {
+  std::optional<double> Value::AsDouble() const {
     if(this->empty) [[unlikely]] {
       return std::optional<double>();
     } else {
@@ -527,7 +583,7 @@ namespace Nuclex::ThinOrm {
         case ValueType::Int32: { return static_cast<double>(this->value.Int32); }
         case ValueType::Int64: { return static_cast<double>(this->value.Int64); }
         case ValueType::Decimal: { return this->value.DecimalValue.ToFloat(); }
-        case ValueType::Float: { static_cast<double>(this->value.Float); }
+        case ValueType::Float: { return static_cast<double>(this->value.Float); }
         case ValueType::Double: { return this->value.Double; }
         case ValueType::String: {
           return Nuclex::Support::Text::lexical_cast<double>(this->value.String);
@@ -561,7 +617,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<std::u8string> Value::ToString() const {
+  std::optional<std::u8string> Value::AsString() const {
     if(this->empty) [[unlikely]] {
       return std::optional<std::u8string>();
     } else {
@@ -611,7 +667,7 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  std::optional<std::vector<std::byte>> Value::ToBlob() const {
+  std::optional<std::vector<std::byte>> Value::AsBlob() const {
     if(this->empty) [[unlikely]] {
       return std::optional<std::vector<std::byte>>();
     } else {
@@ -647,11 +703,13 @@ namespace Nuclex::ThinOrm {
           break;
         }
         case ValueType::Float: {
-          // TODO: Implement float to blob conversion
+          result.reserve(4);
+          writeFloatToBlob(result, this->value.Float);
           break;
         }
         case ValueType::Double: {
-          // TODO: Implement double to blob conversion
+          result.reserve(8);
+          writeFloatToBlob(result, this->value.Double);
           break;
         }
         case ValueType::String: {
@@ -681,9 +739,11 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return std::vector<std::byte>();
+          break;
         }
-      }
+      } // switch on value type
+
+      return result;
     }
   }
 
