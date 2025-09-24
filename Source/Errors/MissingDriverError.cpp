@@ -41,5 +41,3 @@ namespace Nuclex::ThinOrm::Errors {
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Errors
-
-#pragma once

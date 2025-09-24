@@ -46,6 +46,16 @@ namespace Nuclex::ThinOrm::Utilities {
     /// <returns>The 32-bit integer nearest to the floating point value</returns>
     public: static inline std::int32_t NearestInt32(double value);
 
+    /// <summary>Rounds a floating point value to the nearest integer</summary>
+    /// <param name="value">Floating point value that will be rounded</param>
+    /// <returns>The 32-bit integer nearest to the floating point value</returns>
+    public: static inline std::int64_t NearestInt64(float value);
+
+    /// <summary>Rounds a floating point value to the nearest integer</summary>
+    /// <param name="value">Floating point value that will be rounded</param>
+    /// <returns>The 32-bit integer nearest to the floating point value</returns>
+    public: static inline std::int64_t NearestInt64(double value);
+
   };
 
   // ------------------------------------------------------------------------------------------- //
@@ -58,6 +68,18 @@ namespace Nuclex::ThinOrm::Utilities {
 
   inline std::int32_t Quantizer::NearestInt32(double value) {
     return static_cast<std::int32_t>(std::trunc(value + std::copysign(0.5, value)));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline std::int64_t Quantizer::NearestInt64(float value) {
+    return static_cast<std::int64_t>(std::trunc(value + std::copysign(0.5f, value)));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline std::int64_t Quantizer::NearestInt64(double value) {
+    return static_cast<std::int64_t>(std::trunc(value + std::copysign(0.5, value)));
   }
 
   // ------------------------------------------------------------------------------------------- //
