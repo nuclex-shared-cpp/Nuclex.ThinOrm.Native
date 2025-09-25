@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Configuration/ConnectionString.h"
-#include "Nuclex/ThinOrm/Connections/UniqueConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/ContextualConnectionPool.h"
 #include "Nuclex/ThinOrm/Connections/ConnectionFactory.h"
 
 #include <queue> // for std::queue
@@ -45,7 +45,8 @@ namespace Nuclex::ThinOrm::Connections {
   ///   connection
   /// </remarks>
   template<typename TDataContext = void>
-  class NUCLEX_THINORM_TYPE StandardConnectionPool : public UniqueConnectionPool<TDataContext> {
+  class NUCLEX_THINORM_TYPE StandardConnectionPool :
+    public ContextualConnectionPool<TDataContext> {
 
     /// <summary>Initializes a new connection pool with the specified settings</summary>
     /// <param name="connectionFactory">
@@ -71,7 +72,7 @@ namespace Nuclex::ThinOrm::Connections {
     );
 
     /// <summary>Frees all resources owned by the connection pool</summary>
-    public: NUCLEX_THINORM_API inline ~StandardConnectionPool() = default;
+    public: NUCLEX_THINORM_API inline ~StandardConnectionPool() override = default;
 
     /// <summary>Retrieves the current number of connections that the pool will retain</summary>
     /// <returns>The maximum number of connections the pool currently retains</summary>

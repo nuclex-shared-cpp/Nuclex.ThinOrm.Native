@@ -20,7 +20,7 @@ limitations under the License.
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/ThinOrm/Connections/UniqueConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/ContextualConnectionPool.h"
 
 namespace Nuclex::ThinOrm::Connections {
 

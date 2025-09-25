@@ -17,8 +17,8 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
-#define NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_CONTEXTUALCONNECTIONPOOL_H
+#define NUCLEX_THINORM_CONNECTIONS_CONTEXTUALCONNECTIONPOOL_H
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Connections/ConnectionPool.h"
@@ -37,10 +37,10 @@ namespace Nuclex::ThinOrm::Connections {
   ///   access a single database in your application.
   /// </typeparam>
   template<typename TDataContext = void>
-  class NUCLEX_THINORM_TYPE UniqueConnectionPool : public ConnectionPool {
+  class NUCLEX_THINORM_TYPE ContextualConnectionPool : public ConnectionPool {
 
     /// <summary>Frees all resources owned by the connection pool</summary>
-    public: NUCLEX_THINORM_API virtual ~UniqueConnectionPool() = default;
+    public: NUCLEX_THINORM_API inline virtual ~ContextualConnectionPool() override = default;
 
   };
 
@@ -48,4 +48,4 @@ namespace Nuclex::ThinOrm::Connections {
 
 } // namespace Nuclex::ThinOrm::Connections
 
-#endif // NUCLEX_THINORM_CONNECTIONS_UNIQUECONNECTIONPOOL_H
+#endif // NUCLEX_THINORM_CONNECTIONS_CONTEXTUALCONNECTIONPOOL_H
