@@ -46,8 +46,15 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     QSqlDatabase &database, const Query &query
   ) :
     qtSqlStatement(transformSqlStatement(query.GetSqlStatement(), query.GetParameterInfo())),
-    qtQuery(qtSqlStatement) {
-  }
+    qtQuery(qtSqlStatement, database) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  QtSqlMaterializedQuery::QtSqlMaterializedQuery(
+    QSqlDatabase &database, const QtSqlMaterializedQuery &other
+  ) :
+    qtSqlStatement(other.qtSqlStatement),
+    qtQuery(other.qtSqlStatement, database) {}
 
   // ------------------------------------------------------------------------------------------- //
 

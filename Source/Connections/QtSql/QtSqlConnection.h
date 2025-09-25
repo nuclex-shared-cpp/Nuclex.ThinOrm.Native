@@ -93,6 +93,13 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>A reader that can be used to fetch individual rows</returns>
     public: RowReader RunRowQuery(const Query &rowQuery) override;
 
+    /// <summary>Applies the connection properties to the Qt database</summary>
+    /// <param name="database">Qt database instance that will be configured</param>
+    /// <param name="properties">Connection properties that will be applied</param>
+    /// <param name="databaseName">
+    ///   Connection name to use instead of a purely auto-generated one in order to
+    ///   aid in debugging when needed.
+    /// </param>
     private: static void configureQSqlDatabase(
       QSqlDatabase &database,
       const Configuration::ConnectionProperties &properties,

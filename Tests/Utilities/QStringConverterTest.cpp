@@ -24,6 +24,8 @@ limitations under the License.
 
 #include "../../Source/Utilities/QStringConverter.h" // for QStringConverter
 
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
@@ -77,3 +79,5 @@ namespace Nuclex::ThinOrm::Utilities {
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Utilities
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)

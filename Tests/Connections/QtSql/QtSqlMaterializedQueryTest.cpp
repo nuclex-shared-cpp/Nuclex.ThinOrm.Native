@@ -23,6 +23,9 @@ limitations under the License.
 #include <gtest/gtest.h>
 
 #include "../../../Source/Connections/QtSql/QtSqlMaterializedQuery.h"
+
+#if defined(NUCLEX_THINORM_ENABLE_QT)
+
 #include "../../../Source/Utilities/QStringConverter.h" // for QStringConverter
 #include <Nuclex/Support/Text/LexicalAppend.h> // for lexical_append<>
 
@@ -146,3 +149,5 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Connections::QtSql
+
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)

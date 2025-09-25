@@ -89,7 +89,7 @@ namespace Nuclex::ThinOrm {
 
     query.SetParameterValue(u8"userName", 123);
     Value parameterValue = query.GetParameterValue(u8"userName");
-    EXPECT_EQ(parameterValue.ToInt32(), 123);
+    EXPECT_EQ(parameterValue.AsInt32(), 123);
   }
 
   // ------------------------------------------------------------------------------------------- //

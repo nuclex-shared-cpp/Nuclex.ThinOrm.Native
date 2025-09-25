@@ -43,6 +43,10 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <param name="database">Qt database the materialization will be bound to</summarize>
     /// <param name="query">Query describing the SQL statement and parameters</param>
     public: QtSqlMaterializedQuery(QSqlDatabase &database, const Query &query);
+    /// <summary>Initializes a new materialized query as clone of an existing query</summary>
+    /// <param name="database">Qt database the materialization will be bound to</summarize>
+    /// <param name="query">Query describing the SQL statement and parameters</param>
+    public: QtSqlMaterializedQuery(QSqlDatabase &database, const QtSqlMaterializedQuery &other);
     /// <summary>Destroys the materialized query and frees all resources</summary>
     public: ~QtSqlMaterializedQuery();
 
