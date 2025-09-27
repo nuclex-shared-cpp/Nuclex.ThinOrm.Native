@@ -22,7 +22,13 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 
+#include <cstddef> // for std::size_t
 #include <typeinfo> // for std::type_info
+#include <string> // for std::u8string
+
+namespace Nuclex::ThinOrm::Connections {
+  class Connection;
+}
 
 namespace Nuclex::ThinOrm::Migrations {
 
@@ -31,11 +37,42 @@ namespace Nuclex::ThinOrm::Migrations {
   /// <summary>Applies (and optional, reverts) changes to a database</summary>
   class NUCLEX_THINORM_TYPE Migration {
 
+    /// <summary>Initializes a new migration to the specified version</summary>
+    /// <param name="schemaVersion">Schema version this migration will upgrade to</param>
+    /// <param name="name">
+    ///   Name of the migration for documentation purposes, i.e. 'add user management'
+    /// </param>
+    /// <remarks>
+    ///   <para>
+    ///     Each migration needs a unique schema version number. Schema migrations are applied
+    ///     in order of incrementing schema version numbers, so once you've let a migration
+    ///     out to production, its version number must never change.
+    ///   </para>
+    /// </remarks>
+    public: NUCLEX_THINORM_API Migration(
+      std::size_t schemaVersion, const std::u8string &name = std::u8string()
+    );
+#if 0
+    /// <summary>Initializes a new migration to the specified version</summary>
+    /// <param name="schemaDate">Schema date this migration will upgrade to</param>
+    public: NUCLEX_THINORM_API Migration(std::chrono::year_month_day schemaDate);
+#endif
     /// <summary>Frees all resources owned by the migration</summary>
     public: NUCLEX_THINORM_API virtual ~Migration();
 
+    /// <summary>Retrieves the schema version number this migration upgrades to</summary>
+    /// <returns>The database schema version this migration upgrades to</returns>
+    public: NUCLEX_THINORM_API inline std::size_t GetTargetSchemaVersion() const;
+
+    /// <summary>Retrieves the name of the migration for documentation purposes</summary>
+    /// <returns>The name of the migration</returns>
+    public: NUCLEX_THINORM_API inline const std::u8string &GetName() const;
+
     /// <summary>Upgrades the database schema</summary>
-    public: NUCLEX_THINORM_API virtual void Up() = 0;
+    /// <param name="connection">
+    ///   Database connection through which the schema can be upgraded
+    /// </param>
+    public: NUCLEX_THINORM_API virtual void Up(Connections::Connection &connection) = 0;
 
     /// <summary>Downgrades the database schema</summary>
     /// <remarks>
@@ -43,7 +80,10 @@ namespace Nuclex::ThinOrm::Migrations {
     ///   not supported. Override this (and do not call the base implementation) in order
     ///   to support downgrading the database schema to the version before the migration.
     /// </remarks>
-    public: NUCLEX_THINORM_API virtual void Down();
+    /// <param name="connection">
+    ///   Database connection through which the schema can be downgraded
+    /// </param>
+    public: NUCLEX_THINORM_API virtual void Down(Connections::Connection &connection);
 
     /// <summary>
     ///   RTTI type id of the data context for the database the migration applies to
@@ -59,7 +99,24 @@ namespace Nuclex::ThinOrm::Migrations {
     /// </remarks>
     public: NUCLEX_THINORM_API virtual const std::type_info *GetDataContextType() const;
 
+    /// <summary>Database schema version this migration is upgrading to</summary>
+    private: std::size_t schemaVersion;
+    /// <summary>Name of the migration for documentation purposes</summary>
+    private: std::u8string name;
+
   };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline std::size_t Migration::GetTargetSchemaVersion() const {
+    return this->schemaVersion;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const std::u8string &Migration::GetName() const {
+    return this->name;
+  }
 
   // ------------------------------------------------------------------------------------------- //
 

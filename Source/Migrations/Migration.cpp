@@ -27,11 +27,19 @@ namespace Nuclex::ThinOrm::Migrations {
 
   // ------------------------------------------------------------------------------------------- //
 
+  Migration::Migration(
+    std::size_t schemaVersion, const std::u8string &name /* = std::u8string() */
+  ) :
+    schemaVersion(schemaVersion),
+    name(name) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
   Migration::~Migration() = default;
 
   // ------------------------------------------------------------------------------------------- //
 
-  void Migration::Down() {
+  void Migration::Down(Connections::Connection &connection) {
     throw Errors::DowngradeUnsupportedError(
       u8"Migration does not implement the 'Down()' method, thus reverting it is impossible"
     );

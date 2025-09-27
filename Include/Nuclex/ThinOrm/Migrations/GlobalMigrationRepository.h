@@ -29,7 +29,13 @@ namespace Nuclex::ThinOrm::Migrations {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Provides global store to which individual migrations can register</summary>
+  /// <summary>Global store to which individual migrations can register</summary>
+  /// <remarks>
+  ///   This is used in conjunction with the <see cref="MigrationRunner" />. You can either
+  ///   register migrations individually to your <see cref="MigrationRunner" /> or you can
+  ///   use 'initterm' classes to register your migrations to this repository and have
+  ///   your <see cref="MigrationRunner" /> fetch them from this repository.
+  /// </remarks>
   class NUCLEX_THINORM_TYPE GlobalMigrationRepository {
 
     //public: NUCLEX_THINORM_API static void AddMigration

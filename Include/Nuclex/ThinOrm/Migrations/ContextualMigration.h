@@ -23,8 +23,6 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Migrations/Migration.h"
 
-#include <typeinfo> // for std::type_info
-
 namespace Nuclex::ThinOrm::Migrations {
 
   // ------------------------------------------------------------------------------------------- //
