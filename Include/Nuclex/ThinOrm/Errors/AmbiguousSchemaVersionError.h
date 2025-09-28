@@ -17,8 +17,8 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_ERRORS_BADPARAMETERNAMEERROR_H
-#define NUCLEX_THINORM_ERRORS_BADPARAMETERNAMEERROR_H
+#ifndef NUCLEX_THINORM_ERRORS_AMBIGUOUSSCHEMAVERSIONERROR_H
+#define NUCLEX_THINORM_ERRORS_AMBIGUOUSSCHEMAVERSIONERROR_H
 
 #include "Nuclex/ThinOrm/Config.h"
 
@@ -29,16 +29,22 @@ namespace Nuclex::ThinOrm::Errors {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Indicates that a specified parameter name is wrong</summary>
-  class NUCLEX_THINORM_TYPE BadParameterNameError : public std::invalid_argument {
+  /// <summary>
+  ///   Indicates that multiple migrations declared the same schema version
+  /// </summary>
+  class NUCLEX_THINORM_TYPE AmbiguousSchemaVersionError : public std::logic_error {
 
-    /// <summary>Initializes a bad parameter name error</summary>
+    /// <summary>Initializes an ambiguous schema version error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: NUCLEX_THINORM_API explicit BadParameterNameError(const std::u8string &message) noexcept;
+    public: NUCLEX_THINORM_API explicit AmbiguousSchemaVersionError(
+      const std::u8string &message
+    ) noexcept;
 
-    /// <summary>Initializes a bad parameter name error</summary>
+    /// <summary>Initializes a ambiguous schema version error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: NUCLEX_THINORM_API explicit BadParameterNameError(const char8_t *message) noexcept;
+    public: NUCLEX_THINORM_API explicit AmbiguousSchemaVersionError(
+      const char8_t *message
+    ) noexcept;
 
   };
 
@@ -46,4 +52,4 @@ namespace Nuclex::ThinOrm::Errors {
 
 } // namespace Nuclex::ThinOrm::Errors
 
-#endif // NUCLEX_THINORM_ERRORS_BADPARAMETERNAMEERROR_H
+#endif // NUCLEX_THINORM_ERRORS_AMBIGUOUSSCHEMAVERSIONERROR_H

@@ -17,29 +17,29 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_COMMAND_H
-#define NUCLEX_THINORM_COMMAND_H
+// If the library is compiled as a DLL, this ensures symbols are exported
+#define NUCLEX_THINORM_SOURCE 1
 
-#include "Nuclex/ThinOrm/Config.h"
+#include "Nuclex/ThinOrm/Errors/AmbiguousSchemaVersionError.h"
 
-#include <stop_token> // for std::stop_token
-
-namespace Nuclex { namespace ThinOrm {
+namespace Nuclex::ThinOrm::Errors {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Command in the form of an SQL statement that can be issued to a database</summary>
-  class NUCLEX_THINORM_TYPE Command {
-
-    public: NUCLEX_THINORM_API Command(const std::u8string &sqlQuery);
-    /// <summary>Frees all resources owned by the command</summary>
-    public: NUCLEX_THINORM_API virtual ~Command() = default;
-
-
-  };
+  AmbiguousSchemaVersionError::AmbiguousSchemaVersionError(
+    const std::u8string &message
+  ) noexcept :
+    std::logic_error(
+      std::string(
+        reinterpret_cast<const char *>(message.data()), message.length()
+      )
+    ) {}
 
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::ThinOrm
+  AmbiguousSchemaVersionError::AmbiguousSchemaVersionError(const char8_t *message) noexcept :
+    std::logic_error(reinterpret_cast<const char *>(message)) {}
 
-#endif // NUCLEX_THINORM_COMMAND_H
+  // ------------------------------------------------------------------------------------------- //
+
+} // namespace Nuclex::ThinOrm::Errors

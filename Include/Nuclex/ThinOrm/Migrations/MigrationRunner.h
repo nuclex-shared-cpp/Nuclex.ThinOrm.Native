@@ -72,7 +72,7 @@ namespace Nuclex::ThinOrm::Migrations {
 
     /// <summary>Adds the specified migration to the runner for execution</summary>
     /// <param name="migration">Migration that will be added to the runner</param>
-    public: NUCLEX_THINORM_API void AddMigration(std::unique_ptr<Migration> migration);
+    public: NUCLEX_THINORM_API void AddMigration(const std::shared_ptr<Migration> &migration);
 
     /// <summary>Adds the specified migration to the runner for execution</summary>
     /// <typeparam name="TMigration">
@@ -105,8 +105,16 @@ namespace Nuclex::ThinOrm::Migrations {
     public: template<typename TDataContext>
     NUCLEX_THINORM_API void AddAllGlobalMigrations();
 
+    /// <summary>Sorts the migrations in the list by their database schema version</summary>
+    private: void sortMigrationsBySchemaVersion();
+    /// <summary>Throws an exception is a schema version appears twice</summary>
+    private: void requireDistinctSchemaVersions();
+
+    /// <summary>List of migration steps</summary>
+    private: typedef std::vector<std::shared_ptr<Migration>> MigrationVector;
+
     /// <summary>Migrations that have been added to the migration runner</summary>
-    private: std::vector<std::unique_ptr<Migration>> migrations;
+    private: MigrationVector migrations;
 
   };
 
@@ -128,7 +136,7 @@ namespace Nuclex::ThinOrm::Migrations {
       u8"quality as migrations."
     );
 
-    AddMigration(std::make_unique<TMigration>());
+    AddMigration(std::make_shared<TMigration>());
   }
 
   // ------------------------------------------------------------------------------------------- //
