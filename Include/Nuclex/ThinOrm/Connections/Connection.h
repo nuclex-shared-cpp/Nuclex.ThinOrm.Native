@@ -22,6 +22,8 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 
+#include <string> // for std::u8string
+
 namespace Nuclex::ThinOrm {
   class Value;
   class Query;
@@ -75,6 +77,18 @@ namespace Nuclex::ThinOrm::Connections {
     /// <param name="rowQuery">Query that will be executed</param>
     /// <returns>A reader that can be used to fetch individual rows</returns>
     public: virtual RowReader RunRowQuery(const Query &rowQuery) = 0;
+
+    /// <summary>Checks if the specified table exists</summary>
+    /// <param name="tableName">Table or view whose existence will be checked</param>
+    /// <returns>True if a table or view with the given exists</returns>
+    /// <remarks>
+    ///   This is exposed on the conenction level because there is no uniform way to check
+    ///   whether a tabel exists. Ordinarily, database engines should expose a special
+    ///   database named <code>INFORMATION_SCHEMA</code>, but in practice, this isn't
+    ///   guaranteed, so this leaves it up to the driver to implement the correct way
+    ///   for the database or to check via a dummy query.
+    /// </remarks>
+    public: virtual bool DoesTableOrViewExist(const std::u8string &tableName) = 0;
 
     // Dialect tags?
     //

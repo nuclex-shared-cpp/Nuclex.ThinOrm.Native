@@ -174,25 +174,31 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   void QtSqlConnection::Prepare(const Query &query) {
-    throw u8"Not implemented yet";
+    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   void QtSqlConnection::RunStatement(const Query &statement) {
-    throw u8"Not implemented yet";
+    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlConnection::RunScalarQuery(const Query &scalarQuery) {
-    throw u8"Not implemented yet";
+    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   RowReader QtSqlConnection::RunRowQuery(const Query &rowQuery) {
-    throw u8"Not implemented yet";
+    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  bool QtSqlConnection::DoesTableOrViewExist(const std::u8string &tableName) {
+    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
   }
 
   // ------------------------------------------------------------------------------------------- //

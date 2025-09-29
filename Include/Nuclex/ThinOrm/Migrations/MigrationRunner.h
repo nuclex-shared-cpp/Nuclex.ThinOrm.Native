@@ -25,6 +25,10 @@ limitations under the License.
 #include <memory> // for std::unique_ptr<>
 #include <vector> // for std::vector<>
 
+namespace Nuclex::ThinOrm::Connections {
+  class Connection;
+  class ConnectionPool;
+}
 namespace Nuclex::ThinOrm::Migrations {
   class Migration;
 }
@@ -53,10 +57,34 @@ namespace Nuclex::ThinOrm::Migrations {
   /// </remarks>
   class NUCLEX_THINORM_TYPE MigrationRunner {
 
+    /// <summary>Initializes a new migration runner on the specified connection</summary>
+    /// <param name="connection">Database connection the migration runner will use</param>
+    public: NUCLEX_THINORM_API MigrationRunner(
+      const std::shared_ptr<Connections::Connection> &connection
+    );
+    /// <summary>Initializes a new migration runner using a connection pool</summary>
+    /// <param name="pool">
+    ///   Connection pool from which the migration runner will, at the time it is needed,
+    ///   borrow a connection to perform the schema migration
+    /// </param>
+    public: NUCLEX_THINORM_API MigrationRunner(
+      const std::shared_ptr<Connections::ConnectionPool> &pool
+    );
     /// <summary>Frees all resources owned by the migration</summary>
-    public: NUCLEX_THINORM_API MigrationRunner();
-    /// <summary>Frees all resources owned by the migration</summary>
-    public: NUCLEX_THINORM_API virtual ~MigrationRunner();
+    public: NUCLEX_THINORM_API ~MigrationRunner();
+
+    /// <summary>Sets a custom name for the table in which migrations are recorded</summary>
+    /// <param name="tableName">Name that should be used for the migration table</param>
+    /// <remarks>
+    ///   As should be obvious, if you use a custom migration table name, do not ever change
+    ///   it. Otherwise, you'd either have to manually and diligently rename the table in
+    ///   every existing database your application comes into contact with or end up with
+    ///   all migrations being applied a second time, potentially wreaking havoc.
+    /// </remarks>
+    public: NUCLEX_THINORM_API void SetMigrationTableName(const std::u8string &tableName);
+
+    // TODO: Implement logger support
+    //public: NUCLEX_THINORM_API void SetLogger();
 
     /// <summary>Upgrades the database to the highest schema version available</summary>
     /// <remarks>
@@ -107,14 +135,31 @@ namespace Nuclex::ThinOrm::Migrations {
 
     /// <summary>Sorts the migrations in the list by their database schema version</summary>
     private: void sortMigrationsBySchemaVersion();
+
     /// <summary>Throws an exception is a schema version appears twice</summary>
     private: void requireDistinctSchemaVersions();
+
+    /// <summary>Peforms the actual migration work</summary>
+    /// <param name="connection">
+    ///   Connection, either the one given to the migration runner or a borrowed one
+    /// </param>
+    /// <param name="schemaVersion">Schema version to migrate to, nullptr for latest</param>
+    private: void migrate(
+      const std::shared_ptr<Connections::Connection> &connection, std::size_t *schemaVersion
+    );
 
     /// <summary>List of migration steps</summary>
     private: typedef std::vector<std::shared_ptr<Migration>> MigrationVector;
 
+    /// <summary>Connection that will be used to upgrade the database schema</summary>
+    private: std::shared_ptr<Connections::Connection> connection;
+    /// <summary>Pool from which a connection will be taken as the upgrade happens</summary>
+    private: std::shared_ptr<Connections::ConnectionPool> pool;
+
     /// <summary>Migrations that have been added to the migration runner</summary>
     private: MigrationVector migrations;
+    /// <summary>Name of the table in which applied migrations are recorded</summary>
+    private: std::u8string tableName;
 
   };
 

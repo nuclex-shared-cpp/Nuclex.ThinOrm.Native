@@ -23,6 +23,8 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Migrations/MigrationRunner.h"
 #include "Nuclex/ThinOrm/Migrations/Migration.h"
 #include "Nuclex/ThinOrm/Migrations/GlobalMigrationRepository.h"
+#include "Nuclex/ThinOrm/Connections/ConnectionPool.h"
+#include "Nuclex/ThinOrm/Connections/Connection.h"
 #include "Nuclex/ThinOrm/Errors/AmbiguousSchemaVersionError.h"
 
 #include <Nuclex/Support/Text/LexicalAppend.h> // for lexical_append<>()
@@ -35,12 +37,22 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
+  /// <summary>Default name for the table that records applied migrations</summary>
+  /// <remarks>
+  ///   Obviously, do not ever change this. Users can override the name by calling
+  ///   the <see cref="Nuclex.ThinOrm.Migrations.MigrationRunner.SetMigrationTableName" />
+  ///   method. Changing it after a database has been initialized would cause us to assume
+  ///   that no migrations have been applied yet and run them all again, wreaking havoc.
+  /// </remarks>
+  const std::u8string DefaultMigrationTableName(u8"migrations", 10);
+
+  // ------------------------------------------------------------------------------------------- //
+
   /// <summary>
   ///   Comparison functor that checks if one migration's schema version is earlier (less)
   ///   than another's
   /// </summary>
   class MigrationSchemaVersionLess {
-
     //std::less<std::unique_ptr<Nuclex::ThinOrm::Migrations::Migration>>
 
     /// <summary>
@@ -67,14 +79,76 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
+  /// <summary>Borrows a connection from a connection pool and handels returning it</summary>
+  class ConnectionBorrowScope {
+
+    /// <summary>Initializes a new borrow scope and borrows a connection</summary>
+    /// <param name="pool">Pool from which the connection will be borrowed</param>
+    public: inline ConnectionBorrowScope(
+      const std::shared_ptr<Nuclex::ThinOrm::Connections::ConnectionPool> &pool
+    );
+
+    /// <summary>Returns the borrowed connection to the pool</summary>
+    public: inline ~ConnectionBorrowScope();
+
+    /// <summary>Accesses the borrowed connection that scope is holding on to</summary>
+    /// <returns>The borrowed connection</returns>
+    public: inline const std::shared_ptr<Nuclex::ThinOrm::Connections::Connection> &Get() const;
+
+    /// <summary>Pool from which the connection has been borrowed</summary>
+    private: const std::shared_ptr<Nuclex::ThinOrm::Connections::ConnectionPool> &pool;
+    /// <summary>Connection that has been borrowed from the pool</summary>
+    private: std::shared_ptr<Nuclex::ThinOrm::Connections::Connection> connection;
+
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline ConnectionBorrowScope::ConnectionBorrowScope(
+    const std::shared_ptr<Nuclex::ThinOrm::Connections::ConnectionPool> &pool
+  ) :
+    pool(pool),
+    connection(pool->BorrowConnection()) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline ConnectionBorrowScope::~ConnectionBorrowScope() {
+    this->pool->ReturnConnection(this->connection);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline const std::shared_ptr<
+    Nuclex::ThinOrm::Connections::Connection
+  > &ConnectionBorrowScope::Get() const {
+    return this->connection;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 } // anonymous namespace
 
 namespace Nuclex::ThinOrm::Migrations {
 
   // ------------------------------------------------------------------------------------------- //
 
-  MigrationRunner::MigrationRunner():
-    migrations() {}
+  MigrationRunner::MigrationRunner(
+    const std::shared_ptr<Connections::Connection> &connection
+  ) :
+    connection(connection),
+    pool(),
+    migrations(),
+    tableName(DefaultMigrationTableName) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+  MigrationRunner::MigrationRunner(
+    const std::shared_ptr<Connections::ConnectionPool> &pool
+  ) :
+    connection(),
+    pool(pool),
+    migrations(),
+    tableName(DefaultMigrationTableName) {}
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -86,8 +160,12 @@ namespace Nuclex::ThinOrm::Migrations {
     sortMigrationsBySchemaVersion();
     requireDistinctSchemaVersions();
 
-    // TODO: Implement schema migration to latest version
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+    if(static_cast<bool>(this->connection)) {
+      migrate(this->connection, nullptr);
+    } else {
+      ConnectionBorrowScope borrowScope(this->pool);
+      migrate(borrowScope.Get(), nullptr);
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -96,9 +174,12 @@ namespace Nuclex::ThinOrm::Migrations {
     sortMigrationsBySchemaVersion();
     requireDistinctSchemaVersions();
 
-    // TODO: Implement schema migration to specific version
-    (void)schemaVersion;
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+    if(static_cast<bool>(this->connection)) {
+      migrate(this->connection, &schemaVersion);
+    } else {
+      ConnectionBorrowScope borrowScope(this->pool);
+      migrate(borrowScope.Get(), &schemaVersion);
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -164,7 +245,7 @@ namespace Nuclex::ThinOrm::Migrations {
           (nextSchemaVersion < schemaVersion) &&
           u8"Migration steps must be sorted by schema version"
         );
-        throw std::logic_error(
+        throw std::logic_error( // even with assertions disabled, do not let it through!
           reinterpret_cast<const char *>(
             u8"Internal error: migration steps were not sorted by their declared "
             u8"schema vesions by the time 'requireDistinctSchemaVersions() was called."
@@ -173,6 +254,19 @@ namespace Nuclex::ThinOrm::Migrations {
       }
 
     } // for each migration index
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void MigrationRunner::migrate(
+    const std::shared_ptr<Connections::Connection> &connection, std::size_t *schemaVersion
+  ) {
+    bool isDatabaseInitialized = connection->DoesTableOrViewExist(this->tableName);
+
+    // TODO: Apply schema migration towards the target schema version
+    throw std::runtime_error(
+      reinterpret_cast<const char *>(u8"Not implemented yet")
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //

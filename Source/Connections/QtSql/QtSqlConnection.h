@@ -93,6 +93,11 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>A reader that can be used to fetch individual rows</returns>
     public: RowReader RunRowQuery(const Query &rowQuery) override;
 
+    /// <summary>Checks if the specified table exists</summary>
+    /// <param name="tableName">Table or view whose existence will be checked</param>
+    /// <returns>True if a table or view with the given exists</returns>
+    public: bool DoesTableOrViewExist(const std::u8string &tableName) override;
+
     /// <summary>Applies the connection properties to the Qt database</summary>
     /// <param name="database">Qt database instance that will be configured</param>
     /// <param name="properties">Connection properties that will be applied</param>
