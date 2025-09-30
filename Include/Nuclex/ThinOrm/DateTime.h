@@ -53,6 +53,18 @@ namespace Nuclex::ThinOrm {
     /// </remarks>
     public: NUCLEX_THINORM_API explicit DateTime(const std::int64_t ticks);
 
+    /// <summary>Returns the current date and time in UTC</summary>
+    /// <returns>A DateTime instance holding the current date and time</returns>
+    public: NUCLEX_THINORM_API static DateTime Now();
+
+    /// <summary>Returns the current date (without the time of day) in UTC</summary>
+    /// <returns>A DateTime instance holding the current date</returns>
+    public: NUCLEX_THINORM_API static DateTime Today();
+
+    /// <summary>Returns the current time of day (without the date) in UTC</summary>
+    /// <returns>A DateTime instance holding the current time of day only</returns>
+    public: NUCLEX_THINORM_API static DateTime TimeOfDay();
+
     /// <summary>
     ///   Initializes a date and time value from a <see cref="std::tm" /> structure
     /// </summary>
@@ -72,7 +84,7 @@ namespace Nuclex::ThinOrm {
     ///   Number of tenths of microseconds after the time indicated
     /// </param>
     public: NUCLEX_THINORM_API static DateTime FromSecondsSinceUnixEpoch(
-      std::time_t secondsSinceUnixEpoch, std::uint32_t tenthMicrosseconds = 0
+      std::time_t secondsSinceUnixEpoch, std::uint32_t tenthMicroseconds = 0
     );
 
     /// <summary>

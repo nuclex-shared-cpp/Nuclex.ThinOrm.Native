@@ -24,10 +24,21 @@ limitations under the License.
 
 #include <cassert> // for assert()
 #include <stdexcept> // for std::runtime_error()
+#include <chrono> // for std::chrono::system_clock
 
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Number of 1/10th microseconds that elapse every second</summary>
+  std::int64_t TicksPerSecond = 1000 * 1000 * 10;
+
+  /// <summary>Number of 1/10th microseconds that elapse in a single day</summary>
+  std::int64_t TicksPerDay = 86400ll * TicksPerSecond;
+
+  /// <summary>Number of 1/10th microseconds on midnight of January the 1st in 1970</summary>
+  std::int64_t TicksAtStartOfUnixEpoch = 719162ll * TicksPerDay;
+
   // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
@@ -51,6 +62,40 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+  DateTime DateTime::Now() {
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::int64_t microSecondsSinceUnixEpoch = (
+      std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count()
+    );
+
+    return DateTime(microSecondsSinceUnixEpoch * 10ll + TicksAtStartOfUnixEpoch);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  DateTime DateTime::Today() {
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::int64_t microSecondsSinceUnixEpoch = (
+      std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count()
+    );
+
+    microSecondsSinceUnixEpoch -= (microSecondsSinceUnixEpoch % TicksPerDay);
+    return DateTime(microSecondsSinceUnixEpoch * 10ll + TicksAtStartOfUnixEpoch);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  DateTime DateTime::TimeOfDay() {
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::int64_t microSecondsSinceUnixEpoch = (
+      std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count()
+    );
+
+    return DateTime(microSecondsSinceUnixEpoch % TicksPerDay * 10ll + TicksAtStartOfUnixEpoch);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   DateTime DateTime::FromTm(
     const std::tm &dateAndTime, std::uint32_t tenthMicroseconds /* = 0 */
   ) {
@@ -61,10 +106,10 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   DateTime DateTime::FromSecondsSinceUnixEpoch(
-    std::time_t secondsSinceUnixEpoch, std::uint32_t tenthMicrosseconds /* = 0 */
+    std::time_t secondsSinceUnixEpoch, std::uint32_t tenthMicroseconds /* = 0 */
   ) {
-    return DateTime(0);
-    // TODO: Initialize a DateTime vlaue from std::time_t
+    std::int64_t ticks = secondsSinceUnixEpoch * TicksPerSecond + TicksAtStartOfUnixEpoch;
+    return DateTime(ticks + tenthMicroseconds);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -82,13 +127,13 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   DateTime DateTime::GetDateOnly() const {
-    return DateTime(this->ticks - (this->ticks % 864'000'000'000ll));
+    return DateTime(this->ticks - (this->ticks % TicksPerDay));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   DateTime DateTime::GetTimeOnly() const {
-    return DateTime(this->ticks % 864'000'000'000ll);
+    return DateTime(this->ticks % TicksPerDay);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -112,13 +157,20 @@ namespace Nuclex::ThinOrm {
   // ------------------------------------------------------------------------------------------- //
 
   std::time_t DateTime::ToSecondSinceUnixEpoch() const {
-    throw std::runtime_error(reinterpret_cast<const char *>(u8"Not implemented yet"));
+    if(this->ticks < TicksAtStartOfUnixEpoch) [[unlikely]] {
+      return std::time_t(0);
+    }
+
+    return static_cast<std::time_t>(
+      (this->ticks - TicksAtStartOfUnixEpoch) / TicksPerSecond
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   float DateTime::GetSecondFraction() const {
-    throw std::runtime_error(reinterpret_cast<const char *>(u8"Not implemented yet"));
+    std::int64_t tenthMicroseconds = this->ticks % TicksPerSecond;
+    return static_cast<float>(static_cast<double>(tenthMicroseconds) / 10'000'000.0);
   }
 
   // ------------------------------------------------------------------------------------------- //
