@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 
+#include <memory> // for std::unique_ptr<>
 #include <string> // for std::u8string
 
 namespace Nuclex::ThinOrm {
@@ -62,8 +63,6 @@ namespace Nuclex::ThinOrm::Connections {
     /// </remarks>
     public: NUCLEX_THINORM_API inline virtual void Prepare(const Query &query) { (void)query; }
 
-    // TODO: Expose the results as futures or C++ 20 coroutine tasks.
-
     /// <summary>Executes an SQL query that has no results on the database</summary>
     /// <param name="statement">Statement that will be executed</param>
     public: virtual void RunStatement(const Query &statement) = 0;
@@ -73,10 +72,15 @@ namespace Nuclex::ThinOrm::Connections {
     /// <returns>The result of the query</returns>
     public: virtual Value RunScalarQuery(const Query &scalarQuery) = 0;
 
+    /// <summary>Executes an SQL query that updates (or deletes) rows in the database</summary>
+    /// <param name="updateQuery">Query that will be executed</param>
+    /// <returns>The number of affected rows</returns>
+    public: virtual std::size_t RunUpdateQuery(const Query &updateQuery) = 0;
+
     /// <summary>Executes an SQL query that has result rows on the database</summary>
     /// <param name="rowQuery">Query that will be executed</param>
     /// <returns>A reader that can be used to fetch individual rows</returns>
-    public: virtual RowReader RunRowQuery(const Query &rowQuery) = 0;
+    public: virtual std::unique_ptr<RowReader> RunRowQuery(const Query &rowQuery) = 0;
 
     /// <summary>Checks if the specified table exists</summary>
     /// <param name="tableName">Table or view whose existence will be checked</param>

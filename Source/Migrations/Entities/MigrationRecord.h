@@ -17,8 +17,8 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_MIGRATIONS_ENTITIES_APPLIEDMIGRATION_H
-#define NUCLEX_THINORM_MIGRATIONS_ENTITIES_APPLIEDMIGRATION_H
+#ifndef NUCLEX_THINORM_MIGRATIONS_ENTITIES_MIGRATIONRECORD_H
+#define NUCLEX_THINORM_MIGRATIONS_ENTITIES_MIGRATIONRECORD_H
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/DateTime.h" // for DateTime
@@ -26,18 +26,23 @@ limitations under the License.
 #include <cstddef> // for std::size_t
 #include <string> // for std::u8string
 #include <optional> // for std::optional<>
-#include <memory> // for std::shared_ptr<>
-
-namespace Nuclex::ThinOrm::Connections {
-  class Connection;
-}
 
 namespace Nuclex::ThinOrm::Migrations::Entities {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Records an applied database schema migration in the database</summary>
-  class AppliedMigration {
+  class MigrationRecord {
+
+    /// <summary>Initializes a new schema migration record</summary>
+    /// <param name="schemaVersion">Database schema version whose migration was applied</param>
+    /// <param name="appliedOn">Date and time the migration was applied on</param>
+    /// <param name="name">Name given by the user to the 
+    public: MigrationRecord(
+      std::size_t schemaVersion,
+      const DateTime &appliedOn,
+      const std::optional<std::u8string> &name
+    );
 
     /// <summary>Schema version of the migration</summary>
     public: std::size_t SchemaVersion;
@@ -63,4 +68,4 @@ namespace Nuclex::ThinOrm::Migrations::Entities {
 
 } // namespace Nuclex::ThinOrm::Migrations::Entities
 
-#endif // NUCLEX_THINORM_MIGRATIONS_ENTITIES_APPLIEDMIGRATION_H
+#endif // NUCLEX_THINORM_MIGRATIONS_ENTITIES_MIGRATIONRECORD_H

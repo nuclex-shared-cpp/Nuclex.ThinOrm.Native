@@ -167,6 +167,7 @@ namespace Nuclex::ThinOrm::Connections {
 
 } // namespace Nuclex::ThinOrm::Connections
 
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)
+
 #endif // NUCLEX_THINORM_CONNECTIONS_QTSQLCONNECTIONFACTORY_H
 
-#endif // defined(NUCLEX_THINORM_ENABLE_QT)

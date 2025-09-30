@@ -71,6 +71,6 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
 } // namespace Nuclex::ThinOrm::Connections::QtSql
 
-#endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_UNIQUENAMEGENERATOR_H
-
 #endif // #if defined(NUCLEX_THINORM_ENABLE_QT)
+
+#endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_UNIQUENAMEGENERATOR_H

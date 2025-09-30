@@ -83,6 +83,6 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
 } // namespace Nuclex::ThinOrm::Connections::QtSql
 
-#endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLMATERIALIZEDQUERY_H
-
 #endif // defined(NUCLEX_THINORM_ENABLE_QT)
+
+#endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLMATERIALIZEDQUERY_H

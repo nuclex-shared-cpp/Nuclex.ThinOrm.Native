@@ -20,15 +20,21 @@ limitations under the License.
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_THINORM_SOURCE 1
 
-#include "./QtSqlConnection.h"
+#include "./MigrationRecord.h"
 
-namespace Nuclex::ThinOrm::Connections {
-
-  // ------------------------------------------------------------------------------------------- //
-
-  // This file is only here to guarantee that its associated header has no hidden
-  // dependencies and can be included on its own
+namespace Nuclex::ThinOrm::Migrations::Entities {
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm::Connections
+  MigrationRecord::MigrationRecord(
+    std::size_t schemaVersion,
+    const DateTime &appliedOn,
+    const std::optional<std::u8string> &name
+  ) :
+    SchemaVersion(schemaVersion),
+    AppliedOn(appliedOn),
+    Name(name) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // namespace Nuclex::ThinOrm::Migrations::Entities

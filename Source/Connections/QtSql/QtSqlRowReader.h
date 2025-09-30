@@ -17,82 +17,59 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_ROWREADER_H
-#define NUCLEX_THINORM_ROWREADER_H
+#ifndef NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLROWREADER_H
+#define NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLROWREADER_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Value.h"
 
-#include <cstdint> // for std::int16_t, std::int32_t, etc.
-#include <string> // for std::u8string
+#if defined(NUCLEX_THINORM_ENABLE_QT)
 
-namespace Nuclex::ThinOrm {
+#include "Nuclex/ThinOrm/RowReader.h"
+
+namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Reads rows from a query that results in multiple rows</summary>
-  class NUCLEX_THINORM_TYPE RowReader {
+  class QtSqlRowReader : public RowReader {
 
     /// <summary>Frees all resources owned by the reader and closes the query</summary>
-    public: NUCLEX_THINORM_API virtual ~RowReader() = default;
+    public: ~QtSqlRowReader() override;
 
     /// <summary>Tries to move to the next row in the result</summary>
     /// <returns>True if there was a next row, false if the end was reached</returns>
-    /// <remarks>
-    ///   A row reader will start out on an invalid row, meaning that this method is
-    ///   the very first thing you should call. This behavior is intentional to allow for
-    ///   queries that return zero rows. When the is no next row to move to, this method
-    ///   will return 'false' and the row reader will once again be on an invalid row.
-    /// </remarks>
-    public: NUCLEX_THINORM_API virtual bool MoveToNext() = 0;
+    public: bool MoveToNext() override;
 
     /// <summary>Counts the number of columns the query result returns</summary>
     /// <returns>The number of columns in the result</returns>
-    public: NUCLEX_THINORM_API virtual std::size_t CountColumns() const = 0;
+    public: std::size_t CountColumns() const override;
 
     /// <summary>Retrieves the name of the specified column</summary>
     /// <param name="columnIndex">Index of the column whose name will be returned</param>
     /// <returns>The name of the column with the specified index</returns>
-    /// <remarks>
-    ///   The column name is typically the actual column name in the table that was queried
-    ///   but can also be a compound name specific to the database engine if a query involves
-    ///   'JOIN' statements or computed result columns. Most SQL dialects allow queries to
-    ///   explicitly name result column, i.e.  <code>SELECT 42 AS SenseOfLife</code> would
-    ///   produce a column named 'SenseOfLife'.
-    /// </remarks>
-    public: NUCLEX_THINORM_API virtual const std::u8string GetColumnName(
-      std::size_t columnIndex
-    ) const = 0;
+    public: const std::u8string GetColumnName(std::size_t columnIndex) const override;
 
     /// <summary>Looks up the data type of the specified column</summary>
     /// <param name="columnIndex">Index of the column whose data type will be looked up</param>
     /// <returns>The data type of the specified column</returns>
-    public: NUCLEX_THINORM_API virtual ValueType GetColumnType(
-      std::size_t columnIndex
-    ) const = 0;
+    public: ValueType GetColumnType(std::size_t columnIndex) const override;
 
     /// <summary>Retrieves the value of the specified column in the current row</summary>
     /// <param name="columnIndex">Index of the column whose value will be retrieved</param>
     /// <returns>The value of the specified column in the current row</returns>
-    public: NUCLEX_THINORM_API virtual Value GetColumnValue(
-      std::size_t columnIndex
-    ) const = 0;
+    public: Value GetColumnValue(std::size_t columnIndex) const override;
 
     /// <summary>Retrieves the value of the specified column in the current row</summary>
     /// <param name="columnName">Name of the column whose value will be retrieved</param>
     /// <returns>The value of the specified column in the current row</returns>
-    /// <remarks>
-    ///   If the name is ambiguous, an exception will be thrown. Unless you have full
-    ///   control over your queries, it is safer to fetch values by index. It is faster, too.
-    /// </remarks>
-    public: NUCLEX_THINORM_API virtual Value GetColumnValue(
-      const std::u8string &columnName
-    ) const = 0;
+    public: Value GetColumnValue(const std::u8string &columnName) const override;
 
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-} // namespace Nuclex::ThinOrm
+} // namespace Nuclex::ThinOrm::Connections::QtSql
 
-#endif // NUCLEX_THINORM_ROWREADER_H
+#endif // defined(NUCLEX_THINORM_ENABLE_QT)
+
+#endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLROWREADER_H

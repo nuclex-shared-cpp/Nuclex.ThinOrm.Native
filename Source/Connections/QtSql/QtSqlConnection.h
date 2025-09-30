@@ -88,10 +88,15 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>The result of the query</returns>
     public: Value RunScalarQuery(const Query &scalarQuery) override;
 
+    /// <summary>Executes an SQL query that updates (or deletes) rows in the database</summary>
+    /// <param name="updateQuery">Query that will be executed</param>
+    /// <returns>The number of affected rows</returns>
+    public: std::size_t RunUpdateQuery(const Query &updateQuery) override;
+
     /// <summary>Executes an SQL query that has result rows on the database</summary>
     /// <param name="rowQuery">Query that will be executed</param>
     /// <returns>A reader that can be used to fetch individual rows</returns>
-    public: RowReader RunRowQuery(const Query &rowQuery) override;
+    public: std::unique_ptr<RowReader> RunRowQuery(const Query &rowQuery) override;
 
     /// <summary>Checks if the specified table exists</summary>
     /// <param name="tableName">Table or view whose existence will be checked</param>
@@ -129,6 +134,6 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
 } // namespace Nuclex::ThinOrm::Connections::QtSql
 
-#endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLCONNECTION_H
-
 #endif // defined(NUCLEX_THINORM_ENABLE_QT)
+
+#endif // NUCLEX_THINORM_CONNECTIONS_QTSQL_QTSQLCONNECTION_H

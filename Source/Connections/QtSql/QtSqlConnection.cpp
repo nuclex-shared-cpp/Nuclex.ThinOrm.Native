@@ -191,7 +191,13 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
-  RowReader QtSqlConnection::RunRowQuery(const Query &rowQuery) {
+  std::size_t QtSqlConnection::RunUpdateQuery(const Query &updateQuery) {
+    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::unique_ptr<RowReader> QtSqlConnection::RunRowQuery(const Query &rowQuery) {
     throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
   }
 

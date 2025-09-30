@@ -23,15 +23,17 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Migrations/MigrationRunner.h"
 #include "Nuclex/ThinOrm/Migrations/Migration.h"
 #include "Nuclex/ThinOrm/Migrations/GlobalMigrationRepository.h"
+
 #include "Nuclex/ThinOrm/Connections/ConnectionPool.h"
 #include "Nuclex/ThinOrm/Connections/Connection.h"
 #include "Nuclex/ThinOrm/Errors/AmbiguousSchemaVersionError.h"
 
+#include "./Repositories/MigrationRecordRepository.h"
+
 #include <Nuclex/Support/Text/LexicalAppend.h> // for lexical_append<>()
 
-#include "../Utilities/QStringConverter.h" // for QStringConverter, U8Chars()
-
 #include <algorithm> // for std::sort()
+#include <cassert> // for assert()
 
 namespace {
 
@@ -44,16 +46,16 @@ namespace {
   ///   method. Changing it after a database has been initialized would cause us to assume
   ///   that no migrations have been applied yet and run them all again, wreaking havoc.
   /// </remarks>
-  const std::u8string DefaultMigrationTableName(u8"migrations", 10);
+  const std::u8string DefaultMigrationTableName(u8"Migrations", 10);
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>
   ///   Comparison functor that checks if one migration's schema version is earlier (less)
-  ///   than another's
+  ///   than that of another migration
   /// </summary>
   class MigrationSchemaVersionLess {
-    //std::less<std::unique_ptr<Nuclex::ThinOrm::Migrations::Migration>>
+    //std::less<std::shared_ptr<Nuclex::ThinOrm::Migrations::Migration>>
 
     /// <summary>
     ///   Checks if the first migration's schema version is 'less' than the second's
@@ -221,7 +223,7 @@ namespace Nuclex::ThinOrm::Migrations {
 
   void MigrationRunner::requireDistinctSchemaVersions() {
     std::size_t count = this->migrations.size();
-    if(count == 0) {
+    if(count == 0) [[unlikely]] {
       return;
     }
 
@@ -231,7 +233,7 @@ namespace Nuclex::ThinOrm::Migrations {
       // Assuming migrations are sorted by increasing schema versions, if the same
       // schema version is repeated, it means this verification step has failed.
       std::size_t nextSchemaVersion = this->migrations[index]->GetTargetSchemaVersion();
-      if(schemaVersion == nextSchemaVersion) {
+      if(schemaVersion == nextSchemaVersion) [[unlikely]] {
         std::u8string message(u8"Schema version '", 16);
         Nuclex::Support::Text::lexical_append(message, schemaVersion);
         message.append(u8"' was declared by more than one migration and is ambiguous", 58);
@@ -240,7 +242,7 @@ namespace Nuclex::ThinOrm::Migrations {
 
       // If the schema versions are not sorted, our technique of linearly checking for
       // repeated schema version is useless, so we need to check for that, too.
-      if(nextSchemaVersion < schemaVersion) {
+      if(nextSchemaVersion < schemaVersion) [[unlikely]] {
         assert(
           (nextSchemaVersion < schemaVersion) &&
           u8"Migration steps must be sorted by schema version"
@@ -263,10 +265,85 @@ namespace Nuclex::ThinOrm::Migrations {
   ) {
     bool isDatabaseInitialized = connection->DoesTableOrViewExist(this->tableName);
 
-    // TODO: Apply schema migration towards the target schema version
-    throw std::runtime_error(
-      reinterpret_cast<const char *>(u8"Not implemented yet")
-    );
+    Repositories::MigrationRecordRepository repository(connection, this->tableName);
+
+    // Figure out which migrations have already been applied. If the migration records
+    // table doesn't exist yet, create it and skip fetching it.
+    std::unordered_set<std::size_t> appliedMigrations;
+    if(!isDatabaseInitialized) [[unlikely]] {
+      repository.CreateTable();
+    } else {
+      appliedMigrations = repository.FetchAllAppliedSchemaVersions();
+    }
+
+    std::size_t registeredMigrationCount = this->migrations.size();
+
+    // First, revert any migrations that have been applied but should no longer be so
+    // given the target schema version. If the schema version is a null pointer, we can
+    // skip this step because the caller wants all migrations to be applied.
+    if(schemaVersion != nullptr) {
+      for(std::size_t index = registeredMigrationCount; 0 < index;) {
+        --index;
+
+        const std::shared_ptr<Migration> &migration = this->migrations[index];
+        std::size_t migrationTargetSchemaVersion = migration->GetTargetSchemaVersion();
+
+        // Figure out if this migration should be reverted given the schema version
+        // the database should be reverted to
+        bool shouldBeReverted = (*schemaVersion < migrationTargetSchemaVersion);
+
+        // If the migration should be reverted and the migration records table show
+        // that it is currently applied on the database, revert the migration now.
+        bool isApplied = appliedMigrations.contains(migrationTargetSchemaVersion);
+        if(shouldBeReverted && isApplied) {
+
+          // Revert the migration and immediately remove it from the migration records
+          // so it won't be reverted a second time if some migration further down the line
+          // causes an exception and fails the overall migration.
+          migration->Down(*connection.get());
+          repository.RemoveMigration(migrationTargetSchemaVersion);
+        }
+      } // for each migration index in reverse
+    } // if explicit schema version specified
+
+    // Now deal with migrations that should be applied. This is the default and will
+    // step through all migrations in order of their target schema version. Normally,
+    // no new migrations should pop up inbetween already applied migrations, but we
+    // allow this in order to support developers who want to have a gallery of
+    // independent "baselining" migrations.
+    for(std::size_t index = 0; index < registeredMigrationCount; ++index) {
+      const std::shared_ptr<Migration> &migration = this->migrations[index];
+      std::size_t migrationTargetSchemaVersion = migration->GetTargetSchemaVersion();
+
+      // Figure out if this migration should be applied in order to move to
+      // the target database schema version we were given
+      bool shouldBeApplied;
+      if(schemaVersion == nullptr) {
+        shouldBeApplied = true; // apply all if target schema version is a null pointer
+      } else {
+        shouldBeApplied = (*schemaVersion >= migrationTargetSchemaVersion);
+      }
+
+      // If the migration should be applied and the migration records table shows
+      // that it has not yet been applied, run the migration now.
+      bool isApplied = appliedMigrations.contains(migrationTargetSchemaVersion);
+      if(shouldBeApplied && !isApplied) {
+        std::u8string name = migration->GetName();
+
+        // Apply the migration and immediately record it. In case another migration will
+        // fail, we at least leave a record of the successfully applied migrations,
+        // aiding the user in reconstructing what went wrong (and avoiding reapplication
+        // of successful migrations once the failing migration is fixed).
+        migration->Up(*connection.get());
+        repository.AddMigration(
+          Entities::MigrationRecord(
+            migrationTargetSchemaVersion,
+            DateTime::FromSecondsSinceUnixEpoch(0), // TODO: Implement DateTime::GetNow()
+            name.empty() ? std::optional<std::u8string>() : name
+          )
+        );
+      } // if migration should be applied but isn't
+    } // for each migration index
   }
 
   // ------------------------------------------------------------------------------------------- //
