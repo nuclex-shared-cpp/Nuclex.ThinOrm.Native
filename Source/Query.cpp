@@ -64,6 +64,12 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+  void Query::ClearParameterValues() {
+    this->implementation->ClearParameterValues();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   const std::vector<QueryParameterView> &Query::GetParameterInfo() const {
     return this->immutableState->GetParameterInfo();
   }

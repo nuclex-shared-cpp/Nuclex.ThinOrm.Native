@@ -50,6 +50,12 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
   
+  void Query::Implementation::ClearParameterValues() {
+    this->parameterValues.clear();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   const Value &Query::Implementation::GetParameterValue(const std::u8string &name) const {
     ParameterValueMap::const_iterator iterator = this->parameterValues.find(name);
     if(iterator == this->parameterValues.end()) {

@@ -24,7 +24,7 @@ limitations under the License.
 
 #include <memory> // for std::shared_ptr
 
-namespace Nuclex::ThinOrm {
+namespace Nuclex::ThinOrm::Connections {
   class Connection;
 }
 

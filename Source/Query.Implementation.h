@@ -45,6 +45,9 @@ namespace Nuclex::ThinOrm {
     /// <summary>Frees all resources owned by the implementation details</summary>
     public: ~Implementation();
 
+    /// <summary>Clears the values of all parameters</summary>
+    public: void ClearParameterValues();
+
     /// <summary>Retrieves the value assigned to a parameter by its name</summary>
     /// <param name="name">Name of the parameter whose value to fetch</param>
     /// <returns>The current value of the parameter with the specified name</returns>

@@ -61,6 +61,9 @@ namespace Nuclex::ThinOrm {
     /// <returns>The number of parameters in the SQL statement</returns>
     public: NUCLEX_THINORM_API std::size_t CountParameters() const;
 
+    /// <summary>Clears all assigned parameter values</summary>
+    public: NUCLEX_THINORM_API void ClearParameterValues();
+
     /// <summary>
     ///   Retrieves the names and locations of parameter placeholders in the SQL statement
     /// </summary>
