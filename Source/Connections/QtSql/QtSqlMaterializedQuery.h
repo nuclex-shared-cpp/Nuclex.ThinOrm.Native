@@ -28,6 +28,7 @@ limitations under the License.
 
 #include <QSqlDatabase> // for QSqlDatabase
 #include <QSqlQuery> // for QSqlQuery
+#include <QVariant> // for QVariant
 #include <QString> // for QString
 
 #include <memory> // for std::unique_ptr
@@ -50,15 +51,19 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <summary>Destroys the materialized query and frees all resources</summary>
     public: ~QtSqlMaterializedQuery();
 
-#if 0
-    /// <summary>Materializes the specified query for a Qt SQL database</summary>
-    /// <param name="database">Database for which the query will be materialized</param>
-    /// <param name="query">Query that will be materialized</param>
-    /// <returns>A new Qt-specified prepared query ready for execution</returns>
-    public: static std::unique_ptr<QtSqlMaterializedQuery> Materialize(
-      QSqlDatabase &database, const Query &query
-    );
-#endif
+    /// <summary>Executes the query, assuming it returns a scalar value as result</summary>
+    /// <returns>The result of the query</returns>
+    public: Value RunWithScalarResult();
+
+    /// <summary>Constructs a value taking over the value from q Qt variant</summary>
+    /// <param name="variant">Qt variant whose type and value will be adopted</param>
+    /// <returns>A new value mirroring the type and value of the specified Qtvariant</returns>
+    public: static Value ValueFromQVariant(const QVariant &variant);
+
+    /// <summary>Constructs an empty value with a type equivalent to specified Qt type</summary>
+    /// <param name="variantType">Qt variant type the empty value's type will mirror</param>
+    /// <returns>A new, empty value with a type equivalent to the specified Qt type</returns>
+    public: static Value EmptyValueFromType(QVariant::Type variantType);
 
     /// <summary>Transforms the SQL statement into the format expected by Qt SQL</summary>
     /// <param name="sqlStatement">SQL statement that will be transformed</param>
@@ -69,6 +74,15 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     private: static QString transformSqlStatement(
       const std::u8string &sqlStatement, const std::vector<QueryParameterView> &parameters
     );
+
+    /// <summary>Initializes the QSqlQuery and prepares the statement for execution</summary>
+    /// <remarks>
+    ///   This essentially just calls <see cref="QSqlQuery.prepare()" />, which will allow
+    ///   the database driver to pre-compile the SQL statement on the database server, if
+    ///   supported. This will very likely already catch query syntax errors and also when
+    ///   the query references table names or other things that do not exist in the database.
+    /// </remarks>
+    private: void prepareSqlStatement();
 
     /// <summary>
     ///   The SQL statement as it has been passed to the <see cref="QSqlQuery" />

@@ -186,7 +186,8 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlConnection::RunScalarQuery(const Query &scalarQuery) {
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+    QtSqlMaterializedQuery materializedQuery(this->database, scalarQuery);
+    return materializedQuery.RunWithScalarResult();
   }
 
   // ------------------------------------------------------------------------------------------- //
