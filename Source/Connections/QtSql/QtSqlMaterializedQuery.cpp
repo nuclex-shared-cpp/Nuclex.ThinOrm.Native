@@ -104,29 +104,23 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
+  void QtSqlMaterializedQuery::BindParameters(const Query &query) {
+    // TODO: Bind parameters to QtQuery
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void  QtSqlMaterializedQuery::RunWithoutResult() {
+    executeQuery();
+    this->qtQuery.finish();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   Value QtSqlMaterializedQuery::RunWithScalarResult() {
     using Nuclex::ThinOrm::Utilities::QStringConverter;
 
-    // TODO: Bind any query parameters here or leave that up to the QtSqlConnection?
-
-    // Simply execute the prepared query.
-    bool successfullyExecuted = this->qtQuery.exec();
-    if(!successfullyExecuted) [[unlikely]] {
-      std::u8string message(u8"Error executing SQL statement:\n", 31);
-      message.append(QStringConverter::ToU8(this->qtSqlStatement));
-      message.append(u8"\nReason provided by Qt SQL:\n", 28);
-
-      QSqlError lastError = this->qtQuery.lastError();
-      if(lastError.type() == QSqlError::ErrorType::NoError) [[unlikely]] {
-        message.append(u8"unknown QtSql error ", 20);
-        message.append(u8"(.prepare() returned false, yet .lastError() was 'NoError')", 59);
-      } else {
-        message.append(QStringConverter::ToU8(lastError.text()));
-      }
-
-      throw Errors::BadSqlStatementError(message);
-    }
-
+    executeQuery();
     {
       ON_SCOPE_EXIT { this->qtQuery.finish(); };
 
@@ -159,7 +153,7 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
         std::u8string message(
           u8"Expected scalar (single value) result from SQL statement:\n", 58
         );
-        message.append(Nuclex::ThinOrm::Utilities::QStringConverter::ToU8(this->qtSqlStatement));
+        message.append(QStringConverter::ToU8(this->qtSqlStatement));
         // CHECK: Is it safe to assume zero result column = can have no result rows either?
         message.append(u8"\nBut it returned multiple rows of results", 41);
         throw Nuclex::ThinOrm::Errors::BadSqlStatementError(message);
@@ -167,6 +161,18 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
       return ValueFromQVariant(result);
     } // scope guard for this->qtQuery.finish()
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::size_t QtSqlMaterializedQuery::RunWithRowCountResult() {
+    using Nuclex::ThinOrm::Utilities::QStringConverter;
+
+    executeQuery();
+    {
+      ON_SCOPE_EXIT { this->qtQuery.finish(); };
+      return static_cast<std::size_t>(this->qtQuery.numRowsAffected());
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -286,6 +292,29 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
       throw Errors::BadSqlStatementError(message);
     }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void QtSqlMaterializedQuery::executeQuery() {
+    using Nuclex::ThinOrm::Utilities::QStringConverter;
+
+    bool successfullyExecuted = this->qtQuery.exec();
+    if(!successfullyExecuted) [[unlikely]] {
+      std::u8string message(u8"Error executing SQL statement:\n", 31);
+      message.append(QStringConverter::ToU8(this->qtSqlStatement));
+      message.append(u8"\nReason provided by Qt SQL:\n", 28);
+
+      QSqlError lastError = this->qtQuery.lastError();
+      if(lastError.type() == QSqlError::ErrorType::NoError) [[unlikely]] {
+        message.append(u8"unknown QtSql error ", 20);
+        message.append(u8"(.prepare() returned false, yet .lastError() was 'NoError')", 59);
+      } else {
+        message.append(QStringConverter::ToU8(lastError.text()));
+      }
+
+      throw Errors::BadSqlStatementError(message);
+    } // if query failed
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -174,26 +174,32 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   void QtSqlConnection::Prepare(const Query &query) {
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+    QtSqlMaterializedQuery materializedQuery(this->database, query);
+    // TODO: Put the materialized query in an MRU cache once that is implemented!
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   void QtSqlConnection::RunStatement(const Query &statement) {
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+    QtSqlMaterializedQuery materializedQuery(this->database, statement);
+    materializedQuery.BindParameters(statement);
+    materializedQuery.RunWithoutResult();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlConnection::RunScalarQuery(const Query &scalarQuery) {
     QtSqlMaterializedQuery materializedQuery(this->database, scalarQuery);
+    materializedQuery.BindParameters(scalarQuery);
     return materializedQuery.RunWithScalarResult();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   std::size_t QtSqlConnection::RunUpdateQuery(const Query &updateQuery) {
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+    QtSqlMaterializedQuery materializedQuery(this->database, updateQuery);
+    materializedQuery.BindParameters(updateQuery);
+    return materializedQuery.RunWithRowCountResult();
   }
 
   // ------------------------------------------------------------------------------------------- //

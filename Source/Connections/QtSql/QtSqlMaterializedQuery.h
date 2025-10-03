@@ -51,9 +51,29 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <summary>Destroys the materialized query and frees all resources</summary>
     public: ~QtSqlMaterializedQuery();
 
+    /// <summary>Binds the parameter values from the specified query</summary>
+    /// <param name="query">Query whose parameter values will be bound</param>
+    /// <remarks>
+    ///   The query must have the same number of names of parameters as the query that was
+    ///   passed to the constructor of the materialized query instance.
+    /// </remarks>
+    public: void BindParameters(const Query &query);
+
+    /// <summary>Executes the query, assuming it is a statement that returns nothing</summary>
+    public: void RunWithoutResult();
+
     /// <summary>Executes the query, assuming it returns a scalar value as result</summary>
     /// <returns>The result of the query</returns>
     public: Value RunWithScalarResult();
+
+    /// <summary>Executes the query, assuming it affects zero or more rows</summary>
+    /// <returns>The result of the query</returns>
+    /// <remarks>
+    ///   SQL drivers usually provide a separate path to obtaining the number of rows
+    ///   a query has affected. This method will thus not return any result generated
+    ///   by the query, but the number of rows the SQL driver reported to be affected.
+    /// </remarks>
+    public: std::size_t RunWithRowCountResult();
 
     /// <summary>Constructs a value taking over the value from q Qt variant</summary>
     /// <param name="variant">Qt variant whose type and value will be adopted</param>
@@ -83,6 +103,14 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     ///   the query references table names or other things that do not exist in the database.
     /// </remarks>
     private: void prepareSqlStatement();
+
+    /// <summary>Executes the SQL statement via Qt's QSqlQuery</summary>
+    /// <remarks>
+    ///   This method is intended to be used from the various <code>Run...()</code> methods
+    ///   and merely wraps the <see cref="QSqlQuery.exec()" /> method so the error handling
+    ///   code doesn't have to be repeated.
+    /// </remarks>
+    private: void executeQuery();
 
     /// <summary>
     ///   The SQL statement as it has been passed to the <see cref="QSqlQuery" />
