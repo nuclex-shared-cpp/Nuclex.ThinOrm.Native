@@ -24,10 +24,11 @@ limitations under the License.
 
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
-#include "../../Utilities/QStringConverter.h"
+#include "../../Utilities/QStringConverter.h" // for QStringConverter
 
-#include "Nuclex/ThinOrm/Errors/BadSqlStatementError.h"
-#include "Nuclex/ThinOrm/Value.h"
+#include "Nuclex/ThinOrm/Errors/BadSqlStatementError.h" // for BadSqlStatementError
+#include "Nuclex/ThinOrm/Value.h" // for Value
+#include "./QtSqlRowReader.h" // for QtSqlRowReader
 
 #include <Nuclex/Support/Text/LexicalAppend.h> // for lexical_append<>()
 #include <Nuclex/Support/ScopeGuard.h> // for ON_SCOPE_EXIT
@@ -110,7 +111,7 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void  QtSqlMaterializedQuery::RunWithoutResult() {
+  void QtSqlMaterializedQuery::RunWithoutResult() {
     executeQuery();
     this->qtQuery.finish();
   }
@@ -139,13 +140,22 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
         // CHECK: Is this sane? Would Qt SQL rather return 'NULL' in some other way?
         bool hasFirstResultRow = this->qtQuery.next();
         if(!hasFirstResultRow) [[unlikely]] {
+#if 0 // Treat zero rows as empty result (bad idea, I think)
           return EmptyValueFromType(record.field(0).type());
+#else // vv zero rows means error vv // ^^ zero rows means empty result ^^
+          std::u8string message(
+            u8"Expected scalar (single value) result from SQL statement:\n", 58
+          );
+          message.append(QStringConverter::ToU8(this->qtSqlStatement));
+          message.append(u8"\nBut it returned no results", 27);
+          throw Nuclex::ThinOrm::Errors::BadSqlStatementError(message);
+#endif
         }
 
         result = this->qtQuery.value(0);
       }
 
-      // Make sure there aren't multiple rows of reulsts, otherwise, we again refuse to just
+      // Make sure there aren't multiple rows of results, otherwise, we again refuse to just
       // pick a row because the query clearly isn't one with a scalar result and we want to
       // fail early rather than attempt to wipe this discrepancy under the carpet.
       bool hasSecondResultRow = this->qtQuery.next();
@@ -154,7 +164,6 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
           u8"Expected scalar (single value) result from SQL statement:\n", 58
         );
         message.append(QStringConverter::ToU8(this->qtSqlStatement));
-        // CHECK: Is it safe to assume zero result column = can have no result rows either?
         message.append(u8"\nBut it returned multiple rows of results", 41);
         throw Nuclex::ThinOrm::Errors::BadSqlStatementError(message);
       }
@@ -173,6 +182,15 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
       ON_SCOPE_EXIT { this->qtQuery.finish(); };
       return static_cast<std::size_t>(this->qtQuery.numRowsAffected());
     }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::unique_ptr<RowReader> QtSqlMaterializedQuery::RunWithMultiRowResult(
+    const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
+  ) {
+
+    throw -1;
   }
 
   // ------------------------------------------------------------------------------------------- //

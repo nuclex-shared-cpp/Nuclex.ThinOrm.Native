@@ -24,7 +24,13 @@ limitations under the License.
 
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
-#include "Nuclex/ThinOrm/RowReader.h"
+#include "Nuclex/ThinOrm/RowReader.h" // for RowReader
+
+#include <memory> // for std::shared_ptr<>
+
+namespace Nuclex::ThinOrm::Connections::QtSql {
+  class QtSqlMaterializedQuery;
+}
 
 namespace Nuclex::ThinOrm::Connections::QtSql {
 
@@ -32,6 +38,13 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   /// <summary>Reads rows from a query that results in multiple rows</summary>
   class QtSqlRowReader : public RowReader {
+
+    /// <summary>Initializes a new row reader based on a Qt SQL query</summary>
+    /// <param name="materializedQuery">
+    ///   Query the row reader will take temporary ownership of to prevent sharing of
+    ///   its QSqlQuery whilst rows are still being enumerated
+    /// </param>
+    public: QtSqlRowReader(const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery);
 
     /// <summary>Frees all resources owned by the reader and closes the query</summary>
     public: ~QtSqlRowReader() override;
@@ -63,6 +76,9 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <param name="columnName">Name of the column whose value will be retrieved</param>
     /// <returns>The value of the specified column in the current row</returns>
     public: Value GetColumnValue(const std::u8string &columnName) const override;
+
+    /// <summary>Materialized query the row reader has temporary ownership of</summary>
+    private: std::shared_ptr<QtSqlMaterializedQuery> materializedQuery;
 
   };
 

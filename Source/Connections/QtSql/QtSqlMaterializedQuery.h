@@ -33,12 +33,21 @@ limitations under the License.
 
 #include <memory> // for std::unique_ptr
 
+namespace Nuclex::ThinOrm {
+  class RowReader;
+}
+
+namespace Nuclex::ThinOrm::Connections::QtSql {
+  class QtSqlRowReader;
+}
+
 namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Materialization of a generic Query, prepared for a Qt SQL database</summary>
   class QtSqlMaterializedQuery {
+    friend QtSqlRowReader;
 
     /// <summary>Initializes a new materialized query</summary>
     /// <param name="database">Qt database the materialization will be bound to</summarize>
@@ -75,6 +84,18 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// </remarks>
     public: std::size_t RunWithRowCountResult();
 
+    /// <summary>Executes the query, assuming it returns zero or more result rows</summary>
+    /// <param name="materializedQuery">
+    ///   Essentially the this pointer, provided by the connection rather than through
+    ///   <code>std::shared_from_this&lt;&gt;</code> in order for
+    ///   the <see cref="RowReader" /> to take temporary ownership of the materialized query.
+    /// </param>
+    /// <returns>A row reader which acts as an enumerator and row metadata provider</returns>
+    public: std::unique_ptr<RowReader> RunWithMultiRowResult(
+      // TODO: This will also needs a materialized query cache return callback
+      const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
+    );
+
     /// <summary>Constructs a value taking over the value from q Qt variant</summary>
     /// <param name="variant">Qt variant whose type and value will be adopted</param>
     /// <returns>A new value mirroring the type and value of the specified Qtvariant</returns>
@@ -84,6 +105,10 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <param name="variantType">Qt variant type the empty value's type will mirror</param>
     /// <returns>A new, empty value with a type equivalent to the specified Qt type</returns>
     public: static Value EmptyValueFromType(QVariant::Type variantType);
+
+    /// <summary>Accesses the Qt SQL query managed by the materialized query wrapper</summary>
+    /// <returns>The Qt SQL query the wrapper is managing</returns>
+    protected: inline QSqlQuery &GetQtQuery();
 
     /// <summary>Transforms the SQL statement into the format expected by Qt SQL</summary>
     /// <param name="sqlStatement">SQL statement that will be transformed</param>
@@ -120,6 +145,12 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     private: QSqlQuery qtQuery;
 
   };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline QSqlQuery &QtSqlMaterializedQuery::GetQtQuery() {
+    return this->qtQuery;
+  }
 
   // ------------------------------------------------------------------------------------------- //
 

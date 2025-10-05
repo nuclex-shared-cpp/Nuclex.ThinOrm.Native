@@ -205,13 +205,27 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   std::unique_ptr<RowReader> QtSqlConnection::RunRowQuery(const Query &rowQuery) {
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+
+    // TODO: Implement query cache
+    //   For testing, this currently naively returns a fresh materialization each time
+    std::shared_ptr<QtSqlMaterializedQuery> materializedQuery = (
+      std::make_shared<QtSqlMaterializedQuery>(this->database, rowQuery)
+    );
+    materializedQuery->BindParameters(rowQuery);
+
+    // TODO: Do *not* keep this query in the cache here.
+    //   The QSqlQuery also acts as the enumerator, so the QSqlReader must keep our
+    //   our materialized query exclusively to itself until the enumeraiton is complete.
+    return materializedQuery->RunWithMultiRowResult(materializedQuery);
+
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   bool QtSqlConnection::DoesTableOrViewExist(const std::u8string &tableName) {
-    throw std::runtime_error(U8CHARS(u8"Not implemented yet"));
+    return this->database.tables().contains(
+      Nuclex::ThinOrm::Utilities::QStringConverter::FromU8(tableName)
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //

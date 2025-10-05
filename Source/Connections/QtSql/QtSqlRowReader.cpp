@@ -25,8 +25,10 @@ limitations under the License.
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
 #include "../../Utilities/QStringConverter.h"
+#include "./QtSqlMaterializedQuery.h" // for QtSqlMaterializedQuery
 
 #include <QSqlQuery> // for QSqlQuery
+#include <QSqlRecord> // for QSqlRecord
 #include <QSqlError> // for QSqlError
 
 #include <stdexcept> // for std::runtime_error
@@ -42,42 +44,51 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   // ------------------------------------------------------------------------------------------- //
 
+  QtSqlRowReader::QtSqlRowReader(
+    const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
+  ) : materializedQuery(materializedQuery) {}
+
+  // ------------------------------------------------------------------------------------------- //
+
   QtSqlRowReader::~QtSqlRowReader() = default;
+  // TODO: Return ownership of the QtSqlMaterializedQuery to the connection
 
   // ------------------------------------------------------------------------------------------- //
 
   bool QtSqlRowReader::MoveToNext() {
-
+    return this->materializedQuery->GetQtQuery().nextResult();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   std::size_t QtSqlRowReader::CountColumns() const {
-
+    return static_cast<std::size_t>(
+      this->materializedQuery->GetQtQuery().record().count()
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   const std::u8string QtSqlRowReader::GetColumnName(std::size_t columnIndex) const {
-
+    throw -1;
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   ValueType QtSqlRowReader::GetColumnType(std::size_t columnIndex) const {
-
+    throw -1;
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlRowReader::GetColumnValue(std::size_t columnIndex) const {
-
+    throw -1;
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlRowReader::GetColumnValue(const std::u8string &columnName) const {
-
+    throw -1;
   }
 
   // ------------------------------------------------------------------------------------------- //
