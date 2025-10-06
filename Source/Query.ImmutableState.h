@@ -23,6 +23,8 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Query.h"
 
+#include <atomic> // for std::atomic
+
 namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
@@ -44,6 +46,10 @@ namespace Nuclex::ThinOrm {
     /// <returns>The SQL statement the query will execute</returns>
     public: inline const std::u8string &GetSqlStatement() const;
 
+    /// <summary>Returns the unique id of the SQL statement for caching</summary>
+    /// <returns>A unique ID that will stay the same for cloned queries</returns>
+    public: inline std::size_t GetSqlStatementId() const;
+
     /// <summary>
     ///   Retrieves the names and locations of parameter placeholders in the SQL statement
     /// </summary>
@@ -55,8 +61,13 @@ namespace Nuclex::ThinOrm {
     /// <summary>Stores names and locations of parameters</summary>
     private: typedef std::vector<QueryParameterView> ParameterViewVector;
 
+    /// <summary>Generator that is consulted to obtain a unique ID for a query</summary>
+    private: static std::atomic<std::size_t> nextUniqueId;
+
     /// <summary>SQL statement the query will execute</summary>
     private: std::u8string sqlStatement;
+    /// <summary>Unique id of the SQL statement</summary>
+    private: std::size_t sqlStatementId;
     /// <summary>Names and locations of the query parameters in the query string</summary>
     private: ParameterViewVector parameters;
 
@@ -66,6 +77,12 @@ namespace Nuclex::ThinOrm {
 
   inline const std::u8string &Query::ImmutableState::GetSqlStatement() const {
     return this->sqlStatement;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  inline std::size_t Query::ImmutableState::GetSqlStatementId() const {
+    return this->sqlStatementId;
   }
 
   // ------------------------------------------------------------------------------------------- //

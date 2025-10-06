@@ -96,23 +96,30 @@ namespace Nuclex::ThinOrm {
 
   Query::ImmutableState::ImmutableState(const std::u8string &sqlStatement) :
     sqlStatement(sqlStatement),
+    sqlStatementId(nextUniqueId++),
     parameters(parseQueryParameters(sqlStatement)) {}
 
   // ------------------------------------------------------------------------------------------- //
 
   Query::ImmutableState::ImmutableState(const ImmutableState &other) :
     sqlStatement(other.sqlStatement),
+    sqlStatementId(other.sqlStatementId),
     parameters(other.parameters) {}
 
   // ------------------------------------------------------------------------------------------- //
 
   Query::ImmutableState::ImmutableState(ImmutableState &&other) :
     sqlStatement(std::move(other.sqlStatement)),
+    sqlStatementId(other.sqlStatementId),
     parameters(std::move(other.parameters)) {}
 
   // ------------------------------------------------------------------------------------------- //
 
   Query::ImmutableState::~ImmutableState() = default;
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::atomic<std::size_t> Query::ImmutableState::nextUniqueId(0);
 
   // ------------------------------------------------------------------------------------------- //
 

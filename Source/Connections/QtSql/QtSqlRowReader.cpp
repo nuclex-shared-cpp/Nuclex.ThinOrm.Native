@@ -30,6 +30,7 @@ limitations under the License.
 #include <QSqlQuery> // for QSqlQuery
 #include <QSqlRecord> // for QSqlRecord
 #include <QSqlError> // for QSqlError
+#include <QSqlField> // for QSqlField
 
 #include <stdexcept> // for std::runtime_error
 
@@ -70,25 +71,33 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   const std::u8string QtSqlRowReader::GetColumnName(std::size_t columnIndex) const {
-    throw -1;
+    return Utilities::QStringConverter::ToU8(
+      this->materializedQuery->GetQtQuery().record().fieldName(columnIndex)
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   ValueType QtSqlRowReader::GetColumnType(std::size_t columnIndex) const {
-    throw -1;
+    const QSqlRecord &record = this->materializedQuery->GetQtQuery().record();
+    QVariant::Type fieldType = record.field(static_cast<int>(columnIndex)).type();
+    return QtSqlMaterializedQuery::ValueTypeFromType(fieldType);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlRowReader::GetColumnValue(std::size_t columnIndex) const {
-    throw -1;
+    QVariant value = this->materializedQuery->GetQtQuery().value(static_cast<int>(columnIndex));
+    return QtSqlMaterializedQuery::ValueFromQVariant(value);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlRowReader::GetColumnValue(const std::u8string &columnName) const {
-    throw -1;
+    QVariant value = this->materializedQuery->GetQtQuery().value(
+      Utilities::QStringConverter::FromU8(columnName)
+    );
+    return QtSqlMaterializedQuery::ValueFromQVariant(value);
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -149,29 +149,7 @@ namespace Nuclex::ThinOrm::Migrations {
     private: void migrate(
       const std::shared_ptr<Connections::Connection> &connection, std::size_t *schemaVersion
     );
-#if 0
-    /// <summary>Undoes all migrations that are above the target schema version</summary>
-    /// <param name="connection">
-    ///   Connection, either the one given to the migration runner or a borrowed one
-    /// </param>
-    /// <param name="schemaVersion">Schema version to revert to</param>
-    private: void migrateBackward(
-      const std::shared_ptr<Connections::Connection> &connection,
-      const std::unordered_set<std::size_t> &appliedMigrations,
-      std::size_t schemaVersion
-    );
 
-    /// <summary>Applies all migrations up to and including the target schema version</summary>
-    /// <param name="connection">
-    ///   Connection, either the one given to the migration runner or a borrowed one
-    /// </param>
-    /// <param name="schemaVersion">Schema version to upgrade to, nullptr for latest</param>
-    private: void migrateForward(
-      const std::shared_ptr<Connections::Connection> &connection,
-      const std::unordered_set<std::size_t> &appliedMigrations,
-      std::size_t *schemaVersion
-    );
-#endif
     /// <summary>List of migration steps</summary>
     private: typedef std::vector<std::shared_ptr<Migration>> MigrationVector;
 

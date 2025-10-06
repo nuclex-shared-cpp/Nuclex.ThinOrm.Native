@@ -58,6 +58,12 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+  const std::size_t Query::GetSqlStatementId() const {
+    return this->immutableState->GetSqlStatementId();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   std::size_t Query::CountParameters() const {
     return this->immutableState->GetParameterInfo().size();
   }

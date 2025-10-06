@@ -26,6 +26,7 @@ limitations under the License.
 #include <string> // for std::u8string
 #include <memory> // for std::unique_ptr
 #include <vector> // for std::vector
+#include <cstddef> // for std::size_t
 
 namespace Nuclex::ThinOrm {
   class Value;
@@ -56,6 +57,16 @@ namespace Nuclex::ThinOrm {
     /// <summary>Retrieves the SQL statement the query was build for</summary>
     /// <returns>The SQL statement the query will execute</returns>
     public: NUCLEX_THINORM_API const std::u8string &GetSqlStatement() const;
+
+    /// <summary>Returns the unique id of the SQL statement for caching</summary>
+    /// <returns>A unique ID that will stay the same for cloned queries</returns>
+    /// <remarks>
+    ///   A new unique ID will be generated for each new Query that is constructed from an sQL
+    ///   statement. When using the copy constructor or assignment operator of the Query class
+    ///   however, the ID remains the same. SQL driver implementations can use this ID to
+    ///   cache pre-compiled and pre-optimized queries.
+    /// </remarks>
+    public: NUCLEX_THINORM_API const std::size_t GetSqlStatementId() const;
 
     /// <summary>Counts the number of parameters in the SQL statement</summary>
     /// <returns>The number of parameters in the SQL statement</returns>

@@ -35,6 +35,7 @@ limitations under the License.
 
 namespace Nuclex::ThinOrm {
   class RowReader;
+  enum class ValueType;
 }
 
 namespace Nuclex::ThinOrm::Connections::QtSql {
@@ -96,7 +97,12 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
       const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
     );
 
-    /// <summary>Constructs a value taking over the value from q Qt variant</summary>
+    /// <summary>Constructs a Qt variant taking over a value stored in the Valu class</summary>
+    /// <param name="value">Value whose type and value will be stored in the Qt variant</param>
+    /// <returns>A new Qt variant mirroring the type and value of the input Value</returns>
+    public: static QVariant QVariantFromValue(const Value &value);
+
+    /// <summary>Constructs a value taking over the value from a Qt variant</summary>
     /// <param name="variant">Qt variant whose type and value will be adopted</param>
     /// <returns>A new value mirroring the type and value of the specified Qtvariant</returns>
     public: static Value ValueFromQVariant(const QVariant &variant);
@@ -105,6 +111,11 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <param name="variantType">Qt variant type the empty value's type will mirror</param>
     /// <returns>A new, empty value with a type equivalent to the specified Qt type</returns>
     public: static Value EmptyValueFromType(QVariant::Type variantType);
+
+    /// <summary>Returns the ValueType equivalent to a Qt Variant type</summary>
+    /// <param name="variantType">Qt variant type whose equivalent ValueType to look up</param>
+    /// <returns>The ValueType equivalent to the specifeid Qt Variant type</returns>
+    public: static ValueType ValueTypeFromType(QVariant::Type variantType);
 
     /// <summary>Accesses the Qt SQL query managed by the materialized query wrapper</summary>
     /// <returns>The Qt SQL query the wrapper is managing</returns>

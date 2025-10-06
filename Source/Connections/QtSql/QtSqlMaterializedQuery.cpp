@@ -106,7 +106,10 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   void QtSqlMaterializedQuery::BindParameters(const Query &query) {
-    // TODO: Bind parameters to QtQuery
+    const std::vector<QueryParameterView> &parameterInfo = query.GetParameterInfo();
+    for(std::size_t index = 0; index < parameterInfo.size(); ++index) {
+      this->qtQuery.bindValue(index, QVariantFromValue(query.GetParameterValue(index)));
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -189,8 +192,49 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   std::unique_ptr<RowReader> QtSqlMaterializedQuery::RunWithMultiRowResult(
     const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
   ) {
+    return std::make_unique<QtSqlRowReader>(materializedQuery);
+  }
 
-    throw -1;
+  // ------------------------------------------------------------------------------------------- //
+
+  QVariant QtSqlMaterializedQuery::QVariantFromValue(const Value &value) {
+    if(value.IsEmpty()) {
+      return QVariant();
+    }
+
+    switch(value.GetType()) {
+      case ValueType::Boolean: {
+        return QVariant(static_cast<bool>(value));
+      }
+      case ValueType::Int16: {
+        return QVariant(static_cast<int>(static_cast<std::int16_t>(value)));
+      }
+      case ValueType::Int32: {
+        return QVariant(static_cast<int>(static_cast<std::int32_t>(value)));
+      }
+      case ValueType::Int64: {
+        return QVariant(static_cast<qlonglong>(static_cast<std::int64_t>(value)));
+      }
+      case ValueType::Float: {
+        return QVariant(static_cast<double>(static_cast<float>(value)));
+      }
+      case ValueType::Double: {
+        return QVariant(static_cast<double>(value));
+      }
+      case ValueType::String: {
+        return QVariant(
+          Utilities::QStringConverter::FromU8(static_cast<std::u8string>(value))
+        );
+      }
+      default: {
+        throw std::runtime_error(
+          U8CHARS(
+            u8"Attempted to convert a Nuclex::ThinOrm::Value() into a Qt variant, "
+            u8"but the Nuclex::ThinOrm::Value's type cannot be represented in a Qt variant."
+          )
+        );
+      }
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -243,11 +287,30 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
       default: {
         throw std::runtime_error(
           U8CHARS(
-            u8"Attempt to convert Qt variant to Nuclex::ThinOrm::Value() failed because "
-            u8"the Qt variant had an unsupported type."
+            u8"Attempt to construct Nuclex::ThinOrm::Value() with equivalent type to "
+            u8"Qt variant failed because the Variant had an unsupported type."
           )
         );
       }
+    } // switch
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  ValueType QtSqlMaterializedQuery::ValueTypeFromType(QVariant::Type variantType) {
+    switch(variantType) {
+      case QVariant::Type::Bool: { return ValueType::Boolean; }
+      case QVariant::Type::Int: { return ValueType::Int32; }
+      //case QVariant::Type::UInt: { return ValueType::Int32; }
+      case QVariant::Type::LongLong: { return ValueType::Int64; }
+      //case QVariant::Type::ULongLong: { return ValueType::Int64; }
+      case QVariant::Type::Double: { return ValueType::Double; }
+      //case QVariant::Type::Char: { return ValueType::Int16; }
+      case QVariant::Type::String: { return ValueType::String; }
+      //case QVariant::Type::Date: { return ValueType::Date; }
+      //case QVariant::Type::Time: { return ValueType::Time; }
+      //case QVariant::Type::DateTime: { return ValueType::DateTime; }
+      default: { return ValueType(-1); } // Invalid
     } // switch
   }
 

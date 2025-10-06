@@ -72,9 +72,12 @@ namespace Nuclex::ThinOrm {
   void Query::Implementation::SetParameterValueUnchecked(
     const std::u8string &name, const Value &value
   ) {
-    this->parameterValues.insert(
-      ParameterValueMap::value_type(name, value)
-    );
+    ParameterValueMap::iterator iterator = this->parameterValues.find(name);
+    if(iterator == this->parameterValues.end()) {
+      this->parameterValues.emplace(name, value);
+    } else {
+      iterator->second = value;
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //

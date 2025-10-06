@@ -77,8 +77,14 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>The value of the specified column in the current row</returns>
     public: Value GetColumnValue(const std::u8string &columnName) const override;
 
+    //private: struct ParameterInfo {
+    //  public: std::u8string Name;
+    //  public: ValueType Type;
+    //};
+
     /// <summary>Materialized query the row reader has temporary ownership of</summary>
     private: std::shared_ptr<QtSqlMaterializedQuery> materializedQuery;
+    //private: std::vector<ParameterInfo> parameters;
 
   };
 
