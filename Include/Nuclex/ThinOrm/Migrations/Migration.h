@@ -75,14 +75,14 @@ namespace Nuclex::ThinOrm::Migrations {
     public: NUCLEX_THINORM_API virtual void Up(Connections::Connection &connection) = 0;
 
     /// <summary>Downgrades the database schema</summary>
+    /// <param name="connection">
+    ///   Database connection through which the schema can be downgraded
+    /// </param>
     /// <remarks>
     ///   The default implementation throws an exception stating that downgrading is
     ///   not supported. Override this (and do not call the base implementation) in order
     ///   to support downgrading the database schema to the version before the migration.
     /// </remarks>
-    /// <param name="connection">
-    ///   Database connection through which the schema can be downgraded
-    /// </param>
     public: NUCLEX_THINORM_API virtual void Down(Connections::Connection &connection);
 
     /// <summary>

@@ -31,13 +31,13 @@ namespace {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Number of 1/10th microseconds that elapse every second</summary>
-  std::int64_t TicksPerSecond = 1000 * 1000 * 10;
+  constexpr const std::int64_t TicksPerSecond = 1000 * 1000 * 10;
 
   /// <summary>Number of 1/10th microseconds that elapse in a single day</summary>
-  std::int64_t TicksPerDay = 86400ll * TicksPerSecond;
+  constexpr const std::int64_t TicksPerDay = 86400ll * TicksPerSecond;
 
   /// <summary>Number of 1/10th microseconds on midnight of January the 1st in 1970</summary>
-  std::int64_t TicksAtStartOfUnixEpoch = 719162ll * TicksPerDay;
+  constexpr const std::int64_t TicksAtStartOfUnixEpoch = 719162ll * TicksPerDay;
 
   // ------------------------------------------------------------------------------------------- //
 

@@ -26,7 +26,6 @@ limitations under the License.
 #include <Nuclex/Support/Errors/CorruptStringError.h> // for CorruptStringError
 #include <Nuclex/Support/Text/UnicodeHelper.h> // for UnicodeHelper
 
-#include <stdexcept> // for std::runtime_error
 #include <cassert> // for assert()
 
 namespace {

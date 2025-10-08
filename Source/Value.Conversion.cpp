@@ -228,7 +228,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return false;
+          return std::optional<bool>();
         }
       }
     }
@@ -296,7 +296,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return 0;
+          return std::optional<std::uint8_t>();
         }
       }
     }
@@ -358,7 +358,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return 0;
+          return std::optional<std::int16_t>();
         }
       }
     }
@@ -416,7 +416,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return 0;
+          return std::optional<std::int32_t>();
         }
       }
     }
@@ -474,7 +474,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return 0;
+          return std::optional<std::int64_t>();
         }
       }
     }
@@ -519,7 +519,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return 0;
+          return std::optional<Decimal>();
         }
       }
     }
@@ -564,7 +564,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return 0.0f;
+          return std::optional<float>();
         }
       }
     }
@@ -609,7 +609,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return 0.0;
+          return std::optional<double>();
         }
       }
     }
@@ -659,7 +659,61 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          return std::u8string();
+          return std::optional<std::u8string>();
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<DateTime> Value::AsDateTime() const {
+    if(this->empty) [[unlikely]] {
+      return std::optional<DateTime>();
+    } else {
+      switch(this->type) {
+        #if 0 // TODO: Implement date/time coercion
+        case ValueType::Boolean: {
+          return this->value.Boolean ? trueBooleanLiteral : falseBooleanLiteral;
+        }
+        case ValueType::UInt8: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Uint8);
+        }
+        case ValueType::Int16: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Int16);
+        }
+        case ValueType::Int32: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Int32);
+        }
+        case ValueType::Int64: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Int64);
+        }
+        case ValueType::Decimal: { return this->value.DecimalValue.ToString(); }
+        case ValueType::Float: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Float);
+        }
+        case ValueType::Double: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Double);
+        }
+        case ValueType::String: { return this->value.String; }
+        #endif
+        case ValueType::Date: {
+          return this->value.DateTimeValue.GetDateOnly();
+        }
+        case ValueType::Time: {
+          return this->value.DateTimeValue.GetTimeOnly();
+        }
+        case ValueType::DateTime: {
+          return this->value.DateTimeValue;
+        }
+        #if 0
+        case ValueType::Blob: {
+          return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Blob.size());
+        }
+        #endif
+        default: {
+          assert(false && u8"Unsupported value type");
+          return std::optional<DateTime>();
         }
       }
     }
@@ -739,7 +793,7 @@ namespace Nuclex::ThinOrm {
         }
         default: {
           assert(false && u8"Unsupported value type");
-          break;
+          return std::optional<std::vector<std::byte>>();
         }
       } // switch on value type
 

@@ -234,6 +234,12 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+  Value::operator DateTime() const {
+    return AsDateTime().value();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   Value::operator std::vector<std::byte>() const {
     return AsBlob().value();
   }
@@ -290,6 +296,12 @@ namespace Nuclex::ThinOrm {
 
   Value::operator std::optional<std::u8string>() const {
     return AsString();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value::operator std::optional<DateTime>() const {
+    return AsDateTime();
   }
 
   // ------------------------------------------------------------------------------------------- //

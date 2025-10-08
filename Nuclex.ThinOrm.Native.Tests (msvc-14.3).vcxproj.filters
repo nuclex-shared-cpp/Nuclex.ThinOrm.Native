@@ -17,375 +17,344 @@
     <Filter Include="Documents">
       <UniqueIdentifier>{281d21e9-54ae-41ff-b4d5-d1af944e82a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Hardware">
-      <UniqueIdentifier>{7bdff441-a1d8-4222-885f-b2a74b65c2db}</UniqueIdentifier>
+    <Filter Include="Source\Configuration">
+      <UniqueIdentifier>{b3a3170d-d7d3-4c3b-986a-3e0bd8145554}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Interaction">
-      <UniqueIdentifier>{6ee89a3e-e99c-4f4e-b419-10eac7dc419c}</UniqueIdentifier>
+    <Filter Include="Source\Connections">
+      <UniqueIdentifier>{0be81110-9ae8-42bf-b9ec-082737c697dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Tasks">
-      <UniqueIdentifier>{112dec7a-48f7-4e4a-a6e1-2599706d3cfe}</UniqueIdentifier>
+    <Filter Include="Source\Queries">
+      <UniqueIdentifier>{880bcec9-0f9f-41c2-8722-b33c04b10dd4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Hardware">
-      <UniqueIdentifier>{f0423309-0382-4478-b112-432eea3bd510}</UniqueIdentifier>
+    <Filter Include="Include\Configuration">
+      <UniqueIdentifier>{adc4b367-b634-4761-83aa-c846b7086f64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Interaction">
-      <UniqueIdentifier>{be2c5026-1dac-4a7e-8c7d-fd48a87901e1}</UniqueIdentifier>
+    <Filter Include="Include\Connections">
+      <UniqueIdentifier>{40215190-12bb-4c39-b66f-26653554277e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Platform">
-      <UniqueIdentifier>{bc1479f6-3664-42fc-a04a-ab2340514a68}</UniqueIdentifier>
+    <Filter Include="Include\Mapping">
+      <UniqueIdentifier>{6c9f6c3b-2edf-44e0-8568-cfd8801366ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Tasks">
-      <UniqueIdentifier>{aa0fd183-37f7-4f68-b4b5-cb30cfa82301}</UniqueIdentifier>
+    <Filter Include="Include\Plumbing">
+      <UniqueIdentifier>{ffb93fa2-6377-46f2-98ba-4e597459525f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests">
-      <UniqueIdentifier>{56e5cb89-1259-433c-b502-7e90be281981}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Tasks">
-      <UniqueIdentifier>{2bbe504a-85b3-4c42-b387-5b3aeb023aa6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Errors">
-      <UniqueIdentifier>{7ff401dc-2d86-48b8-9ccf-94a476888005}</UniqueIdentifier>
+    <Filter Include="Include\Queries">
+      <UniqueIdentifier>{c7a7874d-0982-4df7-9cb9-9a00ae161076}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Errors">
-      <UniqueIdentifier>{3ebbd493-bc07-4bf8-9d35-e984707a2ad8}</UniqueIdentifier>
+      <UniqueIdentifier>{d9eae2bb-a098-4d63-9e91-bb8ee5afa156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{357deb57-c960-437e-8249-6a9d6bb9d314}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Connections\QtSql">
+      <UniqueIdentifier>{4681ccd0-6fe1-4c33-900c-e998fbf7506e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{77273358-d6c6-45b2-9b1f-0c75dd5ddd8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Utilities">
+      <UniqueIdentifier>{cd30f7e9-4472-4bbb-a95b-7948cf6be6ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Configuration">
+      <UniqueIdentifier>{7a1c983e-fc16-40b3-afb6-f306dcb2d29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Connections">
+      <UniqueIdentifier>{cf536b9a-1095-40f3-860a-2498a0bfffbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Connections\QtSql">
+      <UniqueIdentifier>{5401cc73-1b04-48fa-ab9d-d7916851aa42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Nuclex\Platform\Errors\InsufficientPermissionsError.h">
-      <Filter>Include\Errors</Filter>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Config.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\CpuInfo.h">
-      <Filter>Include\Hardware</Filter>
+    <ClInclude Include="Source\Query.Implementation.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\StoreInfo.h">
-      <Filter>Include\Hardware</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\GpuInfo.h">
-      <Filter>Include\Hardware</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\MemoryInfo.h">
-      <Filter>Include\Hardware</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\PlatformAppraiser.h">
-      <Filter>Include\Hardware</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\ActiveWindowTracker.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\ExtendedMessageService.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\GuiMessageService.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\Message.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageIcon.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageService.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\ModernGuiMessageService.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\TerminalMessageService.h">
-      <Filter>Include\Interaction</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\NaiveTaskCoordinator.h">
-      <Filter>Include\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceManifest.h">
-      <Filter>Include\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceType.h">
-      <Filter>Include\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\Task.h">
-      <Filter>Include\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskCoordinator.h">
-      <Filter>Include\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskEnvironment.h">
-      <Filter>Include\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\ThreadedTask.h">
-      <Filter>Include\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Platform\Config.h">
+    <ClInclude Include="Include\Nuclex\ThinOrm\DataContext.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hardware\WindowsRegistryVolumeInfoReader.h">
-      <Filter>Source\Hardware</Filter>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Decimal.h">
+      <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hardware\WindowsWmiStorageInfoReader.h">
-      <Filter>Source\Hardware</Filter>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Query.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Value.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\ValueType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionProperties.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionString.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionUrl.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\WritableConnectionProperties.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Connection.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionFactory.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionPool.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Driver.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\DriverBasedConnectionFactory.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\QtSqlConnectionFactory.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\StandardConnectionPool.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\UniqueConnectionPool.h">
+      <Filter>Include\Connections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Mapping\TableMappingSyntax.h">
+      <Filter>Include\Mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Plumbing\Task.h">
+      <Filter>Include\Plumbing</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadValueTypeError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Connections\QtSql\QtSqlConnection.h">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Connections\QtSql\UniqueNameGenerator.h">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Query.ImmutableState.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\DateTime.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\QueryParameterView.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\RowReader.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadDateFormatError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadParameterNameError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\MissingDriverError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\UnassignedParameterError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\KnownOptions.h">
+      <Filter>Include\Configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Connections\QtSql\QtSqlMaterializedQuery.h">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ContextualConnectionPool.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\AmbiguousSchemaVersionError.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadSqlStatementError.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\DowngradeUnsupportedError.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Connections\QtSql\QtSqlRowReader.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\DateTimeConverter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\QStringConverter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\Quantizer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilities\QVariantConverter.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Errors\InsufficientPermissionsError.cpp">
-      <Filter>Source\Errors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\CpuInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\GpuInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\LinuxProcCpuInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\LinuxProcCpuInfoReader.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Hardware\LinuxProcMemInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\LinuxProcMemInfoReader.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Hardware\LinuxSysCpuTreeReader.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\LinuxSysCpuTreeReader.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Hardware\MemoryInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxCpuInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxMemoryInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsCpuInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsMemoryInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsStorageInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\StoreInfo.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\StringHelper.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\StringHelper.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Hardware\WindowsBasicCpuInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\WindowsBasicCpuInfoReader.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Hardware\WindowsBasicVolumeInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\WindowsBasicVolumeInfoReader.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Hardware\WindowsRegistryCpuInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\WindowsRegistryCpuInfoReader.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Hardware\WindowsWmiCpuInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Hardware\WindowsWmiCpuInfoReader.h">
-      <Filter>Source\Hardware</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Interaction\ActiveWindowTracker.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\ExtendedMessageService.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\GuiMessageService.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\GuiMessageService.Gtk.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\GuiMessageService.Kde.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\GuiMessageService.Windows.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\Message.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\MessageIcon.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\MessageService.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\ModernGuiMessageService.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\ModernGuiMessageService.Windows.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\TerminalMessageService.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Interaction\TerminalMessageService.Windows.cpp">
-      <Filter>Source\Interaction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Platform\GtkApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\GtkApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\GtkDialogApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\GtkDialogApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\PosixApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\PosixApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\PosixDynamicLibraryApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\PosixDynamicLibraryApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsConsoleApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsConsoleApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsDeviceApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsDeviceApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsFileApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsFileApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsMessageBoxApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsMessageBoxApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsSysInfoApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsSysInfoApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsTaskDialogApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsTaskDialogApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsRegistryApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsRegistryApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\WindowsWmiApi.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\WindowsWmiApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Tasks\NaiveTaskCoordinator.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\ResourceBudget.Allocate.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\ResourceBudget.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Tasks\ResourceBudget.h">
-      <Filter>Source\Tasks</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Tasks\ResourceBudget.Release.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\ResourceManifest.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\ResourceType.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\Task.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\TaskCoordinator.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\TaskEnvironment.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tasks\ThreadedTask.cpp">
-      <Filter>Source\Tasks</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Config.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Hardware\WindowsRegistryVolumeInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
+    <ClCompile Include="Source\Decimal.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Hardware\WindowsWmiStorageInfoReader.cpp">
-      <Filter>Source\Hardware</Filter>
+    <ClCompile Include="Source\Query.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Tests\Tasks\NaiveTaskCoordinatorTest.cpp">
-      <Filter>Tests\Tasks</Filter>
+    <ClCompile Include="Source\Query.Implementation.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Tasks\ResourceBudgetTest.cpp">
-      <Filter>Tests\Tasks</Filter>
+    <ClCompile Include="Source\Value.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Tasks\ResourceManifestTest.cpp">
-      <Filter>Tests\Tasks</Filter>
+    <ClCompile Include="Source\ValueType.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Tasks\ThreadedTaskTest.cpp">
-      <Filter>Tests\Tasks</Filter>
+    <ClCompile Include="Source\Configuration\ConnectionProperties.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\ConnectionString.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\ConnectionUrl.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\WritableConnectionProperties.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\Connection.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\ConnectionFactory.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\ConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\Driver.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\DriverBasedConnectionFactory.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSqlConnectionFactory.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\StandardConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\UniqueConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\BadValueTypeError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSql\QtSqlConnection.cpp">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSql\UniqueNameGenerator.cpp">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DateTime.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Query.ImmutableState.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\QueryParameterView.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Value.Conversion.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\BadDateFormatError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\BadParameterNameError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\MissingDriverError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\UnassignedParameterError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Configuration\KnownOptions.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSql\QtSqlMaterializedQuery.cpp">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSql\QtSqlRowReader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\AmbiguousSchemaVersionError.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\BadSqlStatementError.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\DowngradeUnsupportedError.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\DateTimeConverter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\QStringConverter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\Quantizer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\QVariantConverter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RowReader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Value.Operators.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\DateTimeTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\QueryTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\ValueTest.Conversion.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\ValueTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\ValueTypeTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Configuration\ConnectionStringTest.cpp">
+      <Filter>Tests\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Configuration\ConnectionUrlTest.cpp">
+      <Filter>Tests\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Utilities\QStringConverterTest.cpp">
+      <Filter>Tests\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Utilities\QuantizerTest.cpp">
+      <Filter>Tests\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Connections\QtSql\QtSqlMaterializedQueryTest.cpp">
+      <Filter>Tests\Connections\QtSql</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.md" />
-    <None Include="Nuclex.Platform.Native.def">
-      <Filter>Resources</Filter>
-    </None>
+    <None Include="Nuclex.ThinOrm.Native.def" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Nuclex.Support.Native.ref" />

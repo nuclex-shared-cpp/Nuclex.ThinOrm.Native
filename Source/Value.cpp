@@ -195,6 +195,15 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+  Value::Value(const DateTime &dateTimeValue) noexcept :
+    type(ValueType::DateTime),
+    empty(false),
+    value() {
+    new(&this->value.DateTimeValue) DateTime(dateTimeValue);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   Value::Value(const std::u8string &stringValue) noexcept :
     type(ValueType::String),
     empty(false),
@@ -307,6 +316,17 @@ namespace Nuclex::ThinOrm {
     value() {
     if(!empty) {
       new(&this->value.String) std::u8string(stringValue.value());
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value::Value(const std::optional<DateTime> &dateTimeValue) noexcept :
+    type(ValueType::DateTime),
+    empty(!dateTimeValue.has_value()),
+    value() {
+    if(!empty) {
+      new(&this->value.DateTimeValue) DateTime(dateTimeValue.value());
     }
   }
 

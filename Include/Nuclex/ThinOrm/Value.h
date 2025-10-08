@@ -75,6 +75,9 @@ namespace Nuclex::ThinOrm {
     /// <summary>Initializes a new value as container of a string value</summary>
     /// <param name="stringValue">String value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::u8string &stringValue) noexcept;
+    /// <summary>Initializes a new value as container of a date/time value</summary>
+    /// <param name="dateTimeValue">Date/time value to assume</param>
+    public: NUCLEX_THINORM_API Value(const DateTime &dateTimeValue) noexcept;
     /// <summary>Initializes a new value as container of a blob value</summary>
     /// <param name="blobValue">Blob value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::vector<std::byte> &blobValue) noexcept;
@@ -105,6 +108,9 @@ namespace Nuclex::ThinOrm {
     /// <summary>Initializes a new value as container of a string value</summary>
     /// <param name="stringValue">String value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::optional<std::u8string> &stringValue) noexcept;
+    /// <summary>Initializes a new value as container of a date/time value</summary>
+    /// <param name="dateTimeValue">Date/time value to assume</param>
+    public: NUCLEX_THINORM_API Value(const std::optional<DateTime> &dateTimeValue) noexcept;
     /// <summary>Initializes a new value as container of a blob value</summary>
     /// <param name="blobValue">Blob value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::optional<std::vector<std::byte>> &blobValue) noexcept;
@@ -157,6 +163,9 @@ namespace Nuclex::ThinOrm {
     /// <summary>Returns the value in the container as an UTF-8 string</summary>
     /// <returns>The container's stored value as an UTF-8 string</returns>
     public: NUCLEX_THINORM_API std::optional<std::u8string> AsString() const;
+    /// <summary>Returns the value in the container as a date/time value</summary>
+    /// <returns>The container's stored value as a date/time value</returns>
+    public: NUCLEX_THINORM_API std::optional<DateTime> AsDateTime() const;
     /// <summary>Returns the value in the container as a binary blob</summary>
     /// <returns>The container's stored value as a binary blob</returns>
     public: NUCLEX_THINORM_API std::optional<std::vector<std::byte>> AsBlob() const;
@@ -226,6 +235,9 @@ namespace Nuclex::ThinOrm {
     /// <summary>Reads the stored value as a non-nullable UTF-8 string</summary>
     /// <returns>The stored value as a UTF-8 string</returns>
     public: NUCLEX_THINORM_API explicit operator std::u8string() const;
+    /// <summary>Reads the stored value as a non-nullable date/time value</summary>
+    /// <returns>The stored value as a date/time value</returns>
+    public: NUCLEX_THINORM_API explicit operator DateTime() const;
     /// <summary>Reads the stored value as a non-nullable blob</summary>
     /// <returns>The stored value as a blob</returns>
     public: NUCLEX_THINORM_API explicit operator std::vector<std::byte>() const;
@@ -257,6 +269,9 @@ namespace Nuclex::ThinOrm {
     /// <summary>Reads the stored value as a UTF-8 string</summary>
     /// <returns>The stored value as a UTF-8 string</returns>
     public: NUCLEX_THINORM_API explicit operator std::optional<std::u8string>() const;
+    /// <summary>Reads the stored value as a date/time value</summary>
+    /// <returns>The stored value as a date/time value</returns>
+    public: NUCLEX_THINORM_API explicit operator std::optional<DateTime>() const;
     /// <summary>Reads the stored value as a blob</summary>
     /// <returns>The stored value as a blob</returns>
     public: NUCLEX_THINORM_API explicit operator std::optional<std::vector<std::byte>>() const;

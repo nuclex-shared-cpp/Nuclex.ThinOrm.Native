@@ -24,8 +24,10 @@ limitations under the License.
 
 #if defined(NUCLEX_THINORM_ENABLE_QT)
 
-#include "../../Utilities/QStringConverter.h"
 #include "./QtSqlMaterializedQuery.h" // for QtSqlMaterializedQuery
+
+#include "../../Utilities/QStringConverter.h"
+#include "../../Utilities/QVariantConverter.h"
 
 #include <QSqlQuery> // for QSqlQuery
 #include <QSqlRecord> // for QSqlRecord
@@ -57,7 +59,7 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   bool QtSqlRowReader::MoveToNext() {
-    return this->materializedQuery->GetQtQuery().nextResult();
+    return this->materializedQuery->GetQtQuery().next(); //Result();
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -79,25 +81,31 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   ValueType QtSqlRowReader::GetColumnType(std::size_t columnIndex) const {
+    using Nuclex::ThinOrm::Utilities::QVariantConverter;
+
     const QSqlRecord &record = this->materializedQuery->GetQtQuery().record();
     QVariant::Type fieldType = record.field(static_cast<int>(columnIndex)).type();
-    return QtSqlMaterializedQuery::ValueTypeFromType(fieldType);
+    return QVariantConverter::ValueTypeFromType(fieldType);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlRowReader::GetColumnValue(std::size_t columnIndex) const {
+    using Nuclex::ThinOrm::Utilities::QVariantConverter;
+
     QVariant value = this->materializedQuery->GetQtQuery().value(static_cast<int>(columnIndex));
-    return QtSqlMaterializedQuery::ValueFromQVariant(value);
+    return QVariantConverter::ValueFromQVariant(value);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   Value QtSqlRowReader::GetColumnValue(const std::u8string &columnName) const {
+    using Nuclex::ThinOrm::Utilities::QVariantConverter;
+
     QVariant value = this->materializedQuery->GetQtQuery().value(
       Utilities::QStringConverter::FromU8(columnName)
     );
-    return QtSqlMaterializedQuery::ValueFromQVariant(value);
+    return QVariantConverter::ValueFromQVariant(value);
   }
 
   // ------------------------------------------------------------------------------------------- //

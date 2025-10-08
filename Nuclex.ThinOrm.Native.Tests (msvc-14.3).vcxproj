@@ -21,10 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{71122a31-da07-456a-817c-0068dfe7513f}</ProjectGuid>
-    <RootNamespace>NuclexPlatformNativeTests</RootNamespace>
+    <ProjectGuid>{792cf647-f358-45af-b139-7d60ce5243c7}</ProjectGuid>
+    <RootNamespace>NuclexThinOrmNativeTests</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Nuclex.Platform.Native.Tests (msvc-14.3)</ProjectName>
+    <ProjectName>Nuclex.ThinOrm.Native.Tests (msvc-14.3)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -82,25 +82,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
     <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
-    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+    <TargetName>Nuclex.ThinOrm.Native.Tests</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
     <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
-    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+    <TargetName>Nuclex.ThinOrm.Native.Tests</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
     <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
-    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+    <TargetName>Nuclex.ThinOrm.Native.Tests</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</OutDir>
     <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)-tests\</IntDir>
-    <TargetName>Nuclex.Platform.Native.Tests</TargetName>
+    <TargetName>Nuclex.ThinOrm.Native.Tests</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,7 +119,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>Nuclex.Support.Native.lib;gtest.lib;gtest_main.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\third-party\nuclex-googletest\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>Nuclex.Platform.Native.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Nuclex.ThinOrm.Native.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -138,7 +138,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>Nuclex.Support.Native.lib;gtest.lib;gtest_main.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\third-party\nuclex-googletest\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>Nuclex.Platform.Native.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Nuclex.ThinOrm.Native.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -192,123 +192,107 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>Nuclex.Support.Native.lib;gtest.lib;gtest_main.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\third-party\nuclex-googletest\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>Nuclex.Platform.Native.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Nuclex.ThinOrm.Native.def</ModuleDefinitionFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Nuclex\Platform\Errors\InsufficientPermissionsError.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\CpuInfo.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\StoreInfo.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\GpuInfo.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\MemoryInfo.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Hardware\PlatformAppraiser.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\ActiveWindowTracker.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\ExtendedMessageService.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\GuiMessageService.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\Message.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageIcon.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\MessageService.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\ModernGuiMessageService.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Interaction\TerminalMessageService.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\NaiveTaskCoordinator.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceManifest.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\ResourceType.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\Task.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskCoordinator.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\TaskEnvironment.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Tasks\ThreadedTask.h" />
-    <ClInclude Include="Include\Nuclex\Platform\Config.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionProperties.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionString.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionUrl.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\KnownOptions.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\WritableConnectionProperties.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Connection.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionFactory.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionPool.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ContextualConnectionPool.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Driver.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\DriverBasedConnectionFactory.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\QtSqlConnectionFactory.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\StandardConnectionPool.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\UniqueConnectionPool.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\AmbiguousSchemaVersionError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadDateFormatError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadParameterNameError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadSqlStatementError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadValueTypeError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\DowngradeUnsupportedError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\MissingDriverError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\UnassignedParameterError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Config.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\DataContext.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Decimal.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\DateTime.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Mapping\TableMappingSyntax.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Plumbing\Task.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Query.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\QueryParameterView.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\RowReader.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Value.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\ValueType.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Errors\InsufficientPermissionsError.cpp" />
-    <ClCompile Include="Source\Hardware\CpuInfo.cpp" />
-    <ClCompile Include="Source\Hardware\GpuInfo.cpp" />
-    <ClCompile Include="Source\Hardware\LinuxProcCpuInfoReader.cpp" />
-    <ClInclude Include="Source\Hardware\LinuxProcCpuInfoReader.h" />
-    <ClCompile Include="Source\Hardware\LinuxProcMemInfoReader.cpp" />
-    <ClInclude Include="Source\Hardware\LinuxProcMemInfoReader.h" />
-    <ClCompile Include="Source\Hardware\LinuxSysCpuTreeReader.cpp" />
-    <ClInclude Include="Source\Hardware\LinuxSysCpuTreeReader.h" />
-    <ClCompile Include="Source\Hardware\MemoryInfo.cpp" />
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.cpp" />
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxCpuInfo.cpp" />
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.LinuxMemoryInfo.cpp" />
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsCpuInfo.cpp" />
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsMemoryInfo.cpp" />
-    <ClCompile Include="Source\Hardware\PlatformAppraiser.WindowsStorageInfo.cpp" />
-    <ClCompile Include="Source\Hardware\StoreInfo.cpp" />
-    <ClCompile Include="Source\Hardware\StringHelper.cpp" />
-    <ClInclude Include="Source\Hardware\StringHelper.h" />
-    <ClCompile Include="Source\Hardware\WindowsBasicCpuInfoReader.cpp" />
-    <ClInclude Include="Source\Hardware\WindowsBasicCpuInfoReader.h" />
-    <ClCompile Include="Source\Hardware\WindowsBasicVolumeInfoReader.cpp" />
-    <ClInclude Include="Source\Hardware\WindowsBasicVolumeInfoReader.h" />
-    <ClCompile Include="Source\Hardware\WindowsRegistryCpuInfoReader.cpp" />
-    <ClInclude Include="Source\Hardware\WindowsRegistryCpuInfoReader.h" />
-    <ClCompile Include="Source\Hardware\WindowsRegistryVolumeInfoReader.cpp" />
-    <ClCompile Include="Source\Hardware\WindowsWmiCpuInfoReader.cpp" />
-    <ClInclude Include="Source\Hardware\WindowsRegistryVolumeInfoReader.h" />
-    <ClInclude Include="Source\Hardware\WindowsWmiCpuInfoReader.h" />
-    <ClCompile Include="Source\Hardware\WindowsWmiStorageInfoReader.cpp" />
-    <ClCompile Include="Source\Interaction\ActiveWindowTracker.cpp" />
-    <ClCompile Include="Source\Interaction\ExtendedMessageService.cpp" />
-    <ClCompile Include="Source\Interaction\GuiMessageService.cpp" />
-    <ClCompile Include="Source\Interaction\GuiMessageService.Gtk.cpp" />
-    <ClCompile Include="Source\Interaction\GuiMessageService.Kde.cpp" />
-    <ClCompile Include="Source\Interaction\GuiMessageService.Windows.cpp" />
-    <ClCompile Include="Source\Interaction\Message.cpp" />
-    <ClCompile Include="Source\Interaction\MessageIcon.cpp" />
-    <ClCompile Include="Source\Interaction\MessageService.cpp" />
-    <ClCompile Include="Source\Interaction\ModernGuiMessageService.cpp" />
-    <ClCompile Include="Source\Interaction\ModernGuiMessageService.Windows.cpp" />
-    <ClCompile Include="Source\Interaction\TerminalMessageService.cpp" />
-    <ClCompile Include="Source\Interaction\TerminalMessageService.Windows.cpp" />
-    <ClCompile Include="Source\Platform\GtkApi.cpp" />
-    <ClInclude Include="Source\Hardware\WindowsWmiStorageInfoReader.h" />
-    <ClInclude Include="Source\Platform\GtkApi.h" />
-    <ClCompile Include="Source\Platform\GtkDialogApi.cpp" />
-    <ClInclude Include="Source\Platform\GtkDialogApi.h" />
-    <ClCompile Include="Source\Platform\PosixApi.cpp" />
-    <ClInclude Include="Source\Platform\PosixApi.h" />
-    <ClCompile Include="Source\Platform\PosixDynamicLibraryApi.cpp" />
-    <ClInclude Include="Source\Platform\PosixDynamicLibraryApi.h" />
-    <ClCompile Include="Source\Platform\WindowsApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsApi.h" />
-    <ClCompile Include="Source\Platform\WindowsConsoleApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsConsoleApi.h" />
-    <ClCompile Include="Source\Platform\WindowsDeviceApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsDeviceApi.h" />
-    <ClCompile Include="Source\Platform\WindowsFileApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsFileApi.h" />
-    <ClCompile Include="Source\Platform\WindowsMessageBoxApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsMessageBoxApi.h" />
-    <ClCompile Include="Source\Platform\WindowsRegistryApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsRegistryApi.h" />
-    <ClCompile Include="Source\Platform\WindowsSysInfoApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsSysInfoApi.h" />
-    <ClCompile Include="Source\Platform\WindowsTaskDialogApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsTaskDialogApi.h" />
-    <ClCompile Include="Source\Platform\WindowsWmiApi.cpp" />
-    <ClInclude Include="Source\Platform\WindowsWmiApi.h" />
-    <ClCompile Include="Source\Tasks\NaiveTaskCoordinator.cpp" />
-    <ClCompile Include="Source\Tasks\ResourceBudget.Allocate.cpp" />
-    <ClCompile Include="Source\Tasks\ResourceBudget.cpp" />
-    <ClInclude Include="Source\Tasks\ResourceBudget.h" />
-    <ClCompile Include="Source\Tasks\ResourceBudget.Release.cpp" />
-    <ClCompile Include="Source\Tasks\ResourceManifest.cpp" />
-    <ClCompile Include="Source\Tasks\ResourceType.cpp" />
-    <ClCompile Include="Source\Tasks\Task.cpp" />
-    <ClCompile Include="Source\Tasks\TaskCoordinator.cpp" />
-    <ClCompile Include="Source\Tasks\TaskEnvironment.cpp" />
-    <ClCompile Include="Source\Tasks\ThreadedTask.cpp" />
+    <ClCompile Include="Source\Configuration\ConnectionProperties.cpp" />
+    <ClCompile Include="Source\Configuration\ConnectionString.cpp" />
+    <ClCompile Include="Source\Configuration\ConnectionUrl.cpp" />
+    <ClCompile Include="Source\Configuration\KnownOptions.cpp" />
+    <ClCompile Include="Source\Configuration\WritableConnectionProperties.cpp" />
+    <ClCompile Include="Source\Connections\QtSql\QtSqlConnection.cpp" />
+    <ClCompile Include="Tests\Configuration\ConnectionStringTest.cpp" />
+    <ClCompile Include="Tests\Configuration\ConnectionUrlTest.cpp" />
+    <ClCompile Include="Tests\Connections\QtSql\QtSqlMaterializedQueryTest.cpp" />
+    <ClCompile Include="Tests\DateTimeTest.cpp" />
+    <ClCompile Include="Tests\QueryTest.cpp" />
+    <ClCompile Include="Tests\Utilities\QStringConverterTest.cpp" />
+    <ClCompile Include="Tests\Utilities\QuantizerTest.cpp" />
+    <ClCompile Include="Tests\ValueTest.Conversion.cpp" />
+    <ClCompile Include="Tests\ValueTest.cpp" />
+    <ClCompile Include="Tests\ValueTypeTest.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\QtSqlConnection.h" />
+    <ClCompile Include="Source\Connections\QtSql\QtSqlMaterializedQuery.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\QtSqlMaterializedQuery.h" />
+    <ClCompile Include="Source\Connections\QtSql\QtSqlRowReader.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\QtSqlRowReader.h" />
+    <ClCompile Include="Source\Connections\QtSql\UniqueNameGenerator.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\UniqueNameGenerator.h" />
+    <ClCompile Include="Source\Connections\Connection.cpp" />
+    <ClCompile Include="Source\Connections\ConnectionFactory.cpp" />
+    <ClCompile Include="Source\Connections\ConnectionPool.cpp" />
+    <ClCompile Include="Source\Connections\Driver.cpp" />
+    <ClCompile Include="Source\Connections\DriverBasedConnectionFactory.cpp" />
+    <ClCompile Include="Source\Connections\QtSqlConnectionFactory.cpp" />
+    <ClCompile Include="Source\Connections\StandardConnectionPool.cpp" />
+    <ClCompile Include="Source\Connections\UniqueConnectionPool.cpp" />
+    <ClCompile Include="Source\Errors\AmbiguousSchemaVersionError.cpp" />
+    <ClCompile Include="Source\Errors\BadDateFormatError.cpp" />
+    <ClCompile Include="Source\Errors\BadParameterNameError.cpp" />
+    <ClCompile Include="Source\Errors\BadSqlStatementError.cpp" />
+    <ClCompile Include="Source\Errors\BadValueTypeError.cpp" />
+    <ClCompile Include="Source\Errors\DowngradeUnsupportedError.cpp" />
+    <ClCompile Include="Source\Errors\MissingDriverError.cpp" />
+    <ClCompile Include="Source\Errors\UnassignedParameterError.cpp" />
+    <ClCompile Include="Source\Utilities\DateTimeConverter.cpp" />
+    <ClInclude Include="Source\Utilities\DateTimeConverter.h" />
+    <ClCompile Include="Source\Utilities\QStringConverter.cpp" />
+    <ClInclude Include="Source\Utilities\QStringConverter.h" />
+    <ClCompile Include="Source\Utilities\Quantizer.cpp" />
+    <ClInclude Include="Source\Utilities\Quantizer.h" />
+    <ClCompile Include="Source\Utilities\QVariantConverter.cpp" />
+    <ClInclude Include="Source\Utilities\QVariantConverter.h" />
     <ClCompile Include="Source\Config.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Tests\Tasks\NaiveTaskCoordinatorTest.cpp" />
-    <ClCompile Include="Tests\Tasks\ResourceBudgetTest.cpp" />
-    <ClCompile Include="Tests\Tasks\ResourceManifestTest.cpp" />
-    <ClCompile Include="Tests\Tasks\ThreadedTaskTest.cpp" />
+    <ClCompile Include="Source\DateTime.cpp" />
+    <ClCompile Include="Source\Decimal.cpp" />
+    <ClCompile Include="Source\Query.cpp" />
+    <ClCompile Include="Source\Query.ImmutableState.cpp" />
+    <ClInclude Include="Source\Query.ImmutableState.h" />
+    <ClCompile Include="Source\Query.Implementation.cpp" />
+    <ClInclude Include="Source\Query.Implementation.h" />
+    <ClCompile Include="Source\QueryParameterView.cpp" />
+    <ClCompile Include="Source\RowReader.cpp" />
+    <ClCompile Include="Source\Value.Conversion.cpp" />
+    <ClCompile Include="Source\Value.cpp" />
+    <ClCompile Include="Source\Value.Operators.cpp" />
+    <ClCompile Include="Source\ValueType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Documents\Copyright.md" />
@@ -316,14 +300,32 @@
   <ItemGroup>
     <CustomBuild Include="Nuclex.Support.Native.ref">
       <FileType>Document</FileType>
-      <Command>COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
-      <Message>Copying %(Filename) into target directory...</Message>
-      <Outputs>$(TargetDir)Nuclex.Support.Native.dll</Outputs>
-      <AdditionalInputs>$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
-      <LinkObjects>false</LinkObjects>
-      <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying %(Filename) into target directory...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying %(Filename) into target directory...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying %(Filename) into target directory...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying %(Filename) into target directory...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
     </CustomBuild>
-    <None Include="Nuclex.Platform.Native.def" />
+    <None Include="Nuclex.ThinOrm.Native.def" />
     <None Include="ReadMe.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

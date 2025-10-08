@@ -102,12 +102,28 @@
     <IntDir>obj\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</IntDir>
     <TargetName>Nuclex.Platform.Native</TargetName>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <VcpkgAutoLink>false</VcpkgAutoLink>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtSql\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtCore\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -119,7 +135,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>Nuclex.ThinOrm.Native.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sqlite3.lib;Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,7 +143,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtSql\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtCore\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -138,7 +154,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>Nuclex.ThinOrm.Native.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sqlite3.lib;Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -148,7 +164,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtSql\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtCore\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -165,7 +181,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Nuclex.ThinOrm.Native.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sqlite3.lib;Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -175,7 +191,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtSql\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\QtCore\;$(ProjectDir)..\third-party\qt-5.15.15\windows-msvc14.3-amd64\include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
@@ -191,59 +207,102 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Nuclex.ThinOrm.Native.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.3-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sqlite3.lib;Nuclex.Support.Native.lib;ComCtl32.Lib;wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadValueTypeError.h" />
-    <ClInclude Include="Include\Nuclex\ThinOrm\Command.h" />
-    <ClInclude Include="Include\Nuclex\ThinOrm\Config.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionProperties.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionString.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionUrl.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\KnownOptions.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\WritableConnectionProperties.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Connection.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionFactory.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ConnectionPool.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ContextualConnectionPool.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\Driver.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\DriverBasedConnectionFactory.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\QtSqlConnectionFactory.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\StandardConnectionPool.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\UniqueConnectionPool.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\AmbiguousSchemaVersionError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadDateFormatError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadParameterNameError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadSqlStatementError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadValueTypeError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\DowngradeUnsupportedError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\MissingDriverError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Errors\UnassignedParameterError.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\Config.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\DataContext.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Decimal.h" />
-    <ClInclude Include="Include\Nuclex\ThinOrm\IsolationLevel.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\DateTime.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Mapping\TableMappingSyntax.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Plumbing\Task.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Query.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\QueryParameterView.h" />
+    <ClInclude Include="Include\Nuclex\ThinOrm\RowReader.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\Value.h" />
     <ClInclude Include="Include\Nuclex\ThinOrm\ValueType.h" />
-    <ClInclude Include="Source\Connections\QtSqlConnection.h" />
-    <ClInclude Include="Source\Query.Implementation.h" />
+    <ClInclude Include="SQLite3Api.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Errors\BadValueTypeError.cpp" />
-    <ClCompile Include="Source\Config.cpp" />
     <ClCompile Include="Source\Configuration\ConnectionProperties.cpp" />
     <ClCompile Include="Source\Configuration\ConnectionString.cpp" />
     <ClCompile Include="Source\Configuration\ConnectionUrl.cpp" />
+    <ClCompile Include="Source\Configuration\KnownOptions.cpp" />
     <ClCompile Include="Source\Configuration\WritableConnectionProperties.cpp" />
+    <ClCompile Include="Source\Connections\QtSql\QtSqlConnection.cpp" />
+    <ClCompile Include="SQLite3Api.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\QtSqlConnection.h" />
+    <ClCompile Include="Source\Connections\QtSql\QtSqlMaterializedQuery.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\QtSqlMaterializedQuery.h" />
+    <ClCompile Include="Source\Connections\QtSql\QtSqlRowReader.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\QtSqlRowReader.h" />
+    <ClCompile Include="Source\Connections\QtSql\UniqueNameGenerator.cpp" />
+    <ClInclude Include="Source\Connections\QtSql\UniqueNameGenerator.h" />
     <ClCompile Include="Source\Connections\Connection.cpp" />
     <ClCompile Include="Source\Connections\ConnectionFactory.cpp" />
     <ClCompile Include="Source\Connections\ConnectionPool.cpp" />
     <ClCompile Include="Source\Connections\Driver.cpp" />
     <ClCompile Include="Source\Connections\DriverBasedConnectionFactory.cpp" />
-    <ClCompile Include="Source\Connections\QtSqlConnection.cpp" />
     <ClCompile Include="Source\Connections\QtSqlConnectionFactory.cpp" />
+    <ClCompile Include="Source\Connections\SQLite\SQLiteConnection.cpp" />
+    <ClCompile Include="Source\Connections\SQLite\SQLiteDriver.cpp" />
     <ClCompile Include="Source\Connections\StandardConnectionPool.cpp" />
     <ClCompile Include="Source\Connections\UniqueConnectionPool.cpp" />
+    <ClCompile Include="Source\Errors\AmbiguousSchemaVersionError.cpp" />
+    <ClCompile Include="Source\Errors\BadDateFormatError.cpp" />
+    <ClCompile Include="Source\Errors\BadParameterNameError.cpp" />
+    <ClCompile Include="Source\Errors\BadSqlStatementError.cpp" />
+    <ClCompile Include="Source\Errors\BadValueTypeError.cpp" />
+    <ClCompile Include="Source\Errors\DowngradeUnsupportedError.cpp" />
+    <ClCompile Include="Source\Errors\MissingDriverError.cpp" />
+    <ClCompile Include="Source\Errors\UnassignedParameterError.cpp" />
+    <ClCompile Include="Source\Utilities\DateTimeConverter.cpp" />
+    <ClInclude Include="Source\Connections\SQLite\SQLiteConnection.h" />
+    <ClInclude Include="Source\Connections\SQLite\SQLiteDriver.h" />
+    <ClInclude Include="Source\Utilities\DateTimeConverter.h" />
+    <ClCompile Include="Source\Utilities\QStringConverter.cpp" />
+    <ClInclude Include="Source\Utilities\QStringConverter.h" />
+    <ClCompile Include="Source\Utilities\Quantizer.cpp" />
+    <ClInclude Include="Source\Utilities\Quantizer.h" />
+    <ClCompile Include="Source\Utilities\QVariantConverter.cpp" />
+    <ClInclude Include="Source\Utilities\QVariantConverter.h" />
+    <ClCompile Include="Source\Config.cpp" />
+    <ClCompile Include="Source\DateTime.cpp" />
     <ClCompile Include="Source\Decimal.cpp" />
-    <ClCompile Include="Source\IsolationLevel.cpp" />
     <ClCompile Include="Source\Query.cpp" />
+    <ClCompile Include="Source\Query.ImmutableState.cpp" />
+    <ClInclude Include="Source\Query.ImmutableState.h" />
     <ClCompile Include="Source\Query.Implementation.cpp" />
+    <ClInclude Include="Source\Query.Implementation.h" />
+    <ClCompile Include="Source\QueryParameterView.cpp" />
+    <ClCompile Include="Source\RowReader.cpp" />
+    <ClCompile Include="Source\Value.Conversion.cpp" />
     <ClCompile Include="Source\Value.cpp" />
+    <ClCompile Include="Source\Value.Operators.cpp" />
     <ClCompile Include="Source\ValueType.cpp" />
-    <ClCompile Include="Value.Conversion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Documents\Copyright.md" />
