@@ -28,17 +28,30 @@ limitations under the License.
 
 #include <sqlite3.h> // for the SQLite3 API methods
 
-namespace Nuclex::ThinOrm::Connections::SQLite {
+namespace Nuclex::ThinOrm::Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Wrapper methods that automate error checking for the SQLite3 API</summary>
   class SQLite3Api {
 
+    /// <summary>Opens an SQLite database from a plain path</summary>
+    /// <param name="path">Path of the database file</param>
+    /// <parm name="flags">Flags that control how the database will be opened</param>
     public: static std::shared_ptr<::sqlite3> Open(
       const std::filesystem::path &path,
       int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
     );
+
+    /// <summary>Opens an in-memory SQLite database or a from a plain path</summary>
+    /// <param name="path">Path of the database file</param>
+    /// <parm name="flags">Flags that control how the database will be opened</param>
+    public: static std::shared_ptr<::sqlite3> Open(
+      const std::u8string &uriOrName,
+      int flags = SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE
+    );
+
+    public: [[noreturn]] void ThrowExceptionForExtendedResultCode(int errorCode);
 
   };
 
