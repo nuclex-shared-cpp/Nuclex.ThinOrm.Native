@@ -51,7 +51,13 @@ namespace Nuclex::ThinOrm::Platform {
       int flags = SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE
     );
 
-    public: [[noreturn]] void ThrowExceptionForExtendedResultCode(int errorCode);
+    /// <summary>Throws the appropriate exceptions for the specified result code</summary>
+    /// <param name="extendedResultCode">
+    ///   Result code for which an exception will be thrown
+    /// </param>
+    public: [[noreturn]] static void ThrowExceptionForExtendedResultCode(
+      int extendedResultCode
+    );
 
   };
 

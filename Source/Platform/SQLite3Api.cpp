@@ -391,6 +391,22 @@ namespace {
   }
 
   // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Closes an SQLite3 database while ignoring any errors</summary>
+  /// <param name="database">SQLite database that will be closed</param>
+  void closeSQLite3Database(::sqlite3 *database) noexcept {
+    if(database != nullptr) [[likely]] {
+      //int resultCode = ::sqlite3_close_v2(database);
+      int resultCode = ::sqlite3_close(database);
+      NUCLEX_THINORM_NDEBUG_UNUSED(resultCode);
+      assert(
+        (resultCode == SQLITE_OK) &&
+        u8"SQLite3 database was properly finalized and the library was able to close it"
+      );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
   
 } // anonymous namespace
 
@@ -411,7 +427,6 @@ namespace Nuclex::ThinOrm::Platform {
 
     flags |= SQLITE_OPEN_EXRESCODE;
 
-
     std::u8string utf8Path = path.u8string();
     int extendedResultCode = ::sqlite3_open_v2(
       reinterpret_cast<const char *>(utf8Path.c_str()),
@@ -419,18 +434,39 @@ namespace Nuclex::ThinOrm::Platform {
       flags,
       nullptr
     );
-    if(extendedResultCode)
+    if(extendedResultCode != SQLITE_OK) [[unlikely]] {
+      ThrowExceptionForExtendedResultCode(extendedResultCode);
+    }
 
-    // SQLITE_OPEN_READONLY
-    // SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
-    // SQLITE_OPEN_URI
-    // SQLITE_OPEN_MEMORY
-    // SQLITE_OPEN_NOMUTEX
-    // SQLITE_OPEN_FULLMUTEX
-    // SQLITE_OPEN_SHAREDCACHE
-    // SQLITE_OPEN_PRIVATECACHE
-    // SQLITE_OPEN_EXRESCODE
-    // SQLITE_OPEN_NOFOLLOW
+    return std::shared_ptr<::sqlite3>(database, &closeSQLite3Database);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::shared_ptr<::sqlite3> SQLite3Api::Open(
+    const std::filesystem::path &path,
+    int flags /* = SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE */
+   ) {
+    ::sqlite3 *database = nullptr;
+
+    assert(
+      ((flags & SQLITE_OPEN_URI) != 0) &&
+      u8"URI-based SQLite3Api::Open() must include the SQLITE_OPEN_URI flag"
+    );
+
+    flags |= SQLITE_OPEN_EXRESCODE;
+
+    int extendedResultCode = ::sqlite3_open_v2(
+      reinterpret_cast<const char *>(path.c_str()),
+      &database,
+      flags,
+      nullptr
+    );
+    if(extendedResultCode != SQLITE_OK) [[unlikely]] {
+      ThrowExceptionForExtendedResultCode(extendedResultCode);
+    }
+
+    return std::shared_ptr<::sqlite3>(database, &closeSQLite3Database);
   }
 
   // ------------------------------------------------------------------------------------------- //

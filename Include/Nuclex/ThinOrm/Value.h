@@ -113,7 +113,9 @@ namespace Nuclex::ThinOrm {
     public: NUCLEX_THINORM_API Value(const std::optional<DateTime> &dateTimeValue) noexcept;
     /// <summary>Initializes a new value as container of a blob value</summary>
     /// <param name="blobValue">Blob value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<std::vector<std::byte>> &blobValue) noexcept;
+    public: NUCLEX_THINORM_API Value(
+      const std::optional<std::vector<std::byte>> &blobValue
+    ) noexcept;
     /// <summary>Frees all memory owned by the value</summary>
     public: NUCLEX_THINORM_API ~Value() noexcept;
 
@@ -135,6 +137,16 @@ namespace Nuclex::ThinOrm {
     public: NUCLEX_THINORM_API void Require(
       ValueType requiredType, bool requiredPresence
     ) const;
+
+    /// <summary>Determines if a string contains a value that would indicate trueness</summary>
+    /// <param name="stringValue">
+    ///   String that will be checked for being one of the supported tokens that indicate
+    ///   a boolean with the value true
+    /// </param>
+    /// <returns>True if the string indicates a boolean with the value 'true'</returns>
+    public: NUCLEX_THINORM_API static bool BooleanFromString(
+      const std::u8string &stringValue
+    );
 
     /// <summary>Returns the value in the container as boolean</summary>
     /// <returns>The container's stored value as a boolean</returns>

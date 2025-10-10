@@ -26,48 +26,52 @@ namespace Nuclex::ThinOrm::Configuration {
 
   // ------------------------------------------------------------------------------------------- //
 
-  const std::u8string KnownOptions::ReadOnlyOptionName = (
-    std::u8string(u8"ReadOnly")
+  const std::u8string_view KnownOptions::ReadOnlyOptionName = (
+    std::u8string_view(u8"ReadOnly", 8)
   );
 
-  const std::u8string KnownOptions::EnableCompressionOptionName = (
-    std::u8string(u8"EnableCompression")
+  const std::u8string_view KnownOptions::AllowCreateNewOptionName = (
+    std::u8string_view(u8"AllowCreateNew", 14)
   );
 
-  const std::u8string KnownOptions::ConnectionTimeoutSecondsOptionName = (
-    std::u8string(u8"ConnectionTimeoutSeconds")
+  const std::u8string_view KnownOptions::EnableCompressionOptionName = (
+    std::u8string_view(u8"EnableCompression", 17)
   );
 
-  const std::u8string KnownOptions::ReadTimeoutSecondsOptionName = (
-    std::u8string(u8"ReadTimeoutSeconds")
+  const std::u8string_view KnownOptions::ConnectionTimeoutSecondsOptionName = (
+    std::u8string_view(u8"ConnectionTimeoutSeconds", 24)
   );
 
-  const std::u8string KnownOptions::WriteTimeoutSecondsOptionName = (
-    std::u8string(u8"WriteTimeoutSeconds")
+  const std::u8string_view KnownOptions::ReadTimeoutSecondsOptionName = (
+    std::u8string_view(u8"ReadTimeoutSeconds", 18)
   );
 
-  const std::u8string KnownOptions::EnableSslOptionName = (
-    std::u8string(u8"EnableSsl")
+  const std::u8string_view KnownOptions::WriteTimeoutSecondsOptionName = (
+    std::u8string_view(u8"WriteTimeoutSeconds", 19)
   );
 
-  const std::u8string KnownOptions::RequireSslOptionName = (
-    std::u8string(u8"RequireSsl")
+  const std::u8string_view KnownOptions::EnableSslOptionName = (
+    std::u8string_view(u8"EnableSsl", 9)
   );
 
-  const std::u8string KnownOptions::VerifyServerSslCertificateOptionName = (
-    std::u8string(u8"VerifyServerSslCertificate")
+  const std::u8string_view KnownOptions::RequireSslOptionName = (
+    std::u8string_view(u8"RequireSsl", 10)
   );
 
-  const std::u8string KnownOptions::ClientSslPrivateKeyPathOptionName = (
-    std::u8string(u8"ClientSslPrivateKeyPath")
+  const std::u8string_view KnownOptions::VerifyServerSslCertificateOptionName = (
+    std::u8string_view(u8"VerifyServerSslCertificate", 26)
   );
 
-  const std::u8string KnownOptions::ClientSslPublicKeyPathOptionName = (
-    std::u8string(u8"ClientSslPublicKeyPath")
+  const std::u8string_view KnownOptions::ClientSslPrivateKeyPathOptionName = (
+    std::u8string_view(u8"ClientSslPrivateKeyPath", 23)
   );
 
-  const std::u8string KnownOptions::SslCertificateAuthorityPathOptionName = (
-    std::u8string(u8"SslCertificateAuthorityPath")
+  const std::u8string_view KnownOptions::ClientSslPublicKeyPathOptionName = (
+    std::u8string_view(u8"ClientSslPublicKeyPath", 22)
+  );
+
+  const std::u8string_view KnownOptions::SslCertificateAuthorityPathOptionName = (
+    std::u8string_view(u8"SslCertificateAuthorityPath", 27)
   );
 
   // ------------------------------------------------------------------------------------------- //

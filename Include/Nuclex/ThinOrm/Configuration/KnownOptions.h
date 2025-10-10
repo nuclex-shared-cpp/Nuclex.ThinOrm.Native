@@ -32,37 +32,44 @@ namespace Nuclex::ThinOrm::Configuration {
   class NUCLEX_THINORM_TYPE KnownOptions {
 
     /// <summary>If supported, connects to the database in read-only mode</summary>
-    public: NUCLEX_THINORM_API static const std::u8string ReadOnlyOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view ReadOnlyOptionName;
+
+    /// <summary>For file-backed databases, whether a new database file can be created</summary>
+    /// <remarks>
+    ///   The default value for this is 'true', meaning that file-backed databases, such
+    ///   as SQLite, will create new database file if the specified path does not exist.
+    /// </remarks>
+    public: NUCLEX_THINORM_API static const std::u8string_view AllowCreateNewOptionName;
 
     /// <summary>If supported, enables compression of queried results</summary>
-    public: NUCLEX_THINORM_API static const std::u8string EnableCompressionOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view EnableCompressionOptionName;
 
     /// <summary>Timeout after which a connection attempt should fail byt itself</summary>
-    public: NUCLEX_THINORM_API static const std::u8string ConnectionTimeoutSecondsOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view ConnectionTimeoutSecondsOptionName;
 
     /// <summary>Timeout after which a query should fail if no result is sent</summary>
-    public: NUCLEX_THINORM_API static const std::u8string ReadTimeoutSecondsOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view ReadTimeoutSecondsOptionName;
 
     /// <summary>Timeout after which a query should fail if rows remain unconmfirmed</summary>
-    public: NUCLEX_THINORM_API static const std::u8string WriteTimeoutSecondsOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view WriteTimeoutSecondsOptionName;
 
     /// <summary>Whether to enable SSL encryption if available and compatible</summary>
-    public: NUCLEX_THINORM_API static const std::u8string EnableSslOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view EnableSslOptionName;
 
     /// <summary>Whether to fail a connection attempt if SSL encryption is unavailable</summary>
-    public: NUCLEX_THINORM_API static const std::u8string RequireSslOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view RequireSslOptionName;
 
     /// <summary>Whether validity of the server-provided SSL certificate is checked</summary>
-    public: NUCLEX_THINORM_API static const std::u8string VerifyServerSslCertificateOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view VerifyServerSslCertificateOptionName;
 
     /// <summary>Path to the private key of the client SSL certificate</summary>
-    public: NUCLEX_THINORM_API static const std::u8string ClientSslPrivateKeyPathOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view ClientSslPrivateKeyPathOptionName;
 
     /// <summary>Path to the public key of the client SSL certificate</summary>
-    public: NUCLEX_THINORM_API static const std::u8string ClientSslPublicKeyPathOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view ClientSslPublicKeyPathOptionName;
 
     /// <summary>Path to the certificate authority certificate the use for verification</summary>
-    public: NUCLEX_THINORM_API static const std::u8string SslCertificateAuthorityPathOptionName;
+    public: NUCLEX_THINORM_API static const std::u8string_view SslCertificateAuthorityPathOptionName;
 
   };
 

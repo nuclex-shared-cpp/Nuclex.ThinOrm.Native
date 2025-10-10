@@ -180,6 +180,31 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
+  bool Value::BooleanFromString(const std::u8string &stringValue) {
+    using Nuclex::Support::Text::StringMatcher;
+
+    constexpr const bool caseSensitive = false;
+    bool isSpecialTrueString = (
+      StringMatcher::AreEqual<caseSensitive>(stringValue, onBooleanLiteral) ||
+      StringMatcher::AreEqual<caseSensitive>(stringValue, yesBooleanLiteral) ||
+      StringMatcher::AreEqual<caseSensitive>(stringValue, trueBooleanLiteral) ||
+      StringMatcher::AreEqual<caseSensitive>(stringValue, enabledBooleanLiteral) ||
+      StringMatcher::AreEqual<caseSensitive>(stringValue, activeBooleanLiteral)
+    );
+    if(isSpecialTrueString) {
+      return true;
+    }
+
+    if(stringValue.find(u8'.') == std::string::npos) {
+      return Nuclex::Support::Text::lexical_cast<int>(stringValue) != 0;
+    } else {
+      float floatValue = Nuclex::Support::Text::lexical_cast<float>(stringValue);
+      return (floatValue < -0.5) || (floatValue >= 0.5);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   std::optional<bool> Value::AsBool() const {
     if(this->empty) [[unlikely]] {
       return std::optional<bool>();
@@ -193,27 +218,7 @@ namespace Nuclex::ThinOrm {
         case ValueType::Decimal: { return !this->value.DecimalValue.IsZero(); }
         case ValueType::Float: { return (this->value.Float != 0.0f); }
         case ValueType::Double: { return (this->value.Float != 0.0); }
-        case ValueType::String: {
-          using Nuclex::Support::Text::StringMatcher;
-          constexpr const bool caseSensitive = false;
-          bool isSpecialTrueString = (
-            StringMatcher::AreEqual<caseSensitive>(this->value.String, onBooleanLiteral) ||
-            StringMatcher::AreEqual<caseSensitive>(this->value.String, yesBooleanLiteral) ||
-            StringMatcher::AreEqual<caseSensitive>(this->value.String, trueBooleanLiteral) ||
-            StringMatcher::AreEqual<caseSensitive>(this->value.String, enabledBooleanLiteral) ||
-            StringMatcher::AreEqual<caseSensitive>(this->value.String, activeBooleanLiteral)
-          );
-          if(isSpecialTrueString) {
-            return true;
-          }
-
-          if(this->value.String.find(u8'.') == std::string::npos) {
-            return Nuclex::Support::Text::lexical_cast<int>(this->value.String) != 0;
-          } else {
-            float floatValue = Nuclex::Support::Text::lexical_cast<float>(this->value.String);
-            return (floatValue < -0.5) || (floatValue >= 0.5);
-          }
-        }
+        case ValueType::String: { return BooleanFromString(this->value.String); }
         case ValueType::Date: {
           return (this->value.DateTimeValue.GetDateOnly().GetTicks() != 0);
         }
