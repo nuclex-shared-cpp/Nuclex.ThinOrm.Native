@@ -28,6 +28,8 @@ limitations under the License.
 #include "Nuclex/ThinOrm/Configuration/KnownOptions.h"
 #include "Nuclex/ThinOrm/Value.h"
 
+#include <Nuclex/Support/Text/StringMatcher.h> // for StringMatcher
+
 #include "../../Platform/SQLite3Api.h" // for SQLite3Api
 
 #include <stdexcept> // for std::runtime_error
@@ -60,42 +62,45 @@ namespace {
     Nuclex::ThinOrm::Configuration::KnownOptions::AllowCreateNewOptionName
   );
 
+  /// <summary>Controls how pages are cached for a database</summary>
+  const std::u8string_view cacheOptionName(u8"Cache", 5);
+  /// <summary>Indicates that the database should be a private in-memory database</summary>
+  const std::u8string_view privateOptionValue(u8"Private", 7);
+  /// <summary>Indicates that the database should be a shareable in-memory database</summary>
+  const std::u8string_view sharedOptionValue(u8"Shared", 6);
+
+  /// <summary>Whether to open a database in memory only</summary>
+  const std::u8string_view inMemoryOptionName(u8"InMemory", 8);
+
   /// <summary>Whether the opened database file can be a symlink</summary>
   const std::u8string_view followSymLinksOptionName(u8"FollowSymLinks", 14);
 
-  // 1: not in memory (false)
-  // 2: in memory and private (private) <-- or do this by leaving db name empty?
-  // 3: in memory and shared (true)
-  const std::u8string_view inMemoryOptionName(u8"InMemory", 8);
-  //const std::u8string_view sharedCacheString(u8"SharedCache", 11);
-
   /// <summary>How SQLite should handle multi-threaded scenarios</summary>
-  const std::u8string_view threadingModeOptionName(u8"ThreadingMode", 13);
-  /// <summary>Indicates that different connections can run concurrent queries</summary>
-  const std::u8string_view perConnectionOptionValue(u8"PerConnection", 13);
-  /// <summary>Indicates that all queries should be executed in series</summary>
-  const std::u8string_view globalOptionValue(u8"Global", 6);
+  const std::u8string_view mutexOptionName(u8"ConnectionMutex", 15);
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>
-  ///   Checks whether the specified option, when interpreted as a boolean, indicates
-  ///   that the option should be enabled
+  ///   Checks whether the specified value, when interpreted as a boolean, indicates
+  ///   that an option should be enabled
   /// </summary>
-  /// <param name="connectionProperties">Setings that are storing the option</param>
-  /// <param name="optionName">Name of the option that will be checked</param>
-  /// <returns>True if the option's value indicates that it should be enabled</returns>
-  bool isBooleanOptionSet(
-    const Nuclex::ThinOrm::Configuration::ConnectionProperties &connectionProperties,
-    const std::u8string_view &optionName
+  /// <param name="optionValue">Value the user has assigned to the option</param>
+  /// <param name="valueOnMissing">Value to assume if the option was not set</param>
+  /// <param name="valueOnEmpty">Value to assume if the option value is empty</param>
+  /// <returns>True if the value indicates that the option should be enabled</returns>
+  inline bool interpretBooleanOption(
+    const std::optional<std::u8string> &optionValue,
+    bool valueOnMissing = false,
+    bool valueOnEmpty = true
   ) {
-    std::optional<std::u8string> value = connectionProperties.GetOption(
-      std::u8string(optionName)
-    );
-    if(value.has_value()) {
-      return Nuclex::ThinOrm::Value::BooleanFromString(value.value());
+    if(optionValue.has_value()) {
+      if(optionValue.value().empty()) {
+        return valueOnEmpty;
+      } else {
+        return Nuclex::ThinOrm::Value::BooleanFromString(optionValue.value());
+      }
     } else {
-      return false;
+      return valueOnMissing
     }
   }
 
@@ -130,40 +135,103 @@ namespace Nuclex::ThinOrm::Connections::SQLite {
   std::shared_ptr<Connection> SQLiteDriver::Connect(
     const Configuration::ConnectionProperties &connectionProperties
   ) {
-    int flags = 0;
+    using Nuclex::Support::Text::StringMatcher;
+    constexpr const bool CaseSensitive = false;
 
-    // The read-only options forces read-onyl mode. This is a simple option that default
-    // to false when not present, so we only need to check if it is turned on.
-    bool shouldOpenReadOnly = isBooleanOptionSet(connectionProperties, readOnlyOptionName);
+    int flags = SQLITE_OPEN_EXRESCODE;
+
+    // The read-only option forces read-only mode by its mere presence
+    bool shouldOpenReadOnly = interpretBooleanOption(
+      connectionProperties.GetOption(std::u8string(readOnlyOptionName))
+    );
     if(shouldOpenReadOnly) {
       flags |= SQLITE_OPEN_READONLY;
-    }
-
-    // The allow create new option defaults to true (opposite of SQLite,
-    // which requires the flag or will not create a new database)
-    std::optional<std::u8string> createNewOptionValue = (
-      connectionProperties.GetOption(std::u8string(allowCreateNewOptionName))
-    );
-    if(createNewOptionValue.has_value()) {
-      bool allowCreateNew = Value::BooleanFromString(createNewOptionValue.value());
-      if(allowCreateNew) {
-        flags |= SQLITE_OPEN_CREATE; // Creation of new database file explicitly allowed
-      }
     } else {
-      flags |= SQLITE_OPEN_CREATE; // Default value allows creation
+      flags |= SQLITE_OPEN_READWRITE;
     }
 
-    // SQLITE_OPEN_READONLY
-    // SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
-    // SQLITE_OPEN_URI
-    // SQLITE_OPEN_MEMORY
-    // SQLITE_OPEN_NOMUTEX
-    // SQLITE_OPEN_FULLMUTEX
-    // SQLITE_OPEN_SHAREDCACHE
-    // SQLITE_OPEN_PRIVATECACHE
-    // SQLITE_OPEN_EXRESCODE
-    // SQLITE_OPEN_NOFOLLOW
+    // The "allow create new" option defaults to true if missing (opposite of SQLite,
+    // which requires the flag to create a new database).
+    bool shouldCreateNewDatabase = interpretBooleanOption(
+      connectionProperties.GetOption(std::u8string(allowCreateNewOptionName)), true
+    );
+    if(shouldCreateNewDatabase) {
+      flags |= SQLITE_OPEN_CREATE;
+    }
 
+    // The "in memory" option can be used to create databases that exist only in memory
+    // and are not backed by a file on disk.
+    bool shouldStoreDatabaseInMemory = interpretBooleanOption(
+      connectionProperties.GetOption(std::u8string(inMemoryOptionName))
+    );
+    if(shouldStoreDatabaseInMemory) {
+      flags |= SQLITE_OPEN_MEMORY;
+    }
+
+    // The cache option controls the page cache. For an in-memory database that can be
+    // opened by multiple connections, a shared page cache must be used.
+    std::optional<std::u8string> cacheOptionValue = (
+      connectionProperties.GetOption(std::u8string(cacheOptionName))
+    );
+    if(cacheOptionValue.has_value()) {
+      bool isPrivate = StringMatcher::AreEqual<CaseSensitive>(
+        cacheOptionValue.value(), privateOptionValue
+      );
+      if(isPrivate) {
+        flags |= SQLITE_OPEN_MEMORY | SQLITE_OPEN_PRIVATECACHE;
+      }
+
+      bool isShared = StringMatcher::AreEqual<CaseSensitive>(
+        cacheOptionValue.value(), sharedOptionValue
+      );
+      if(isShared) {
+        flags |= SQLITE_OPEN_MEMORY | SQLITE_OPEN_SHAREDCACHE;
+      }
+    }
+
+    // The allow create new option defaults to true if missing (opposite of SQLite,
+    // which requires the flag to create a new database)
+    bool shouldFollowSymLinks = interpretBooleanOption(
+      connectionProperties.GetOption(std::u8string(followSymLinksOptionName)), true
+    );
+    if(!shouldFollowSymLinks) {
+      flags |= SQLITE_OPEN_NOFOLLOW;
+    }
+
+    // The mutex option tells SQLite whether to use a mutex in each connection,
+    // allowing connections to be accessed from multple threads. Otherwise, each
+    // connection must be exlusively used by one thread only.
+    std::optional<std::u8string> mutexOptionValue = (
+      connectionProperties.GetOption(std::u8string(mutexOptionName))
+    );
+    if(mutexOptionValue.has_value()) {
+      if(Value::BooleanFromString(mutexOptionValue.value())) {
+        flags |= SQLITE_OPEN_FULLMUTEX;
+      } else {
+        flags |= SQLITE_OPEN_NOMUTEX;
+      }
+    }
+
+    // Now establish a connection. Due to how connection properties work, especially those
+    // that are parsed from JDBC-style connection URLs, a complex path would be split into
+    // a directory stored in "hostname or path" and a "database name" (which here is identical
+    // to the file name). If both are present we need to concatenate them like a path.
+    std::shared_ptr<::sqlite3> connection;
+    {
+      std::u8string hostnameOrPath = connectionProperties.GetHostnameOrPath();
+      std::optional<std::u8string> databaseName = connectionProperties.GetDatabaseName();
+
+      if(databaseName.has_value()) {
+        if(hostnameOrPath.empty()) {
+          connection = Platform::SQLite3Api::Open(databaseName.value(), flags);
+        } else { // ^^ only database name present ^^ // vv path and name present vv
+          std::filesystem::path path = hostnameOrPath;
+          connection = Platform::SQLite3Api::Open(path / databaseName.value(), flags);
+        }
+      } else { // ^^ database name present ^^ // vv database name absent vv
+        connection = Platform::SQLite3Api::Open(hostnameOrPath, flags);
+      }
+    }
 
     (void)connectionProperties;
     throw std::runtime_error(reinterpret_cast<const char *>(u8"Not implemented yet"));
