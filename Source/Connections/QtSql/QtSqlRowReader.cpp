@@ -49,17 +49,39 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
   QtSqlRowReader::QtSqlRowReader(
     const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
-  ) : materializedQuery(materializedQuery) {}
+  ) :
+    materializedQuery(materializedQuery),
+    isFinished(false) {}
 
   // ------------------------------------------------------------------------------------------- //
 
-  QtSqlRowReader::~QtSqlRowReader() = default;
-  // TODO: Return ownership of the QtSqlMaterializedQuery to the connection
+  QtSqlRowReader::~QtSqlRowReader() {
+    if(!this->isFinished) {
+      this->materializedQuery->GetQtQuery().finish();
+    }
+    // TODO: Return ownership of the QtSqlMaterializedQuery to the connection
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
   bool QtSqlRowReader::MoveToNext() {
-    return this->materializedQuery->GetQtQuery().next(); //Result();
+    bool gotAnotherRow = this->materializedQuery->GetQtQuery().next();
+
+    //bool act = this->materializedQuery->GetQtQuery().isActive();
+    //bool sel = this->materializedQuery->GetQtQuery().isSelect();
+    //QString err = this->materializedQuery->GetQtQuery().lastError().text();
+
+    // Finalize the query. This might result in the column names and types being
+    // no longer retrievable, transitioning the row reader into a "bad" state,
+    // but leaving it up to the destructor to finalize the query would invite
+    // other issues since there's not guarantee the row reader will be destroyed
+    // before the user attempts another query on the same connection.
+    if(!gotAnotherRow) [[unlikely]] {
+      this->materializedQuery->GetQtQuery().finish();
+      this->isFinished = true;
+    }
+
+    return gotAnotherRow;
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -86,7 +86,7 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     public: std::size_t RunWithRowCountResult();
 
     /// <summary>Executes the query, assuming it returns zero or more result rows</summary>
-    /// <param name="materializedQuery">
+    /// <param name="self">
     ///   Essentially the this pointer, provided by the connection rather than through
     ///   <code>std::shared_from_this&lt;&gt;</code> in order for
     ///   the <see cref="RowReader" /> to take temporary ownership of the materialized query.
@@ -94,7 +94,7 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
     /// <returns>A row reader which acts as an enumerator and row metadata provider</returns>
     public: std::unique_ptr<RowReader> RunWithMultiRowResult(
       // TODO: This will also needs a materialized query cache return callback
-      const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
+      const std::shared_ptr<QtSqlMaterializedQuery> &self
     );
 
     /// <summary>Accesses the Qt SQL query managed by the materialized query wrapper</summary>

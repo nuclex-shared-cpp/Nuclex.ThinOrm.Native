@@ -84,7 +84,8 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
 
     /// <summary>Materialized query the row reader has temporary ownership of</summary>
     private: std::shared_ptr<QtSqlMaterializedQuery> materializedQuery;
-    //private: std::vector<ParameterInfo> parameters;
+    /// <summary>Whether the query has been finalized yet</summary>
+    private: bool isFinished;
 
   };
 

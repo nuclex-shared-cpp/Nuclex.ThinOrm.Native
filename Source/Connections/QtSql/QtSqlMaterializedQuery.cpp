@@ -187,8 +187,6 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   std::size_t QtSqlMaterializedQuery::RunWithRowCountResult() {
-    using Nuclex::ThinOrm::Utilities::QStringConverter;
-
     executeQuery();
     {
       ON_SCOPE_EXIT { this->qtQuery.finish(); };
@@ -199,9 +197,10 @@ namespace Nuclex::ThinOrm::Connections::QtSql {
   // ------------------------------------------------------------------------------------------- //
 
   std::unique_ptr<RowReader> QtSqlMaterializedQuery::RunWithMultiRowResult(
-    const std::shared_ptr<QtSqlMaterializedQuery> &materializedQuery
+    const std::shared_ptr<QtSqlMaterializedQuery> &self
   ) {
-    return std::make_unique<QtSqlRowReader>(materializedQuery);
+    executeQuery();
+    return std::make_unique<QtSqlRowReader>(self);
   }
 
   // ------------------------------------------------------------------------------------------- //
