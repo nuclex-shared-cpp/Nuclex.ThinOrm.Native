@@ -103,12 +103,12 @@ namespace Nuclex::ThinOrm {
       const std::u8string &iso8601Time
     );
 
-    /// <summary>Converts the date and time value to an ISO 8601 date and time</summary>
-    /// <returns>A string containing the date and time in the ISO 8601 date format</returns>
+    /// <summary>Returns the date and time value without its time of day</summary>
+    /// <returns>The date and time value cleared of its time of day</returns>
     public: NUCLEX_THINORM_API DateTime GetDateOnly() const;
 
-    /// <summary>Converts the date and time value to an ISO 8601 time</summary>
-    /// <returns>A string containing the time in the ISO 8601 time format</returns>
+    /// <summary>Strips the date and time value of its date</summary>
+    /// <returns>The date and time value cleared of its date</returns>
     public: NUCLEX_THINORM_API DateTime GetTimeOnly() const;
 
     /// <summary>Converts the date and time value to an ISO 8601 date and time</summary>

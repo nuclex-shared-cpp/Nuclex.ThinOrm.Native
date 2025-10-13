@@ -40,7 +40,7 @@ namespace {
   const std::u8string_view CreateTableCloser(
     u8" (\n"
     u8"  SchemaVersion  BIGINT NOT NULL,\n"
-    u8"  AppliedOn  TIMESTAMP NOT NULL,\n"
+    u8"  AppliedOn  VARCHAR(27) NOT NULL,\n"
     u8"  Name  VARCHAR(255) NULL,\n"
     u8"  PRIMARY KEY (SchemaVersion)\n"
     u8");",

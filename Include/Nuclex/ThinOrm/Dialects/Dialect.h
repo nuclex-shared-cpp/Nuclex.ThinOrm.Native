@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Dialects/QuoteStyle.h"
+#include "Nuclex/ThinOrm/Dialects/DateTimeDialect.h"
 
 namespace Nuclex::ThinOrm::Dialects {
 
@@ -29,6 +30,9 @@ namespace Nuclex::ThinOrm::Dialects {
 
   /// <summary>Describes the SQL dialect spoken by a database engine</summary>
   class NUCLEX_THINORM_TYPE Dialect {
+
+    /// <summary>Specifics of how the database engine handles date and time</summary>
+    public: NUCLEX_THINORM_API DateTimeDialect DateTimeStyle;
 
     /// <summary>How identifiers (table and column names) can be quoted</summary>
     /// <remarks>

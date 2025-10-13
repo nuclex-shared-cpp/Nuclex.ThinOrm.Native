@@ -47,14 +47,14 @@ namespace Nuclex::ThinOrm::Dialects {
     /// </remarks>
     DoubleQuotes,
 
-    /// <summary>Identifier can be put in brackets</summary>
+    /// <summary>Identifiers can be put in brackets</summary>
     /// <remarks>
     ///   This is only a convention on Microsoft SQL Server and not understood by any other
     ///   database, except for SQLite, which accepts these as a compatibility feature.
     /// </remarks>
     Brackets,
 
-    /// <summary>Identifier can be put in backticks</summary>
+    /// <summary>Identifiers can be put in backticks</summary>
     /// <remarks>
     ///   This is only a convention on MySQL / MariaDB and not understood by any other
     ///   database, except for SQLite, which accepts these as a compatibility feature.
