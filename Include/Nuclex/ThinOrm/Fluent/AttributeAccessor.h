@@ -122,8 +122,8 @@ namespace Nuclex::ThinOrm::Fluent {
     TEntity &entity = *static_cast<TEntity *>(entityAsVoid);
 
     // Note: if you are binding your own entity class and your compiler shows an error here
-    // that says that a 'Value' cannot be constructed from whatever type 'attributeValue' is,
-    // that means your entity class uses an attribute of a type that this ORM system does not
+    // that says that a 'Value' cannot be converted to whatever type 'TAttribute' is, that
+    // means your entity class uses an attribute of a type that this ORM system does not
     // support. Please check the constructors of the 'Value' class to see supported types.
     entity.*AttributePointer = static_cast<TAttribute>(value); // uses type conversion operator
   }
