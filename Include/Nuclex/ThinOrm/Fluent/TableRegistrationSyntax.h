@@ -21,13 +21,10 @@ limitations under the License.
 #define NUCLEX_THINORM_FLUENT_TABLEREGISTRATIONSYNTAX_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Fluent/ColumnRegistrationSyntax.h"
+#include "Nuclex/ThinOrm/Fluent/ColumnRegistrationSyntax.h" // for ColumnRegistrationSyntax
+#include "Nuclex/ThinOrm/Fluent/AttributeAccessor.h" // for AttributeAccessor
 
 #include <string> // for std::u8string
-
-namespace Nuclex::ThinOrm::Fluent {
-  class GlobalEntityRegistry;
-}
 
 namespace Nuclex::ThinOrm::Fluent {
 
@@ -46,7 +43,7 @@ namespace Nuclex::ThinOrm::Fluent {
     /// </param>
     /// <param name="tableName">Name of the table in the database to set up</param>
     public: NUCLEX_THINORM_API inline TableRegistrationSyntax(
-      GlobalEntityRegistry &registry, const std::u8string_view &tableName
+      EntityMappingConfigurator &registry, const std::u8string_view &tableName
     );
 
     /// <summary>Maps a column in the table to an attribute in the entity class</summary>
@@ -54,16 +51,16 @@ namespace Nuclex::ThinOrm::Fluent {
     /// <param name="columnName">Name of the colum in the database table</param>
     /// <param name="member">Address of the attribute in the entity class</param>
     /// <returns>
-    ///   The a fluent interface helper that provides the syntactic methods for describing
+    ///   A fluent interface helper that provides the syntactic methods for describing
     ///   the column or starting the registration of another column.
     /// </returns>
-    public: template<typename TAttribute>
+    public: template<typename TAttribute, TAttribute TEntity::*attribute>
     NUCLEX_THINORM_API inline ColumnRegistrationSyntax<TEntity, TAttribute> WithColumn(
-      const std::u8string_view &columnName, TAttribute TEntity::*member
+      const std::u8string_view &columnName //, TAttribute TEntity::*member
     );
 
     /// <summary>Global registry in which the table will be registered</summary>
-    private: GlobalEntityRegistry &registry;
+    private: EntityMappingConfigurator &registry;
     /// <summary>Name of the table that is being set up</summary>
     private: std::u8string_view tableName;
 
@@ -73,26 +70,33 @@ namespace Nuclex::ThinOrm::Fluent {
 
   template<typename TEntity>
   inline TableRegistrationSyntax<TEntity>::TableRegistrationSyntax(
-    GlobalEntityRegistry &registry, const std::u8string_view &tableName
+    EntityMappingConfigurator &registry, const std::u8string_view &tableName
   ) :
     registry(registry),
     tableName(tableName) {}
 
   // ------------------------------------------------------------------------------------------- //
-/*
+
   template<typename TEntity>
-  template<typename TAttribute>
+  template<typename TAttribute, TAttribute TEntity::*attribute>
   inline ColumnRegistrationSyntax<
     TEntity, TAttribute
-  > TableRegistrationSyntax<TEntity>::WithColumn<TAttribute>(
-    const std::u8string_view &columnName, TAttribute TEntity::*member
+  > TableRegistrationSyntax<TEntity>::WithColumn(
+    const std::u8string_view &columnName//, TAttribute TEntity::*member
   ) {
-    // TODO: Associate member offset in global entity registry
+    /*
+    this->registry.AddEntityAttribute(
+      typeid(TEntity),
+      columnName,
+      &AttributeAccessor<TEntity, TAttribute, attribute>::Get,
+      &AttributeAccessor<TEntity, TAttribute, attribute>::Set
+    );
+    */
     return ColumnRegistrationSyntax<TEntity, TAttribute>(
       this->registry, this->tableName, columnName
     );
   }
-*/
+
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Fluent

@@ -17,97 +17,92 @@ limitations under the License.
 */
 #pragma endregion // Apache License 2.0
 
-#ifndef NUCLEX_THINORM_FLUENT_GLOBALENTITYREGISTRY_H
-#define NUCLEX_THINORM_FLUENT_GLOBALENTITYREGISTRY_H
+#ifndef NUCLEX_THINORM_FLUENT_ENTITYMAPPINGCONFIGURATOR_H
+#define NUCLEX_THINORM_FLUENT_ENTITYMAPPINGCONFIGURATOR_H
 
 #include "Nuclex/ThinOrm/Config.h"
-#include "Nuclex/ThinOrm/Fluent/TableRegistrationSyntax.h"
+#include "Nuclex/ThinOrm/Value.h" // for Value
+#include <string> // for std::u8string_view
 
 namespace Nuclex::ThinOrm::Fluent {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Exposes a table in the data contex for fluent queriest</summary>
-  class NUCLEX_THINORM_TYPE GlobalEntityRegistry : public EntityMappingConfigurator {
+  /// <summary>
+  ///   Interface through which the registered entities and attributes can be configured
+  /// </summary>
+  class NUCLEX_THINORM_TYPE EntityMappingConfigurator {
 
-    /// <summary>Initializes a new entity registry</summary>
-    public: NUCLEX_THINORM_API GlobalEntityRegistry();
+    /// <summary
+    ///   >Signature for a function that reads the value of an attribute in an entity
+    /// </summary>
+    /// <param name="entity">
+    ///   Instance of an entity class from which an attribute will be read
+    /// </param>
+    /// <returns>The attribute's value wrapped in a <see cref="Value" /> class</returns>
+    public: typedef Value GetAttributeValueFunction(const void *entity);
 
-    /// <summary>Frees all resources owned by the entity registry</summary>
-    public: NUCLEX_THINORM_API ~GlobalEntityRegistry();
-
-    /// <summary>Registers an entity class that maps to a specific table</summary>
-    /// <typeparam name="TEntity">Entity class that will be registered</typeparam>
-    /// <param name="tableName">Name of the table in the database</param>
-    /// <returns>
-    ///   A fluent interface helper that provides the syntactic methods for mapping
-    ///   columns in the table to attributes in the entity class.
-    /// </returns>
-    public: template<typename TEntity>
-    NUCLEX_THINORM_API inline TableRegistrationSyntax<TEntity> RegisterTable(
-      const std::u8string_view &tableName
-    );
+    /// <summary
+    ///   >Signature for a function that sets the value of an attribute in an entity
+    /// </summary>
+    /// <param name="entity">
+    ///   Instance of an entity class in which an attribute will be set
+    /// </param>
+    /// <param name="value">
+    ///   The value to assign to the attribute wrapped in a <see cref="Value" /> class
+    /// </param>
+    public: typedef void SetAttributeValueFunction(void *entity, const Value &value);
 
     /// <summary>Registers an entity class that maps to a specific table</summary>
     /// <param name="entityType">Type information </param>
     /// <param name="tableName">Name of the table in the database</param>
-    public: NUCLEX_THINORM_API void AddEntity(
+    public: NUCLEX_THINORM_API virtual void AddEntity(
       const std::type_info &entityType, const std::u8string_view &tableName
-    ) override;
+    ) = 0;
 
     /// <summary>Registers an entity class that maps to a specific table</summary>
     /// <param name="entityType">Type information identifying the entity</param>
     /// <param name="columnName">Name of the column in the database table</param>
     /// <param name="getter">Getter through which the attribute can be read</param>
     /// <param name="setter">Getter through which the attribute can be updated</param>
-    public: NUCLEX_THINORM_API void AddEntityAttribute(
+    public: NUCLEX_THINORM_API virtual void AddEntityAttribute(
       const std::type_info &entityType,
       const std::u8string_view &columnName,
       GetAttributeValueFunction getter,
       SetAttributeValueFunction setter
-    ) override;
+    ) = 0;
 
     /// <summary>Configures an already-registered column as a nullable or not</summary>
     /// <param name="entityType">Type information identifying the entity</param>
     /// <param name="columnName">Name of the column in the database table</param>
     /// <param name="isNullable">Whether the column is nullable in the table</param>
-    public: NUCLEX_THINORM_API void SetColumnNullable(
+    public: NUCLEX_THINORM_API virtual void SetColumnNullable(
       const std::type_info &entityType,
       const std::u8string_view &columnName,
       bool isNullable = true
-    ) override;
+    ) = 0;
 
     /// <summary>Configures an already-registered column as a primary key or not</summary>
     /// <param name="entityType">Type information identifying the entity</param>
     /// <param name="columnName">Name of the column in the database table</param>
     /// <param name="isPrimaryKey">Whether the column is a primary key in the table</param>
-    public: NUCLEX_THINORM_API void SetColumnIsPrimaryKey(
+    public: NUCLEX_THINORM_API virtual void SetColumnIsPrimaryKey(
       const std::type_info &entityType,
       const std::u8string_view &columnName,
       bool isPrimaryKey = true
-    ) override;
+    ) = 0;
 
     /// <summary>Configures an already-registered column as auto-generated or not</summary>
     /// <param name="entityType">Type information identifying the entity</param>
     /// <param name="columnName">Name of the column in the database table</param>
     /// <param name="isPrimaryKey">Whether the column receives an auto-generated value</param>
-    public: NUCLEX_THINORM_API void SetColumnIsAutoGenerated(
+    public: NUCLEX_THINORM_API virtual void SetColumnIsAutoGenerated(
       const std::type_info &entityType,
       const std::u8string_view &columnName,
       bool isAutoGenerated = true
-    ) override;
+    ) = 0;
 
   };
-
-  // ------------------------------------------------------------------------------------------- //
-
-  template<typename TEntity>
-  inline TableRegistrationSyntax<TEntity> GlobalEntityRegistry::RegisterTable(
-    const std::u8string_view &tableName
-  ) {
-    AddEntity(typeid(TEntity), tableName);
-    return TableRegistrationSyntax<TEntity>(*this, tableName);
-  }
 
   // ------------------------------------------------------------------------------------------- //
 
