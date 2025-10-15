@@ -47,17 +47,25 @@ namespace Nuclex::ThinOrm::Fluent {
     );
 
     /// <summary>Maps a column in the table to an attribute in the entity class</summary>
-    /// <typeparam name="TAttribute">Type of the attribute that is being mapped</typeparam>
+    /// <typeparam name="AttributePointer">Offset pointer to the attribute to map</typeparam>
+    /// <typeparam name="TAttributePointer">Type of the attribute pointer</typeparam>
     /// <param name="columnName">Name of the colum in the database table</param>
-    /// <param name="member">Address of the attribute in the entity class</param>
     /// <returns>
     ///   A fluent interface helper that provides the syntactic methods for describing
     ///   the column or starting the registration of another column.
     /// </returns>
-    public: template<typename TAttribute, TAttribute TEntity::*attribute>
-    NUCLEX_THINORM_API inline ColumnRegistrationSyntax<TEntity, TAttribute> WithColumn(
-      const std::u8string_view &columnName //, TAttribute TEntity::*member
-    );
+    public: template<
+      auto AttributePointer,
+      // vv SFINAE vv ignore for usage side vv merely forces + identifies types vv
+      typename TAttributePointer = decltype(AttributePointer),
+      typename = std::enable_if_t<
+        std::is_member_object_pointer_v<TAttributePointer> &&
+        std::is_same_v<typename AttributePointerTraits<TAttributePointer>::EntityType, TEntity>
+      >
+    > ColumnRegistrationSyntax<
+      TEntity, typename AttributePointerTraits<TAttributePointer>::AttributeType
+      // typename AttributePointerTraits<TAttributePointer>::DecayedAttr
+    > WithColumn(const std::u8string_view &columnName);
 
     /// <summary>Global registry in which the table will be registered</summary>
     private: EntityMappingConfigurator &registry;
@@ -78,23 +86,22 @@ namespace Nuclex::ThinOrm::Fluent {
   // ------------------------------------------------------------------------------------------- //
 
   template<typename TEntity>
-  template<typename TAttribute, TAttribute TEntity::*attribute>
-  inline ColumnRegistrationSyntax<
-    TEntity, TAttribute
-  > TableRegistrationSyntax<TEntity>::WithColumn(
-    const std::u8string_view &columnName//, TAttribute TEntity::*member
-  ) {
-    /*
+  template<auto AttributePointer, typename TAttributePointer, typename>
+  ColumnRegistrationSyntax<
+    TEntity, typename AttributePointerTraits<TAttributePointer>::AttributeType
+    //typename AttributePointerTraits<TAttributePointer>::DecayedAttr
+  >
+  TableRegistrationSyntax<TEntity>::WithColumn(const std::u8string_view &columnName) {
     this->registry.AddEntityAttribute(
       typeid(TEntity),
       columnName,
-      &AttributeAccessor<TEntity, TAttribute, attribute>::Get,
-      &AttributeAccessor<TEntity, TAttribute, attribute>::Set
+      &AttributeAccessor<AttributePointer>::Get,
+      &AttributeAccessor<AttributePointer>::Set
     );
-    */
-    return ColumnRegistrationSyntax<TEntity, TAttribute>(
-      this->registry, this->tableName, columnName
-    );
+
+    return ColumnRegistrationSyntax<
+      TEntity, typename AttributePointerTraits<TAttributePointer>::AttributeType
+    >(this->registry, this->tableName, columnName);
   }
 
   // ------------------------------------------------------------------------------------------- //

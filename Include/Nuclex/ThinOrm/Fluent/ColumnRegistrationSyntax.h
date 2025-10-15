@@ -47,21 +47,6 @@ namespace Nuclex::ThinOrm::Fluent {
       const std::u8string_view &columnName
     );
 
-    /// <summary>
-    ///   Adds another mapped column to the entity class and lets you describe it
-    /// </summary>
-    /// <typeparam name="TAttribute">Type of the attribute that is being mapped</typeparam>
-    /// <param name="columnName">Name of the colum in the database table</param>
-    /// <param name="member">Address of the attribute in the entity class</param>
-    /// <returns>
-    ///   A fluent interface helper that provides the syntactic methods for describing
-    ///   the column or starting the registration of another column.
-    /// </returns>
-    public: template<typename TNewAttribute>
-    NUCLEX_THINORM_API inline ColumnRegistrationSyntax<TEntity, TNewAttribute> WithColumn(
-      const std::u8string_view &columnName, TNewAttribute TEntity::*member
-    );
-
     /// <summary>Declares that the column is non-nullable in the database</summary>
     /// <returns>The column registration syntax so other calls can be chained on it</returns>
     public: NUCLEX_THINORM_API inline ColumnRegistrationSyntax &NotNull();
@@ -98,20 +83,6 @@ namespace Nuclex::ThinOrm::Fluent {
     columnName(columnName) {}
 
   // ------------------------------------------------------------------------------------------- //
-
-  template<typename TEntity, typename TAttribute>
-  template<typename TNewAttribute>
-  inline ColumnRegistrationSyntax<
-    TEntity, TNewAttribute
-  > ColumnRegistrationSyntax<TEntity, TAttribute>::WithColumn(
-    const std::u8string_view &columnName, TNewAttribute TEntity::*member
-  ) {
-    // TODO: Associate member offset in global entity registry
-    return ColumnRegistrationSyntax<TEntity, TNewAttribute>(
-      this->registry, this->tableName, columnName
-    );
-  }
-
   // ------------------------------------------------------------------------------------------- //
 
   template<typename TEntity, typename TAttribute>
