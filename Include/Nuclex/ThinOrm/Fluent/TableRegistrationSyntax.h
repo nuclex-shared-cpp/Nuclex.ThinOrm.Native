@@ -22,7 +22,6 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Fluent/ColumnRegistrationSyntax.h" // for ColumnRegistrationSyntax
-#include "Nuclex/ThinOrm/Fluent/AttributeAccessor.h" // for AttributeAccessor
 
 #include <string> // for std::u8string
 
@@ -90,8 +89,9 @@ namespace Nuclex::ThinOrm::Fluent {
   ColumnRegistrationSyntax<
     TEntity, typename AttributePointerTraits<TAttributePointer>::AttributeType
     //typename AttributePointerTraits<TAttributePointer>::DecayedAttr
-  >
-  TableRegistrationSyntax<TEntity>::WithColumn(const std::u8string_view &columnName) {
+  > TableRegistrationSyntax<TEntity>::WithColumn(
+    const std::u8string_view &columnName
+  ) {
     this->registry.AddEntityAttribute(
       typeid(TEntity),
       columnName,

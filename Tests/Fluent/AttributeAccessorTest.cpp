@@ -30,10 +30,14 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
+  /// <summary>Example entity class for testing</summary>
   class TestEntity {
 
+    /// <summary>An integer-typed attribute</summary>
     public: int Id;
+    /// <summary>A UTF-8 string attribute</summary>
     public: std::u8string Name;
+    /// <summary>An optional UTF-8 string attribute</summary>
     public: std::optional<std::u8string> PasswordHash;
 
   };
@@ -46,7 +50,7 @@ namespace Nuclex::ThinOrm::Fluent {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(AttributeAccessorTest, CanReadAttributes) {
+  TEST(AttributeAccessorTest, CanReadIntegerAttributes) {
     TestEntity t;
     t.Id = 123;
 
@@ -63,13 +67,36 @@ namespace Nuclex::ThinOrm::Fluent {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(AttributeAccessorTest, CanWriteAttributes) {
+  TEST(AttributeAccessorTest, CanWriteIntegerAttributes) {
     TestEntity t = {};
     Value v(123);
 
     AttributeAccessor<&TestEntity::Id>::Set(static_cast<void *>(&t), v);
 
     EXPECT_EQ(t.Id, 123);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(AttributeAccessorTest, CanReadStringAttributes) {
+    TestEntity t;
+    t.Name = u8"John Doe";
+
+    Value v = AttributeAccessor<&TestEntity::Name>::Get(static_cast<void *>(&t));
+
+    EXPECT_EQ(v.GetType(), ValueType::String);
+    EXPECT_EQ(v.AsString(), u8"John Doe");
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(AttributeAccessorTest, CanWriteStringAttributes) {
+    TestEntity t = {};
+    Value v(std::u8string(u8"Jane Doe"));
+
+    AttributeAccessor<&TestEntity::Name>::Set(static_cast<void *>(&t), v);
+
+    EXPECT_EQ(t.Name, std::u8string(u8"Jane Doe"));
   }
 
   // ------------------------------------------------------------------------------------------- //
