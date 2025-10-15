@@ -43,8 +43,8 @@ namespace {
     u8"  AppliedOn  VARCHAR(27) NOT NULL,\n"
     u8"  Name  VARCHAR(255) NULL,\n"
     u8"  PRIMARY KEY (SchemaVersion)\n"
-    u8");",
-    129
+    u8")",
+    130
   );
 
   // ------------------------------------------------------------------------------------------- //
