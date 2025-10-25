@@ -68,8 +68,8 @@ namespace Nuclex::ThinOrm::Fluent {
     public: NUCLEX_THINORM_API virtual void AddEntityAttribute(
       const std::type_info &entityType,
       const std::u8string_view &columnName,
-      GetAttributeValueFunction getter,
-      SetAttributeValueFunction setter
+      GetAttributeValueFunction *getter,
+      SetAttributeValueFunction *setter
     ) = 0;
 
     /// <summary>Configures an already-registered column as a nullable or not</summary>

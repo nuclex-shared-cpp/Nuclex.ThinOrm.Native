@@ -21,6 +21,7 @@ limitations under the License.
 #define NUCLEX_THINORM_SOURCE 1
 
 #include "Nuclex/ThinOrm/Fluent/GlobalEntityRegistry.h"
+#include "./GlobalEntityRegistry.Implementation.h"
 
 namespace {
 
@@ -33,7 +34,8 @@ namespace Nuclex::ThinOrm::Fluent {
 
   // ------------------------------------------------------------------------------------------- //
 
-  GlobalEntityRegistry::GlobalEntityRegistry() {}
+  GlobalEntityRegistry::GlobalEntityRegistry() :
+    implementation(std::make_unique<Implementation>()) {}
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -52,8 +54,8 @@ namespace Nuclex::ThinOrm::Fluent {
   void GlobalEntityRegistry::AddEntityAttribute(
     const std::type_info &entityType,
     const std::u8string_view &columnName,
-    GetAttributeValueFunction getter,
-    SetAttributeValueFunction setter
+    GetAttributeValueFunction *getter,
+    SetAttributeValueFunction *setter
   ) {
 
   }
