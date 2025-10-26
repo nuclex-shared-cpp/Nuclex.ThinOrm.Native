@@ -33,7 +33,8 @@ namespace Nuclex::ThinOrm::Fluent {
 
   // ------------------------------------------------------------------------------------------- //
 
-  GlobalEntityRegistry::Implementation::Implementation() {}
+  GlobalEntityRegistry::Implementation::Implementation() :
+    Tables() {}
 
   // ------------------------------------------------------------------------------------------- //
 

@@ -62,11 +62,13 @@ namespace Nuclex::ThinOrm::Fluent {
     /// <param name="columnName">Name of the column in the database table</param>
     /// <param name="getter">Getter through which the attribute can be read</param>
     /// <param name="setter">Getter through which the attribute can be updated</param>
+    /// <param name="attributeType">RTTI type of the attribute in the entity class</param>
     public: NUCLEX_THINORM_API void AddEntityAttribute(
       const std::type_info &entityType,
       const std::u8string_view &columnName,
       GetAttributeValueFunction *getter,
-      SetAttributeValueFunction *setter
+      SetAttributeValueFunction *setter,
+      const std::type_info &attributeType
     ) override;
 
     /// <summary>Configures an already-registered column as a nullable or not</summary>

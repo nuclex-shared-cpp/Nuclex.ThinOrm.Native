@@ -32,6 +32,12 @@ namespace {
 namespace Nuclex::ThinOrm::Fluent {
 
   // ------------------------------------------------------------------------------------------- //
+
+  TableInfo::TableInfo(const std::u8string &name, const std::type_info &type) :
+    Name(name),
+    Type(type),
+    Columns() {}
+
   // ------------------------------------------------------------------------------------------- //
 
 } // namespace Nuclex::ThinOrm::Fluent

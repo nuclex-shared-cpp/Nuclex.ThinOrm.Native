@@ -30,14 +30,22 @@ namespace Nuclex::ThinOrm::Fluent {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Private implementation of the global entity registry</summary>
+  /// <summary>Describes a database table an the entity class mapped to it</summary>
   class TableInfo {
+
+    /// <summary>Initializes a new table description</summary>
+    /// <param name="name">Name of the table in the database</param>
+    /// <param name="type">RTTI type information of the entity class for the tabe</param>
+    public: TableInfo(const std::u8string &name, const std::type_info &type);
 
     /// <summary>Name of the table in the database</summary>
     public: std::u8string Name;
 
+    /// <summary>Type of the entity class the table is mapped to</summary>
+    public: const std::type_info &Type;
+
     /// <summary>Maps strings to column information records</summary>
-    public: typedef std::unordered_map<std::size_t, ColumnInfo> SizeColumnInfoMap;
+    public: typedef std::unordered_map<std::u8string, ColumnInfo> SizeColumnInfoMap;
 
     /// <summary>Column metadata and getter/setter functions keyed by column offset</summary>
     public: SizeColumnInfoMap Columns;

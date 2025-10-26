@@ -96,7 +96,8 @@ namespace Nuclex::ThinOrm::Fluent {
       typeid(TEntity),
       columnName,
       &AttributeAccessor<AttributePointer>::Get,
-      &AttributeAccessor<AttributePointer>::Set
+      &AttributeAccessor<AttributePointer>::Set,
+      typeid(typename AttributePointerTraits<TAttributePointer>::AttributeType)
     );
 
     return ColumnRegistrationSyntax<

@@ -42,10 +42,10 @@ namespace Nuclex::ThinOrm::Fluent {
     public: NUCLEX_THINORM_API ~Implementation();
 
     /// <summary>Map of a RTTI type to database table descriptions/summary>
-    private: typedef std::unordered_map<std::type_index, TableInfo> TypeTableInfoMap;
+    public: typedef std::unordered_map<std::type_index, TableInfo> TypeTableInfoMap;
 
     /// <summary>Tables that have been registered for different entity types</summary>
-    private: TypeTableInfoMap tables;
+    public: TypeTableInfoMap Tables;
 
   };
 
