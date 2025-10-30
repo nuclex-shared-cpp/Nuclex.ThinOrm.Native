@@ -1,0 +1,126 @@
+#pragma region Apache License 2.0
+/*
+Nuclex Native Framework
+Copyright (C) 2002-2024 Markus Ewald / Nuclex Development Labs
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+#pragma endregion // Apache License 2.0
+
+#ifndef NUCLEX_THINORM_FLUENT_TABLE_H
+#define NUCLEX_THINORM_FLUENT_TABLE_H
+
+#include "Nuclex/ThinOrm/Config.h"
+#include "Nuclex/ThinOrm/Fluent/Queryable.h"
+
+namespace Nuclex::ThinOrm {
+  class DataContext;
+}
+
+namespace Nuclex::ThinOrm::Fluent {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Exposes a table in the data context for fluent queries</summary>
+  /// <typeparam name="TEntity">Entity class type to expose as a table</typeparam>
+  template<typename TEntity>
+  class NUCLEX_THINORM_TYPE Table : public Queryable<TEntity> {
+
+    /// <summary>Initializes a new exposed table</summary>
+    /// <param name="dataContext">Data context through which the database is accesed</param>
+    public: NUCLEX_THINORM_API Table(DataContext &dataContext);
+
+    /// <summary>Deletes rows from the table</summary>
+    /// <returns>A syntax helper by which the delete statement can be limited</returns>
+    public: NUCLEX_THINORM_API std::size_t Delete(
+      // TODO: Figure out convenient syntax to construct where conditions
+    );
+
+    /// <summary>Inserts rows into the table</summary>
+    /// <returns>A syntax helper by which the rows to insert can be specified</returns>
+    public: NUCLEX_THINORM_API void Insert(
+      // TODO: Figure out convenient syntax to specify rows to insert
+    );
+
+    /// <summary>Updates rows in the table</summary>
+    /// <returns>
+    ///   A syntax helper by which the columns to update can be specified and by which
+    ///   the affected rows update can be limited
+    /// </returns>
+    public: NUCLEX_THINORM_API std::size_t Update(
+      // TODO: Figure out convenient syntax to construct where conditions
+      // TODO: Figure out convenient syntax to specify columns to update
+    );
+
+    /// <summary>Updates rows in the table</summary>
+    /// <returns>
+    ///   A syntax helper by which the columns to update can be specified and by which
+    ///   the affected rows update can be limited
+    /// </returns>
+    public: NUCLEX_THINORM_API std::size_t Upsert(
+      // TODO: Figure out convenient syntax to specify columns to update-insert
+    );
+
+    /// <summary>Filters the results by the specified criteria</summary>
+    /// <returns>The Queryable itself to allow further modifiers to be chained</returns>
+    public: NUCLEX_THINORM_API Queryable &Where(
+      // TODO: Figure out convenient syntax to construct where conditions
+    ) const override;
+
+    /// <summary>Skips the specified number of rows from the result returned</summary>>
+    /// <param name="count">Number of result rows that will be skipped</param>
+    /// <returns>The Queryable itself to allow further modifiers to be chained</returns>
+    public: NUCLEX_THINORM_API Queryable &Skip(std::size_t count) const override;
+
+    /// <summary>Limits the number of result rows to the specified count</summary>>
+    /// <param name="count">Maximum number of result rows that will be returned</param>
+    /// <returns>The Queryable itself to allow further modifiers to be chained</returns>
+    public: NUCLEX_THINORM_API Queryable &Take(std::size_t count) const override;
+
+    /// <summary>Limits the number of result rows to the specified count</summary>>
+    /// <param name="count">Maximum number of result rows that will be returned</param>
+    /// <returns>The Queryable itself to allow further modifiers to be chained</returns>
+    public: NUCLEX_THINORM_API std::vector<TEntity> ToVector() const override;
+
+    /// <summary>Returns the first result row of the query</summary>
+    /// <returns>The first result row returned by the query</returns>
+    public: NUCLEX_THINORM_API TEntity First() const override;
+
+    /// <summary>Returns the first result row of the query or a default value</summary>
+    /// <param name="defaultResult">Value to return if the query returns no result</param>
+    /// <returns>The first result row returned by the query or the default value</returns>
+    public: NUCLEX_THINORM_API std::optional<TEntity> FirstOrDefault(
+      const std::optional<TEntity> &defaultResultis
+    ) const override;
+
+    /// <summary>Returns the only result row of the query</summary>
+    /// <returns>The only result row generated by the query</returns>
+    public: NUCLEX_THINORM_API TEntity Single() const override;
+
+    /// <summary>Returns the only result row of the query or a default value</summary>
+    /// <param name="defaultResult">Value to return if the query returns no result</param>
+    /// <returns>The only result row generated by the query or the default value</returns>
+    public: NUCLEX_THINORM_API std::optional<TEntity> SingleOrDefault(
+      const std::optional<TEntity> &defaultResult
+    ) const override;
+
+    /// <summary>Data context through which queries will be run</summary>
+    private: DataContext &dataContext;
+
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // namespace Nuclex::ThinOrm::Fluent
+
+#endif // NUCLEX_THINORM_FLUENT_TABLE_H
