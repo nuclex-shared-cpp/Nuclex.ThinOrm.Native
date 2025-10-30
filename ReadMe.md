@@ -31,8 +31,8 @@ you enabled Qt support during build, otherwise, the
 `DriverBasedconnectionFactory` should be your tool of choice:
 
 ```cpp
-auto cf = std::make_shared<DriverBasedConnectionFactory>();
-cf->RegisterAllBuiltInDrivers();
+auto connectionFactory = std::make_shared<DriverBasedConnectionFactory>();
+connectionFactory->RegisterAllBuiltInDrivers();
 ```
 
 Notice that all classes are designed to work well with dependency injectors,
@@ -183,7 +183,7 @@ Here's an example:
 Query testQuery(u8"SELECT Name, Birthday FROM Users");
 
 std::shared_ptr<RowReader> reader = (
-  databaseConnection->RunQueryWithResults(testQuery);
+  databaseConnection->RunRowQuery(testQuery);
 );
 
 while(reader->MoveToNextResult()) {
