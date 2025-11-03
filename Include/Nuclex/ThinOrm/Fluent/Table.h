@@ -73,19 +73,19 @@ namespace Nuclex::ThinOrm::Fluent {
 
     /// <summary>Filters the results by the specified criteria</summary>
     /// <returns>The Queryable itself to allow further modifiers to be chained</returns>
-    public: NUCLEX_THINORM_API Queryable &Where(
+    public: NUCLEX_THINORM_API Queryable<TEntity> &Where(
       // TODO: Figure out convenient syntax to construct where conditions
     ) const override;
 
     /// <summary>Skips the specified number of rows from the result returned</summary>>
     /// <param name="count">Number of result rows that will be skipped</param>
     /// <returns>The Queryable itself to allow further modifiers to be chained</returns>
-    public: NUCLEX_THINORM_API Queryable &Skip(std::size_t count) const override;
+    public: NUCLEX_THINORM_API Queryable<TEntity> &Skip(std::size_t count) const override;
 
     /// <summary>Limits the number of result rows to the specified count</summary>>
     /// <param name="count">Maximum number of result rows that will be returned</param>
     /// <returns>The Queryable itself to allow further modifiers to be chained</returns>
-    public: NUCLEX_THINORM_API Queryable &Take(std::size_t count) const override;
+    public: NUCLEX_THINORM_API Queryable<TEntity> &Take(std::size_t count) const override;
 
     /// <summary>Limits the number of result rows to the specified count</summary>>
     /// <param name="count">Maximum number of result rows that will be returned</param>
