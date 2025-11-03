@@ -75,9 +75,6 @@ namespace Nuclex::ThinOrm {
     /// <summary>Initializes a new value as container of a string value</summary>
     /// <param name="stringValue">String value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::u8string &stringValue) noexcept;
-    /// <summary>Initializes a new value as container of a date/time value</summary>
-    /// <param name="dateTimeValue">Date/time value to assume</param>
-    public: NUCLEX_THINORM_API Value(const DateTime &dateTimeValue) noexcept;
     /// <summary>Initializes a new value as container of a blob value</summary>
     /// <param name="blobValue">Blob value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::vector<std::byte> &blobValue) noexcept;
@@ -108,9 +105,6 @@ namespace Nuclex::ThinOrm {
     /// <summary>Initializes a new value as container of a string value</summary>
     /// <param name="stringValue">String value to assume</param>
     public: NUCLEX_THINORM_API Value(const std::optional<std::u8string> &stringValue) noexcept;
-    /// <summary>Initializes a new value as container of a date/time value</summary>
-    /// <param name="dateTimeValue">Date/time value to assume</param>
-    public: NUCLEX_THINORM_API Value(const std::optional<DateTime> &dateTimeValue) noexcept;
     /// <summary>Initializes a new value as container of a blob value</summary>
     /// <param name="blobValue">Blob value to assume</param>
     public: NUCLEX_THINORM_API Value(
@@ -118,6 +112,25 @@ namespace Nuclex::ThinOrm {
     ) noexcept;
     /// <summary>Frees all memory owned by the value</summary>
     public: NUCLEX_THINORM_API ~Value() noexcept;
+
+    /// <summary>Initializes a new value as container of a date value</summary>
+    /// <param name="dateValue">Date value to assume</param>
+    public: NUCLEX_THINORM_API static Value FromDate(const DateTime &dateValue);
+    /// <summary>Initializes a new value as container of a date value</summary>
+    /// <param name="dateValue">Date value to assume</param>
+    public: NUCLEX_THINORM_API static Value FromDate(const std::optional<DateTime> &dateValue);
+    /// <summary>Initializes a new value as container of a date/time value</summary>
+    /// <param name="dateTimeValue">Date/time value to assume</param>
+    public: NUCLEX_THINORM_API static Value FromDateTime(const DateTime &dateTimeValue);
+    /// <summary>Initializes a new value as container of a date/time value</summary>
+    /// <param name="dateTimeValue">Date/time value to assume</param>
+    public: NUCLEX_THINORM_API static Value FromDateTime(const std::optional<DateTime> &dateTimeValue);
+    /// <summary>Initializes a new value as container of a time value</summary>
+    /// <param name="timeValue">Time value to assume</param>
+    public: NUCLEX_THINORM_API static Value FromTime(const DateTime &timeValue);
+    /// <summary>Initializes a new value as container of a time value</summary>
+    /// <param name="timeValue">Time value to assume</param>
+    public: NUCLEX_THINORM_API static Value FromTime(const std::optional<DateTime> &timeValue);
 
     /// <summary>Retrieves the type of value stored in the value container</summary>
     /// <returns>The type of value currently held in the container</returns>
@@ -316,8 +329,6 @@ namespace Nuclex::ThinOrm {
       public: double Double;
       /// <summary>UTF-8 string value if the container stores a UTF-8 string</summary>
       public: std::u8string String;
-      /// <summary>Date and time value if the container stores a date and/or time</summary>
-      public: DateTime DateTimeValue;
       /// <summary>Blob value if the container stores a blob</summary>
       public: std::vector<std::byte> Blob;
     } value;

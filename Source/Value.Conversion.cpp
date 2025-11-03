@@ -214,20 +214,14 @@ namespace Nuclex::ThinOrm {
         case ValueType::UInt8: { return (0 < this->value.Uint8); }
         case ValueType::Int16: { return (this->value.Int16 != 0); }
         case ValueType::Int32: { return (this->value.Int32 != 0); }
+        case ValueType::Date:
+        case ValueType::Time:
+        case ValueType::DateTime:
         case ValueType::Int64: { return (this->value.Int64 != 0); }
         case ValueType::Decimal: { return !this->value.DecimalValue.IsZero(); }
         case ValueType::Float: { return (this->value.Float != 0.0f); }
         case ValueType::Double: { return (this->value.Float != 0.0); }
         case ValueType::String: { return BooleanFromString(this->value.String); }
-        case ValueType::Date: {
-          return (this->value.DateTimeValue.GetDateOnly().GetTicks() != 0);
-        }
-        case ValueType::Time: {
-          return (this->value.DateTimeValue.GetTimeOnly().GetTicks() != 0);
-        }
-        case ValueType::DateTime: {
-          return this->value.DateTimeValue.GetTicks() != 0;
-        }
         case ValueType::Blob: {
           return !this->value.Blob.empty();
         }
@@ -279,17 +273,17 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date: {
           return static_cast<std::uint8_t>(
-            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetDateOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Time: {
           return static_cast<std::uint8_t>(
-            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetTimeOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::DateTime: {
           return static_cast<std::uint8_t>(
-            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Blob: {
@@ -345,17 +339,17 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date: {
           return static_cast<std::int16_t>(
-            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetDateOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Time: {
           return static_cast<std::int16_t>(
-            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetTimeOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::DateTime: {
           return static_cast<std::int16_t>(
-            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Blob: {
@@ -403,17 +397,17 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date: {
           return static_cast<std::int32_t>(
-            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetDateOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Time: {
           return static_cast<std::int32_t>(
-            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetTimeOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::DateTime: {
           return static_cast<std::int32_t>(
-            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Blob: {
@@ -461,17 +455,17 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date: {
           return static_cast<std::int64_t>(
-            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetDateOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Time: {
           return static_cast<std::int64_t>(
-            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetTimeOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::DateTime: {
           return static_cast<std::int64_t>(
-            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Blob: {
@@ -505,18 +499,18 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date: {
           return Decimal(
-            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetDateOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Time: {
           return Decimal(
-            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
-          ); // TOOD: Add fractional seconds as decimal places
+            DateTime(this->value.Int64).GetTimeOnly().ToSecondSinceUnixEpoch()
+          );
         }
         case ValueType::DateTime: {
           return Decimal(
-            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
-          ); // TODO: Add fractional seconds as decimal places
+            DateTime(this->value.Int64).ToSecondSinceUnixEpoch()
+          );
         }
         case ValueType::Blob: {
           // TODO: Implement reading 128-bit decimals from blobs
@@ -550,18 +544,20 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date: {
           return static_cast<float>(
-            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetDateOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Time: {
+          DateTime result = DateTime(this->value.Int64);
           return static_cast<float>(
-            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
-          ) + this->value.DateTimeValue.GetSecondFraction();
+            result.GetDateOnly().ToSecondSinceUnixEpoch()
+          ) + result.GetSecondFraction();
         }
         case ValueType::DateTime: {
+          DateTime result = DateTime(this->value.Int64);
           return static_cast<float>(
-            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
-          ) + this->value.DateTimeValue.GetSecondFraction();
+            result.ToSecondSinceUnixEpoch()
+          ) + result.GetSecondFraction();
         }
         case ValueType::Blob: {
           // TODO: Implement readFloatFromBlob()
@@ -595,18 +591,20 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Date: {
           return static_cast<double>(
-            this->value.DateTimeValue.GetDateOnly().ToSecondSinceUnixEpoch()
+            DateTime(this->value.Int64).GetDateOnly().ToSecondSinceUnixEpoch()
           );
         }
         case ValueType::Time: {
+          DateTime result = DateTime(this->value.Int64);
           return static_cast<double>(
-            this->value.DateTimeValue.GetTimeOnly().ToSecondSinceUnixEpoch()
-          ) + this->value.DateTimeValue.GetSecondFraction();
+            result.GetDateOnly().ToSecondSinceUnixEpoch()
+          ) + result.GetSecondFraction();
         }
         case ValueType::DateTime: {
+          DateTime result = DateTime(this->value.Int64);
           return static_cast<double>(
-            this->value.DateTimeValue.ToSecondSinceUnixEpoch()
-          ) + this->value.DateTimeValue.GetSecondFraction();
+            result.ToSecondSinceUnixEpoch()
+          ) + result.GetSecondFraction();
         }
         case ValueType::Blob: {
           // TODO: Implement readFloatFromBlob()
@@ -650,15 +648,9 @@ namespace Nuclex::ThinOrm {
           return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Double);
         }
         case ValueType::String: { return this->value.String; }
-        case ValueType::Date: {
-          return this->value.DateTimeValue.GetDateOnly().ToIso8601DateTime();
-        }
-        case ValueType::Time: {
-          return this->value.DateTimeValue.ToIso8601Time();
-        }
-        case ValueType::DateTime: {
-          return this->value.DateTimeValue.ToIso8601DateTime();
-        }
+        case ValueType::Date: { return DateTime(this->value.Int64).ToIso8601Date(); }
+        case ValueType::Time: { return DateTime(this->value.Int64).ToIso8601Time(); }
+        case ValueType::DateTime: { return DateTime(this->value.Int64).ToIso8601DateTime(); }
         case ValueType::Blob: {
           return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Blob.size());
         }
@@ -702,15 +694,9 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::String: { return this->value.String; }
         #endif
-        case ValueType::Date: {
-          return this->value.DateTimeValue.GetDateOnly();
-        }
-        case ValueType::Time: {
-          return this->value.DateTimeValue.GetTimeOnly();
-        }
-        case ValueType::DateTime: {
-          return this->value.DateTimeValue;
-        }
+        case ValueType::Date:
+        case ValueType::Time:
+        case ValueType::DateTime: { return DateTime(this->value.Int64); }
         #if 0
         case ValueType::Blob: {
           return Nuclex::Support::Text::lexical_cast<std::u8string>(this->value.Blob.size());
@@ -752,6 +738,9 @@ namespace Nuclex::ThinOrm {
           writeIntegerToBlob(result, this->value.Int32);
           break;
         }
+        case ValueType::Date:
+        case ValueType::Time:
+        case ValueType::DateTime:
         case ValueType::Int64: {
           result.reserve(8);
           writeIntegerToBlob(result, this->value.Int64);
@@ -779,19 +768,6 @@ namespace Nuclex::ThinOrm {
             reinterpret_cast<char8_t *>(result.data())
           );
           break;
-        }
-        case ValueType::Date: {
-          result.reserve(8);
-          writeIntegerToBlob(result, this->value.DateTimeValue.GetDateOnly().GetTicks());
-          break;
-        }
-        case ValueType::Time: {
-          result.reserve(8);
-          writeIntegerToBlob(result, this->value.DateTimeValue.GetTimeOnly().GetTicks());
-        }
-        case ValueType::DateTime: {
-          result.reserve(8);
-          writeIntegerToBlob(result, this->value.DateTimeValue.GetTicks());
         }
         case ValueType::Blob: {
           return this->value.Blob;

@@ -74,7 +74,7 @@ namespace Nuclex::ThinOrm {
         case ValueType::Date:
         case ValueType::Time:
         case ValueType::DateTime: {
-          new(&this->value.DateTimeValue) DateTime(other.value.DateTimeValue); break;
+          new(&this->value.Int64) DateTime(other.value.Int64); break;
         }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(other.value.Blob); break;
@@ -109,7 +109,7 @@ namespace Nuclex::ThinOrm {
         case ValueType::Date:
         case ValueType::Time:
         case ValueType::DateTime: {
-          new(&this->value.DateTimeValue) DateTime(std::move(other.value.DateTimeValue)); break;
+          new(&this->value.Int64) DateTime(std::move(other.value.Int64)); break;
         }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(std::move(other.value.Blob)); break;
@@ -191,15 +191,6 @@ namespace Nuclex::ThinOrm {
     empty(false),
     value() {
     this->value.Double = doubleValue;
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  Value::Value(const DateTime &dateTimeValue) noexcept :
-    type(ValueType::DateTime),
-    empty(false),
-    value() {
-    new(&this->value.DateTimeValue) DateTime(dateTimeValue);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -321,17 +312,6 @@ namespace Nuclex::ThinOrm {
 
   // ------------------------------------------------------------------------------------------- //
 
-  Value::Value(const std::optional<DateTime> &dateTimeValue) noexcept :
-    type(ValueType::DateTime),
-    empty(!dateTimeValue.has_value()),
-    value() {
-    if(!empty) {
-      new(&this->value.DateTimeValue) DateTime(dateTimeValue.value());
-    }
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
   Value::Value(const std::optional<std::vector<std::byte>> &blobValue) noexcept :
     type(ValueType::Blob),
     empty(!blobValue.has_value()),
@@ -351,6 +331,72 @@ namespace Nuclex::ThinOrm {
         case ValueType::Blob: { this->value.Blob.~vector(); break; }
         default: break;
       }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value Value::FromDate(const DateTime &dateValue) {
+    Value result(dateValue.GetTicks());
+    result.type = ValueType::Date;
+    return result;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value Value::FromDate(const std::optional<DateTime> &dateValue) {
+    if(dateValue.has_value()) {
+      Value result(dateValue.value().GetTicks());
+      result.type = ValueType::Date;
+      return result;
+    } else {
+      Value result = Value(std::optional<std::int64_t>());
+      result.type = ValueType::Date;
+      return result;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value Value::FromDateTime(const DateTime &dateTimeValue) {
+    Value result(dateTimeValue.GetTicks());
+    result.type = ValueType::DateTime;
+    return result;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value Value::FromDateTime(const std::optional<DateTime> &dateTimeValue) {
+    if(dateTimeValue.has_value()) {
+      Value result(dateTimeValue.value().GetTicks());
+      result.type = ValueType::DateTime;
+      return result;
+    } else {
+      Value result = Value(std::optional<std::int64_t>());
+      result.type = ValueType::DateTime;
+      return result;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value Value::FromTime(const DateTime &timeValue) {
+    Value result(timeValue.GetTicks());
+    result.type = ValueType::Time;
+    return result;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Value Value::FromTime(const std::optional<DateTime> &timeValue) {
+    if(timeValue.has_value()) {
+      Value result(timeValue.value().GetTicks());
+      result.type = ValueType::Time;
+      return result;
+    } else {
+      Value result = Value(std::optional<std::int64_t>());
+      result.type = ValueType::Time;
+      return result;
     }
   }
 
@@ -406,7 +452,7 @@ namespace Nuclex::ThinOrm {
         case ValueType::Date:
         case ValueType::Time:
         case ValueType::DateTime: {
-          new(&this->value.DateTimeValue) DateTime(other.value.DateTimeValue); break;
+          new(&this->value.Int64) DateTime(other.value.Int64); break;
         }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(other.value.Blob); break;
@@ -449,7 +495,7 @@ namespace Nuclex::ThinOrm {
         case ValueType::Date:
         case ValueType::Time:
         case ValueType::DateTime: {
-          new(&this->value.DateTimeValue) DateTime(std::move(other.value.DateTimeValue)); break;
+          new(&this->value.Int64) DateTime(std::move(other.value.Int64)); break;
         }
         case ValueType::Blob: {
           new(&this->value.Blob) std::vector<std::byte>(std::move(other.value.Blob)); break;
