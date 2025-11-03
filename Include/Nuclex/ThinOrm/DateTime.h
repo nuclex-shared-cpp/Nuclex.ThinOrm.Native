@@ -92,15 +92,21 @@ namespace Nuclex::ThinOrm {
     /// </summary>
     /// <param name="iso8601Date">Date (and optionally time) in ISO 8601 format</param>
     /// <returns>The date and time value parsed from the ISO 8601 date</returns>
+    /// <remarks>
+    ///   If you have an ISO 8601 date only (without time), this method will parse it
+    ///   correctly and leave the time portion of the new <see cref="DateTime" /> set
+    ///   to zero. This is in constrast to <see cref="ToIso8601DateTime" /> and
+    ///   <see cref="ToIso8601Date" /> for outputting dates with or without times.
+    /// </remarks>
     public: NUCLEX_THINORM_API static DateTime ParseIso8601DateTime(
-      const std::u8string &iso8601Date
+      const std::u8string_view &iso8601Date
     );
 
     /// <summary>Parses a date and time value from an ISO 8601 time</summary>
     /// <param name="iso8601Date">Time in ISO 8601 format</param>
     /// <returns>The date and time value parsed from the ISO 8601 time</returns>
     public: NUCLEX_THINORM_API static DateTime ParseIso8601Time(
-      const std::u8string &iso8601Time
+      const std::u8string_view &iso8601Time
     );
 
     /// <summary>Returns the date and time value without its time of day</summary>
@@ -110,6 +116,10 @@ namespace Nuclex::ThinOrm {
     /// <summary>Strips the date and time value of its date</summary>
     /// <returns>The date and time value cleared of its date</returns>
     public: NUCLEX_THINORM_API DateTime GetTimeOnly() const;
+
+    /// <summary>Converts the date and time value to an ISO 8601 date</summary>
+    /// <returns>A string containing the date in the ISO 8601 date format</returns>
+    public: NUCLEX_THINORM_API std::u8string ToIso8601Date() const;
 
     /// <summary>Converts the date and time value to an ISO 8601 date and time</summary>
     /// <returns>A string containing the date and time in the ISO 8601 date format</returns>
