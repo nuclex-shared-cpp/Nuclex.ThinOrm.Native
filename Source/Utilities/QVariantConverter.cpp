@@ -84,6 +84,21 @@ namespace {
     );
   }
 #endif
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Calculates the number of elapsed days since 1970 from a Qt date</summary>
+  /// <param name="qtDate">Qt date from which the elapsed days will be calculated</param>
+  /// <returns>The number of elapsed days since January the 1st in the year 1970</returns>
+  std::int64_t daysSinceUnixEpochFromQtDate(const QDate qtDate) {
+    std::chrono::sys_days sysDays = (
+      std::chrono::year(static_cast<int>(qtDate.year())) /
+      std::chrono::month(static_cast<unsigned>(qtDate.month())) /
+      std::chrono::day(static_cast<unsigned>(qtDate.day()))
+    );
+    return static_cast<std::int64_t>(sysDays.time_since_epoch().count());
+  }
+
   // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
@@ -180,9 +195,32 @@ namespace Nuclex::ThinOrm::Utilities {
       case QVariant::Type::String: {
         return Value(std::optional<std::u8string>(QStringConverter::ToU8(variant.toString())));
       }
-      //case QVariant::Type::Date: { return Value(std::optional<DateTime>()); }
-      //case QVariant::Type::Time: { return Value(std::optional<DateTime>()); }
-      //case QVariant::Type::DateTime: { return Value(std::optional<DateTime>()); }
+      case QVariant::Type::Date: {
+        std::int64_t daysSinceUnixEpoch = daysSinceUnixEpochFromQtDate(variant.toDate());
+        return Value::FromDate(
+          DateTime(daysSinceUnixEpoch * TicksPerDay + TicksAtStartOfUnixEpoch)
+        );
+      }
+      case QVariant::Type::Time: {
+        std::int64_t millisecondTimeOfDay = static_cast<std::int64_t>(
+          variant.toTime().msecsSinceStartOfDay()
+        );
+        return Value::FromTime(DateTime(millisecondTimeOfDay * TicksPerMillisecond));
+      }
+      case QVariant::Type::DateTime: {
+        QDateTime qtDateTime = variant.toDateTime().toUTC();
+        std::int64_t daysSinceUnixEpoch = daysSinceUnixEpochFromQtDate(qtDateTime.date());
+        std::int64_t millisecondTimeOfDay = static_cast<std::int64_t>(
+          variant.toTime().msecsSinceStartOfDay()
+        );
+
+        return Value::FromDateTime(
+          DateTime(
+            (daysSinceUnixEpoch * TicksPerDay + TicksAtStartOfUnixEpoch) +
+            (millisecondTimeOfDay * TicksPerMillisecond)
+          )
+        );
+      }
       default: {
         throw std::runtime_error(
           U8CHARS(
