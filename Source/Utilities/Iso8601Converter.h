@@ -33,14 +33,42 @@ namespace Nuclex::ThinOrm::Utilities {
   /// <summary>Converts date and time values between different formats</summary>
   class Iso8601Converter {
 
+    /// <summary>Parses an ISO 8601 date with optional time value</summary>
+    /// <param name="value">Date (and, optionally, time) that will be parsed</param>
+    /// <returns>
+    ///   The tick count (tenth microseconds since the year 1) that matches the specified
+    ///   ISO 8601 date (and, optionally, time)
+    /// </returns>
+    /// <remrks>
+    ///   If the ISO 8601 string containsa time zone, it will be ignored. Dates are
+    ///   always in UTC format
+    /// </remarks>
     public: static std::int64_t ParseIso8601DateTime(const std::u8string_view &value);
 
+    /// <summary>Parses an ISO 8601 time</summary>
+    /// <param name="value">Time that will be parsed</param>
+    /// <returns>
+    ///   The tick count (tenth microseconds) that matches the specified ISO 8601 time
+    /// </returns>
+    /// <remrks>
+    ///   If the ISO 8601 string containsa time zone, it will be ignored. Dates are
+    ///   always in UTC format
+    /// </remarks>
     public: static std::int64_t ParseIso8601Time(const std::u8string_view &value);
 
+    /// <summary>Prints a tick count as an ISO 8601 date</summary>
+    /// <param name="target">UTF-8 string buffer the date will be printed to</param>
+    /// <param name="ticks">Tick count that will be printed as an ISO 8601 date</param>
     public: static void PrintIso8601Date(char8_t *target/*[10]*/, std::int64_t ticks);
 
+    /// <summary>Prints a tick count as an ISO 8601 time</summary>
+    /// <param name="target">UTF-8 string buffer the time will be printed to</param>
+    /// <param name="ticks">Tick count that will be printed as an ISO 8601 time</param>
     public: static void PrintIso8601Time(char8_t *target/*[8]*/, std::int64_t ticks);
 
+    /// <summary>Prints a tick count as an ISO 8601 date and time</summary>
+    /// <param name="target">UTF-8 string buffer the date and time will be printed to</param>
+    /// <param name="ticks">Tick count that will be printed as an ISO 8601 date and time</param>
     public: static void PrintIso8601DateTime(char8_t *target/*[19]*/, std::int64_t ticks);
 
   };
@@ -49,4 +77,4 @@ namespace Nuclex::ThinOrm::Utilities {
 
 } // namespace Nuclex::ThinOrm::Utilities
 
-#endif // NUCLEX_THINORM_UTILITIES_DATETIMECONVERTER_H
+#endif // NUCLEX_THINORM_UTILITIES_ISO8601CONVERTER_H
