@@ -46,6 +46,45 @@ namespace {
   constexpr const std::int64_t TicksAtStartOfUnixEpoch = 719162ll * TicksPerDay;
 
   // ------------------------------------------------------------------------------------------- //
+#if 0
+  /// <summary<Constructs a Qt date from a tick count</summary>
+  /// <param name="ticks">Date as tenth microseconds since the year 1</param>
+  /// <returns>The date in Qt's own format</returns>
+  inline QDate qdateFromTicks(std::int64_t ticks) {
+    const std::int64_t daysSinceYearOne = ticks / TicksPerDay;
+    const std::int64_t daysSinceUnixEpoch  = daysSinceYearOne - TicksAtStartOfUnixEpoch;
+    const std::chrono::sys_days sysDays{std::chrono::days{daysSinceUnixEpoch}};
+    const std::chrono::year_month_day yearMonthDay{sysDays};
+
+    return QDate(
+      static_cast<int>(yearMonthDay.year()),
+      static_cast<unsigned>(yearMonthDay.month()),
+      static_cast<unsigned>(yearMonthDay.day())
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary<Constructs a Qt time from a tick count</summary>
+  /// <param name="ticks">Time as tenth microseconds since the year 1</param>
+  /// <returns>The time in Qt's own format</returns>
+  inline QTime qtimeFromFicks(std::int64_t ticks) {
+    std::int64_t ticksSinceMidnight = ticks % TicksPerDay;
+    if(ticksSinceMidnight < 0) { // to emulate floor mod
+      ticksSinceMidnight += TicksPerDay;
+    }
+
+    std::int64_t millisecondsSinceMidnight = ticksSinceMidnight / TicksPerMillisecond;
+
+    return QTime(
+      static_cast<int>(millisecondsSinceMidnight / 3'600'000),
+      static_cast<int>(millisecondsSinceMidnight / 60'000 % 60),
+      static_cast<int>(millisecondsSinceMidnight / 1'000 % 60),
+      static_cast<int>(millisecondsSinceMidnight % 1'000)
+    );
+  }
+#endif
+  // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
 
@@ -167,9 +206,9 @@ namespace Nuclex::ThinOrm::Utilities {
       case QVariant::Type::Double: { return Value(std::optional<double>()); }
       //case QVariant::Type::Char: { return Value(std::optional<std::int16_t>()); }
       case QVariant::Type::String: { return Value(std::optional<std::u8string>()); }
-      //case QVariant::Type::Date: { return Value(std::optional<DateTime>()); }
-      //case QVariant::Type::Time: { return Value(std::optional<DateTime>()); }
-      //case QVariant::Type::DateTime: { return Value(std::optional<DateTime>()); }
+      case QVariant::Type::Date: { return Value::FromDate(std::optional<DateTime>()); }
+      case QVariant::Type::Time: { return Value::FromTime(std::optional<DateTime>()); }
+      case QVariant::Type::DateTime: { return Value::FromDateTime(std::optional<DateTime>()); }
       default: {
         throw std::runtime_error(
           U8CHARS(
@@ -193,9 +232,9 @@ namespace Nuclex::ThinOrm::Utilities {
       case QVariant::Type::Double: { return ValueType::Double; }
       //case QVariant::Type::Char: { return ValueType::Int16; }
       case QVariant::Type::String: { return ValueType::String; }
-      //case QVariant::Type::Date: { return ValueType::Date; }
-      //case QVariant::Type::Time: { return ValueType::Time; }
-      //case QVariant::Type::DateTime: { return ValueType::DateTime; }
+      case QVariant::Type::Date: { return ValueType::Date; }
+      case QVariant::Type::Time: { return ValueType::Time; }
+      case QVariant::Type::DateTime: { return ValueType::DateTime; }
       default: { return ValueType(-1); } // Invalid
     } // switch
   }
