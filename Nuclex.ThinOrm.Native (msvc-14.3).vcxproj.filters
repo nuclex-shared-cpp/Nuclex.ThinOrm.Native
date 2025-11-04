@@ -32,9 +32,6 @@
     <Filter Include="Include\Mapping">
       <UniqueIdentifier>{6c9f6c3b-2edf-44e0-8568-cfd8801366ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Plumbing">
-      <UniqueIdentifier>{ffb93fa2-6377-46f2-98ba-4e597459525f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\Errors">
       <UniqueIdentifier>{d9eae2bb-a098-4d63-9e91-bb8ee5afa156}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,24 @@
     </Filter>
     <Filter Include="Source\Platform">
       <UniqueIdentifier>{2e3e8564-be87-4e8a-a11f-aeed99da8ac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Fluent">
+      <UniqueIdentifier>{b662030f-0cd1-4611-b8fa-44409bdc717f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Fluent">
+      <UniqueIdentifier>{a88c2ecf-6cf3-4d34-b815-c7c231d9dba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Migrations">
+      <UniqueIdentifier>{a6d4383e-cbe4-49ea-b2f4-cd61565b1f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Migrations">
+      <UniqueIdentifier>{79765cbb-d52e-4198-b04d-fded04f9dbbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Migrations\Entities">
+      <UniqueIdentifier>{1d1bf435-469b-46ec-a86b-2d2e6d0adefc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Migrations\Repositories">
+      <UniqueIdentifier>{c91c5467-61d6-43c3-b40a-421a13a61ffe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -109,14 +124,8 @@
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\StandardConnectionPool.h">
       <Filter>Include\Connections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Connections\UniqueConnectionPool.h">
-      <Filter>Include\Connections</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Mapping\TableMappingSyntax.h">
       <Filter>Include\Mapping</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Plumbing\Task.h">
-      <Filter>Include\Plumbing</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadValueTypeError.h">
       <Filter>Include\Errors</Filter>
@@ -172,9 +181,6 @@
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ContextualConnectionPool.h">
       <Filter>Include\Connections</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utilities\DateTimeConverter.h">
-      <Filter>Source\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Utilities\QStringConverter.h">
       <Filter>Source\Utilities</Filter>
     </ClInclude>
@@ -190,7 +196,58 @@
     <ClInclude Include="Source\Connections\SQLite\SQLiteDriver.h">
       <Filter>Source\Connections\SQLite</Filter>
     </ClInclude>
-    <ClInclude Include="SQLite3Api.h">
+    <ClInclude Include="Source\Utilities\Iso8601Converter.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Fluent\ColumnInfo.h">
+      <Filter>Source\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Fluent\GlobalEntityRegistry.Implementation.h">
+      <Filter>Source\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Fluent\TableInfo.h">
+      <Filter>Source\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\AttributeAccessor.h">
+      <Filter>Include\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\ColumnRegistrationSyntax.h">
+      <Filter>Include\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\EntityMappingConfigurator.h">
+      <Filter>Include\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\GlobalEntityRegistry.h">
+      <Filter>Include\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\Queryable.h">
+      <Filter>Include\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\Table.h">
+      <Filter>Include\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\TableRegistrationSyntax.h">
+      <Filter>Include\Fluent</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Migrations\ContextualMigration.h">
+      <Filter>Include\Migrations</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Migrations\GlobalMigrationRepository.h">
+      <Filter>Include\Migrations</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Migrations\Migration.h">
+      <Filter>Include\Migrations</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Migrations\MigrationRunner.h">
+      <Filter>Include\Migrations</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Migrations\Entities\MigrationRecord.h">
+      <Filter>Source\Migrations\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Migrations\Repositories\MigrationRecordRepository.h">
+      <Filter>Source\Migrations\Repositories</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platform\SQLite3Api.h">
       <Filter>Source\Platform</Filter>
     </ClInclude>
   </ItemGroup>
@@ -244,9 +301,6 @@
       <Filter>Source\Connections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Connections\StandardConnectionPool.cpp">
-      <Filter>Source\Connections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Connections\UniqueConnectionPool.cpp">
       <Filter>Source\Connections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\BadValueTypeError.cpp">
@@ -306,9 +360,6 @@
     <ClCompile Include="Source\Value.Operators.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utilities\DateTimeConverter.cpp">
-      <Filter>Source\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Utilities\QStringConverter.cpp">
       <Filter>Source\Utilities</Filter>
     </ClCompile>
@@ -324,7 +375,61 @@
     <ClCompile Include="Source\Connections\SQLite\SQLiteDriver.cpp">
       <Filter>Source\Connections\SQLite</Filter>
     </ClCompile>
-    <ClCompile Include="SQLite3Api.cpp">
+    <ClCompile Include="Source\Utilities\Iso8601Converter.cpp">
+      <Filter>Source\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\AttributeAccessor.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\ColumnRegistrationSyntax.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\ColunnInfo.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\EntityMappingConfigurator.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\GlobalEntityRegistry.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\GlobalEntityRegistry.Implementation.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\Queryable.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\Table.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\TableInfo.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Fluent\TableRegistrationSyntax.cpp">
+      <Filter>Source\Fluent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Migrations\ContextualMigration.cpp">
+      <Filter>Source\Migrations</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Migrations\GlobalMigrationRepository.cpp">
+      <Filter>Source\Migrations</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Migrations\Migration.cpp">
+      <Filter>Source\Migrations</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Migrations\MigrationRunner.cpp">
+      <Filter>Source\Migrations</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Migrations\Entities\MigrationRecord.cpp">
+      <Filter>Source\Migrations\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Migrations\Repositories\MigrationRecordRepository.cpp">
+      <Filter>Source\Migrations\Repositories</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\ContextualConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platform\SQLite3Api.cpp">
       <Filter>Source\Platform</Filter>
     </ClCompile>
   </ItemGroup>

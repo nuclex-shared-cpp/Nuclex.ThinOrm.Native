@@ -22,7 +22,8 @@ limitations under the License.
 
 #include "Nuclex/ThinOrm/Config.h"
 #include "Nuclex/ThinOrm/Value.h" // for Value
-#include <string> // for std::u8string_view
+
+#include <typeinfo> // for std::type_info
 
 namespace Nuclex::ThinOrm::Fluent {
 

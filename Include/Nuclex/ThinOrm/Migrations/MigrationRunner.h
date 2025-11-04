@@ -24,6 +24,7 @@ limitations under the License.
 
 #include <memory> // for std::unique_ptr<>
 #include <vector> // for std::vector<>
+#include <string> // for std::u8string
 #include <cstddef> // for std::size_t
 #include <unordered_set> // for std::unordered_set<>
 

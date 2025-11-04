@@ -24,6 +24,8 @@ limitations under the License.
 
 #include "./GlobalEntityRegistry.Implementation.h"
 
+#include <stdexcept> // for std::invalid_argument
+
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
