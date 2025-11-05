@@ -32,7 +32,7 @@ namespace Nuclex::ThinOrm::Dialects {
   class NUCLEX_THINORM_TYPE Dialect {
 
     /// <summary>Specifics of how the database engine handles date and time</summary>
-    public: NUCLEX_THINORM_API DateTimeDialect DateTimeStyle;
+    public: DateTimeDialect DateTimeStyle;
 
     /// <summary>How identifiers (table and column names) can be quoted</summary>
     /// <remarks>
@@ -40,7 +40,7 @@ namespace Nuclex::ThinOrm::Dialects {
     ///   whitespace, line breaks, punctuation or such. Unusual or localized identifiers
     ///   can be put in quotes. This property specifies how those quotes should look.
     /// </remarks>
-    public: NUCLEX_THINORM_API QuoteStyle IdentifierQuoteStyle;
+    public: QuoteStyle IdentifierQuoteStyle;
 
     // Should we even expose this? It should be the user's job to match the casing and
     // otherwise, they messed up. We might actually verify casing rather than add crudges

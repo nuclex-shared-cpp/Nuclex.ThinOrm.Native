@@ -266,8 +266,10 @@ namespace Nuclex::ThinOrm {
           if(this->value.String.find(u8'.') == std::string::npos) {
             return Nuclex::Support::Text::lexical_cast<std::uint8_t>(this->value.String);
           } else {
-            return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(
-              Nuclex::Support::Text::lexical_cast<float>(this->value.String)
+            return static_cast<std::uint8_t>(
+              Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(
+                Nuclex::Support::Text::lexical_cast<float>(this->value.String)
+              )
             );
           }
         }
@@ -288,7 +290,7 @@ namespace Nuclex::ThinOrm {
         }
         case ValueType::Blob: {
           if(this->value.Blob.empty()) {
-            return 0;
+            return std::uint8_t(0);
           } else {
             return std::to_integer<std::uint8_t>(this->value.Blob[0]);
           }
@@ -308,7 +310,9 @@ namespace Nuclex::ThinOrm {
       return std::optional<std::int16_t>();
     } else {
       switch(this->type) {
-        case ValueType::Boolean: { return this->value.Boolean ? 1 : 0; }
+        case ValueType::Boolean: {
+          return this->value.Boolean ? std::int16_t(1) : std::int16_t(0);
+        }
         case ValueType::UInt8: { return static_cast<std::int16_t>(this->value.Uint8); }
         case ValueType::Int16: { return this->value.Int16; }
         case ValueType::Int32: { return static_cast<std::int16_t>(this->value.Int32); }
@@ -332,8 +336,10 @@ namespace Nuclex::ThinOrm {
           if(this->value.String.find(u8'.') == std::string::npos) {
             return Nuclex::Support::Text::lexical_cast<std::int16_t>(this->value.String);
           } else {
-            return Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(
-              Nuclex::Support::Text::lexical_cast<float>(this->value.String)
+            return static_cast<std::int16_t>(
+              Nuclex::ThinOrm::Utilities::Quantizer::NearestInt32(
+                Nuclex::Support::Text::lexical_cast<float>(this->value.String)
+              )
             );
           }
         }

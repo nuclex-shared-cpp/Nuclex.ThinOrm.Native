@@ -39,7 +39,7 @@ namespace Nuclex::ThinOrm::Migrations {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void Migration::Down(Connections::Connection &connection) {
+  void Migration::Down(Connections::Connection &) {
     throw Errors::DowngradeUnsupportedError(
       u8"Migration does not implement the 'Down()' method, thus reverting it is impossible"
     );

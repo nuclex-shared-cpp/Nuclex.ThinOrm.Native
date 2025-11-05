@@ -226,9 +226,9 @@ namespace Nuclex::ThinOrm {
     std::tm result = {};
     {
       std::int64_t secondOfDay = (ticks % TicksPerDay) / TicksPerSecond;
-      result.tm_sec = secondOfDay % 60;
-      result.tm_min = secondOfDay / 60 % 60;
-      result.tm_hour = secondOfDay / 3600;
+      result.tm_sec = static_cast<int>(secondOfDay % 60);
+      result.tm_min = static_cast<int>(secondOfDay / 60 % 60);
+      result.tm_hour = static_cast<int>(secondOfDay / 3600);
     }
     {
       std::chrono::days daysFromUnixEpoch(
@@ -237,12 +237,14 @@ namespace Nuclex::ThinOrm {
 
       std::chrono::sys_days sysDays(daysFromUnixEpoch);
       std::chrono::year_month_day date = sysDays;
-      result.tm_mday = static_cast<unsigned>(date.day());
-      result.tm_mon = static_cast<unsigned>(date.month()) - 1;
+      result.tm_mday = static_cast<int>(static_cast<unsigned>(date.day()));
+      result.tm_mon = static_cast<int>(static_cast<unsigned>(date.month()) - 1);
       result.tm_year = static_cast<int>(date.year()) - 1900;
 
-      result.tm_wday = std::chrono::weekday(sysDays).c_encoding();
-      result.tm_yday = (sysDays - std::chrono::sys_days{date.year()/1/1}).count();
+      result.tm_wday = static_cast<int>(std::chrono::weekday(sysDays).c_encoding());
+      result.tm_yday = static_cast<int>(
+        (sysDays - std::chrono::sys_days{date.year()/1/1}).count()
+      );
     }
 
     result.tm_isdst = -1;
@@ -266,7 +268,9 @@ namespace Nuclex::ThinOrm {
 
   float DateTime::GetSecondFraction() const {
     std::int64_t tenthMicroseconds = this->ticks % TicksPerSecond;
-    return static_cast<float>(static_cast<double>(tenthMicroseconds) / 10'000'000.0);
+    return static_cast<float>(
+      static_cast<double>(tenthMicroseconds) / static_cast<double>(TicksPerSecond)
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
