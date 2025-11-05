@@ -29,9 +29,6 @@
     <Filter Include="Include\Connections">
       <UniqueIdentifier>{40215190-12bb-4c39-b66f-26653554277e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Mapping">
-      <UniqueIdentifier>{6c9f6c3b-2edf-44e0-8568-cfd8801366ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\Errors">
       <UniqueIdentifier>{d9eae2bb-a098-4d63-9e91-bb8ee5afa156}</UniqueIdentifier>
     </Filter>
@@ -68,29 +65,20 @@
     <Filter Include="Source\Migrations\Repositories">
       <UniqueIdentifier>{c91c5467-61d6-43c3-b40a-421a13a61ffe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Dialects">
+      <UniqueIdentifier>{41dfe930-03f3-47e2-9ae6-0a525d7786e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Dialects">
+      <UniqueIdentifier>{9ccb616a-818c-4f6f-833e-dc3c067cfa24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Transactions">
+      <UniqueIdentifier>{5d9783c5-cc38-459d-8d46-d78473de296f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Transactions">
+      <UniqueIdentifier>{653e1fca-fbb4-4111-be6a-cf1d1552d499}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Config.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Query.Implementation.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\DataContext.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Decimal.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Query.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Value.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\ValueType.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\ConnectionProperties.h">
       <Filter>Include\Configuration</Filter>
     </ClInclude>
@@ -124,29 +112,17 @@
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\StandardConnectionPool.h">
       <Filter>Include\Connections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\Mapping\TableMappingSyntax.h">
-      <Filter>Include\Mapping</Filter>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Dialects\DateTimeDialect.h">
+      <Filter>Include\Dialects</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Dialects\Dialect.h">
+      <Filter>Include\Dialects</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Dialects\QuoteStyle.h">
+      <Filter>Include\Dialects</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadValueTypeError.h">
       <Filter>Include\Errors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Connections\QtSql\QtSqlConnection.h">
-      <Filter>Source\Connections\QtSql</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Connections\QtSql\UniqueNameGenerator.h">
-      <Filter>Source\Connections\QtSql</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Query.ImmutableState.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\DateTime.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\QueryParameterView.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\ThinOrm\RowReader.h">
-      <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Errors\BadDateFormatError.h">
       <Filter>Include\Errors</Filter>
@@ -163,12 +139,6 @@
     <ClInclude Include="Include\Nuclex\ThinOrm\Configuration\KnownOptions.h">
       <Filter>Include\Configuration</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Connections\QtSql\QtSqlMaterializedQuery.h">
-      <Filter>Source\Connections\QtSql</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Connections\QtSql\QtSqlRowReader.h">
-      <Filter>Source\Connections\QtSql</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Errors\AmbiguousSchemaVersionError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
@@ -180,33 +150,6 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Connections\ContextualConnectionPool.h">
       <Filter>Include\Connections</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utilities\QStringConverter.h">
-      <Filter>Source\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utilities\Quantizer.h">
-      <Filter>Source\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utilities\QVariantConverter.h">
-      <Filter>Source\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Connections\SQLite\SQLiteConnection.h">
-      <Filter>Source\Connections\SQLite</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Connections\SQLite\SQLiteDriver.h">
-      <Filter>Source\Connections\SQLite</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utilities\Iso8601Converter.h">
-      <Filter>Source\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Fluent\ColumnInfo.h">
-      <Filter>Source\Fluent</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Fluent\GlobalEntityRegistry.Implementation.h">
-      <Filter>Source\Fluent</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Fluent\TableInfo.h">
-      <Filter>Source\Fluent</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\ThinOrm\Fluent\AttributeAccessor.h">
       <Filter>Include\Fluent</Filter>
@@ -241,35 +184,38 @@
     <ClInclude Include="Include\Nuclex\ThinOrm\Migrations\MigrationRunner.h">
       <Filter>Include\Migrations</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Migrations\Entities\MigrationRecord.h">
-      <Filter>Source\Migrations\Entities</Filter>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Transactions\IsolationLevel.h">
+      <Filter>Include\Transactions</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Migrations\Repositories\MigrationRecordRepository.h">
-      <Filter>Source\Migrations\Repositories</Filter>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Config.h">
+      <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Platform\SQLite3Api.h">
-      <Filter>Source\Platform</Filter>
+    <ClInclude Include="Include\Nuclex\ThinOrm\DataContext.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Decimal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Query.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\Value.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\ValueType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\DateTime.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\QueryParameterView.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\ThinOrm\RowReader.h">
+      <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Config.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Decimal.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Query.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Query.Implementation.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Value.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ValueType.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Configuration\ConnectionProperties.cpp">
       <Filter>Source\Configuration</Filter>
     </ClCompile>
@@ -279,8 +225,50 @@
     <ClCompile Include="Source\Configuration\ConnectionUrl.cpp">
       <Filter>Source\Configuration</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Configuration\KnownOptions.cpp">
+      <Filter>Source\Configuration</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Configuration\WritableConnectionProperties.cpp">
       <Filter>Source\Configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Connections\QtSql\QtSqlConnection.cpp">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Connections\QtSql\QtSqlConnection.h">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Connections\QtSql\UniqueNameGenerator.cpp">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Connections\QtSql\UniqueNameGenerator.h">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Connections\QtSql\QtSqlMaterializedQuery.cpp">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Connections\QtSql\QtSqlMaterializedQuery.h">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Connections\QtSql\QtSqlRowReader.cpp">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Connections\QtSql\QtSqlRowReader.h">
+      <Filter>Source\Connections\QtSql</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Connections\SQLite\SQLiteConnection.cpp">
+      <Filter>Source\Connections\SQLite</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Connections\SQLite\SQLiteConnection.h">
+      <Filter>Source\Connections\SQLite</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Connections\SQLite\SQLiteDriver.cpp">
+      <Filter>Source\Connections\SQLite</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Connections\SQLite\SQLiteDriver.h">
+      <Filter>Source\Connections\SQLite</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Connections\ContextualConnectionPool.cpp">
+      <Filter>Source\Connections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Connections\Connection.cpp">
       <Filter>Source\Connections</Filter>
@@ -303,26 +291,14 @@
     <ClCompile Include="Source\Connections\StandardConnectionPool.cpp">
       <Filter>Source\Connections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Errors\BadValueTypeError.cpp">
-      <Filter>Source\Errors</Filter>
+    <ClCompile Include="Source\Dialects\DateTimeDialect.cpp">
+      <Filter>Source\Dialects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Connections\QtSql\QtSqlConnection.cpp">
-      <Filter>Source\Connections\QtSql</Filter>
+    <ClCompile Include="Source\Dialects\Dialect.cpp">
+      <Filter>Source\Dialects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Connections\QtSql\UniqueNameGenerator.cpp">
-      <Filter>Source\Connections\QtSql</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DateTime.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Query.ImmutableState.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\QueryParameterView.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Value.Conversion.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\Dialects\QuoteStyle.cpp">
+      <Filter>Source\Dialects</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\BadDateFormatError.cpp">
       <Filter>Source\Errors</Filter>
@@ -330,20 +306,14 @@
     <ClCompile Include="Source\Errors\BadParameterNameError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Errors\BadValueTypeError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Errors\MissingDriverError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\UnassignedParameterError.cpp">
       <Filter>Source\Errors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Configuration\KnownOptions.cpp">
-      <Filter>Source\Configuration</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Connections\QtSql\QtSqlMaterializedQuery.cpp">
-      <Filter>Source\Connections\QtSql</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Connections\QtSql\QtSqlRowReader.cpp">
-      <Filter>Source\Connections\QtSql</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\AmbiguousSchemaVersionError.cpp">
       <Filter>Source\Errors</Filter>
@@ -354,30 +324,6 @@
     <ClCompile Include="Source\Errors\DowngradeUnsupportedError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RowReader.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Value.Operators.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utilities\QStringConverter.cpp">
-      <Filter>Source\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utilities\Quantizer.cpp">
-      <Filter>Source\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utilities\QVariantConverter.cpp">
-      <Filter>Source\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Connections\SQLite\SQLiteConnection.cpp">
-      <Filter>Source\Connections\SQLite</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Connections\SQLite\SQLiteDriver.cpp">
-      <Filter>Source\Connections\SQLite</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utilities\Iso8601Converter.cpp">
-      <Filter>Source\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Fluent\AttributeAccessor.cpp">
       <Filter>Source\Fluent</Filter>
     </ClCompile>
@@ -387,6 +333,9 @@
     <ClCompile Include="Source\Fluent\ColunnInfo.cpp">
       <Filter>Source\Fluent</Filter>
     </ClCompile>
+    <ClInclude Include="Source\Fluent\ColumnInfo.h">
+      <Filter>Source\Fluent</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Fluent\EntityMappingConfigurator.cpp">
       <Filter>Source\Fluent</Filter>
     </ClCompile>
@@ -396,6 +345,9 @@
     <ClCompile Include="Source\Fluent\GlobalEntityRegistry.Implementation.cpp">
       <Filter>Source\Fluent</Filter>
     </ClCompile>
+    <ClInclude Include="Source\Fluent\GlobalEntityRegistry.Implementation.h">
+      <Filter>Source\Fluent</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Fluent\Queryable.cpp">
       <Filter>Source\Fluent</Filter>
     </ClCompile>
@@ -405,6 +357,9 @@
     <ClCompile Include="Source\Fluent\TableInfo.cpp">
       <Filter>Source\Fluent</Filter>
     </ClCompile>
+    <ClInclude Include="Source\Fluent\TableInfo.h">
+      <Filter>Source\Fluent</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Fluent\TableRegistrationSyntax.cpp">
       <Filter>Source\Fluent</Filter>
     </ClCompile>
@@ -423,14 +378,89 @@
     <ClCompile Include="Source\Migrations\Entities\MigrationRecord.cpp">
       <Filter>Source\Migrations\Entities</Filter>
     </ClCompile>
+    <ClInclude Include="Source\Migrations\Entities\MigrationRecord.h">
+      <Filter>Source\Migrations\Entities</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Migrations\Repositories\MigrationRecordRepository.cpp">
       <Filter>Source\Migrations\Repositories</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Connections\ContextualConnectionPool.cpp">
-      <Filter>Source\Connections</Filter>
+    <ClInclude Include="Source\Migrations\Repositories\MigrationRecordRepository.h">
+      <Filter>Source\Migrations\Repositories</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Utilities\Iso8601Converter.cpp">
+      <Filter>Source\Utilities</Filter>
     </ClCompile>
+    <ClInclude Include="Source\Utilities\Iso8601Converter.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Utilities\QStringConverter.cpp">
+      <Filter>Source\Utilities</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Utilities\QStringConverter.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Utilities\Quantizer.cpp">
+      <Filter>Source\Utilities</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Utilities\Quantizer.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Utilities\QVariantConverter.cpp">
+      <Filter>Source\Utilities</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Utilities\QVariantConverter.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Platform\SQLite3Api.cpp">
       <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\SQLite3Api.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Transactions\IsolationLevel.cpp">
+      <Filter>Source\Transactions</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DateTime.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Decimal.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Query.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Query.Implementation.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Query.Implementation.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Query.ImmutableState.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Query.ImmutableState.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\QueryParameterView.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Value.Conversion.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RowReader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Value.Operators.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Value.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ValueType.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
