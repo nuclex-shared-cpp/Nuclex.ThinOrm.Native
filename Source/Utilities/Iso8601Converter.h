@@ -30,7 +30,14 @@ namespace Nuclex::ThinOrm::Utilities {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Converts date and time values between different formats</summary>
+  /// <summary>Converts date and time values to and from ISO 8601</summary>
+  /// <remarks>
+  ///   This is a validating parser and printer for ISO 8601 date and time strings.
+  ///   It supports only 4-digit years (no extended -/+ prefix 6-digit years) but covers
+  ///   all other ISO 8601 date/time properties. It can parse the basic format, extended
+  ///   format and it validates the time zone, if appended (the time zone itself is not
+  ///   used as <see cref="DateTime" /> only supports UTC dates and times).
+  /// </remarks>
   class Iso8601Converter {
 
     /// <summary>Parses an ISO 8601 date with optional time value</summary>
